@@ -7,7 +7,7 @@
 
 int main()
 {
-    FILE *file = fopen("./input.txt", "r");
+    FILE *file = fopen("./input.txt", "r"); // make the filepath an input parameter
 
     char **lines = NULL;
     int lineCount = 0;
@@ -33,8 +33,7 @@ int main()
         {
             if (isdigit(lines[i][j]))
             {
-                int digit = lines[i][j] - '0';
-                count += digit * 10;
+                count += (lines[i][j] - '0') * 10;
                 break;
             }
 
