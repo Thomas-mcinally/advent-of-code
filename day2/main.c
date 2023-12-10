@@ -14,7 +14,6 @@ int main()
     char buffer[MAX_LINE_LENGTH];
     while (fgets(buffer, MAX_LINE_LENGTH, file) != NULL)
     {
-        // Allocate memory for the new line
         lines = realloc(lines, (lineCount + 1) * sizeof(char *));
         lines[lineCount] = malloc(strlen(buffer) + 1);
 
@@ -23,6 +22,7 @@ int main()
     }
     fclose(file);
     int result = 0;
+    int power = 0;
 
     for (int i = 0; i < lineCount; i++)
     {
@@ -72,9 +72,15 @@ int main()
     {
         result += game_id;
     }
+    power += game_max_red_count * game_max_green_count * game_max_blue_count;
+    free(lines[i]);
     }
-    printf("%i", result);
+    free(lines);
+    
+    printf("%i\n", result);
+    printf("%i\n", power);
     return 0;
 }
 
-// ans: 2278
+// task1 ans: 2278
+// task2 ans: 67953
