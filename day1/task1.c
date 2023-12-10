@@ -7,7 +7,7 @@
 
 int main()
 {
-    FILE *file = fopen("./input.txt", "r"); // make the filepath an input parameter
+    FILE *file = fopen("./input.txt", "r");
 
     char **lines = NULL;
     int lineCount = 0;
