@@ -3,24 +3,30 @@
 #include <string.h>
 #include <ctype.h>
 
-int main()
-{
+int read_file_to_lines(char ***lines){
     int MAX_LINE_LENGTH = 256;
     FILE *file = fopen("./input.txt", "r");
 
-    char **lines = NULL;
     int lineCount = 0;
 
     char buffer[MAX_LINE_LENGTH];
     while (fgets(buffer, MAX_LINE_LENGTH, file) != NULL)
     {
-        lines = realloc(lines, (lineCount + 1) * sizeof(char *));
-        lines[lineCount] = malloc(strlen(buffer) + 1);
+        *lines = realloc(*lines, (lineCount + 1) * sizeof(char *));
+        (*lines)[lineCount] = malloc(strlen(buffer) + 1);
 
-        strcpy(lines[lineCount], buffer);
+        strcpy((*lines)[lineCount], buffer);
         lineCount++;
     }
     fclose(file);
+    return lineCount;
+}
+
+int main()
+{
+    char **lines = NULL;
+    int lineCount = read_file_to_lines(&lines);
+
     int result = 0;
     int power = 0;
 
