@@ -79,7 +79,41 @@ int part1(char **grid, int ROWS, int COLS)
     return partNumberSum;
 }
 
+int part2(char **grid, int ROWS, int COLS)
+// HARD WITHOUT A HASHMAP TYPE
+{
+    if (ROWS != COLS)
+    {
+        printf("ERROR: ROWS != COLS\n");
+        return 1;
+    }
 
+    int curNum = 0;
+    // curNumStarNeighbours = [(x,y), (x,y), (x,y), (x,y)]
+    for (int r = 0; r < ROWS; r++)
+    {
+        for (int c = 0; c < COLS; c++)
+        {
+            if (isdigit(grid[r][c]))
+            {
+                curNum = curNum * 10 + (grid[r][c] - '0');
+                // Check if any neighbour is star and update curNumStarNeighbours
+            }
+            else
+            {
+                curNum = 0;
+                // update star: neighbouring nums hashmap
+            }
+            
+        }
+        curNum = 0;
+        // update star: neighbouring nums hashmap
+    }
+    // Calculate gearratioSum
+
+    // return gearratioSum
+
+}
 int main()
 {
     int partNumberSum = 0;
@@ -87,5 +121,9 @@ int main()
     int linecount = read_file_to_lines(&lines);
 
     printf("Part 1: %i\n", part1(lines, linecount, strlen(lines[0]) - 1));
+    char myChar = 'a';
+    myChar += 28;
+    printf("%c\n", myChar);
+
 }
 
