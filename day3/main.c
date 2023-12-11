@@ -41,19 +41,15 @@ int at_least_one_neighbour_is_symbol(char **lines, int i, int j, int max_i, int 
 
 }
 
-
-int main()
+int part1(char **grid, int ROWS, int COLS)
 {
-    int partNumberSum = 0;
-    char **grid = NULL;
-    int ROWS = read_file_to_lines(&grid);
-    int COLS = strlen(grid[0]) - 1;
     if (ROWS != COLS)
     {
         printf("ERROR: ROWS != COLS\n");
         return 1;
     }
 
+    int partNumberSum = 0;
     int curNum = 0;
     int curNumIsValid = 0;
     for (int r = 0; r < ROWS; r++)
@@ -79,8 +75,17 @@ int main()
         if (curNumIsValid) partNumberSum += curNum;
         curNum = 0;
         curNumIsValid = 0;
-        
     }
-        printf("Part 1: %i\n", partNumberSum);
+    return partNumberSum;
+}
+
+
+int main()
+{
+    int partNumberSum = 0;
+    char **lines = NULL;
+    int linecount = read_file_to_lines(&lines);
+
+    printf("Part 1: %i\n", part1(lines, linecount, strlen(lines[0]) - 1));
 }
 
