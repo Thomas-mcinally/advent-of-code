@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+int read_file_to_lines(char ***lines){
+    int MAX_LINE_LENGTH = 256;
+    FILE *file = fopen("./input.txt", "r");
+    int lineCount = 0;
+
+    char buffer[MAX_LINE_LENGTH];
+    while (fgets(buffer, MAX_LINE_LENGTH, file) != NULL)
+    {
+        *lines = realloc(*lines, (lineCount + 1) * sizeof(char *));
+        (*lines)[lineCount] = malloc(strlen(buffer) + 1);
+
+        strcpy((*lines)[lineCount], buffer);
+        lineCount++;
+    }
+    fclose(file);
+    return lineCount;
+}
+
+int is_symbol(char c)
+{
+    if (isdigit(c) || c == '.') return 0;
+    return 1;
+}
+
+int at_least_one_neighbour_is_symbol(char **lines, int i, int j, int max_i, int max_j)
+{
+    if (j > 0 && is_symbol(lines[i][j-1])) return 1;
+    if (j < max_j && is_symbol(lines[i][j+1])) return 1;
+    if (i > 0 && is_symbol(lines[i-1][j])) return 1;
+    if (i < max_i && is_symbol(lines[i+1][j])) return 1;
+    if (i > 0 && j > 0 && is_symbol(lines[i-1][j-1])) return 1;
+    if (i > 0 && j < max_j && is_symbol(lines[i-1][j+1])) return 1;
+    if (i < max_i && j > 0 && is_symbol(lines[i+1][j-1])) return 1;
+    if (i < max_i && j < max_j && is_symbol(lines[i+1][j+1])) return 1;
+    return 0;
+
+}
+
+
+int main()
+{
+    int partNumberSum = 0;
+    char **grid = NULL;
+    int ROWS = read_file_to_lines(&grid);
+    int COLS = strlen(grid[0]) - 1;
+    if (ROWS != COLS)
+    {
+        printf("ERROR: ROWS != COLS\n");
+        return 1;
+    }
+
+    int curNum = 0;
+    int curNumIsValid = 0;
+    for (int r = 0; r < ROWS; r++)
+    {
+        for (int c = 0; c < COLS; c++)
+        {
+            if (isdigit(grid[r][c]))
+            {
+                curNum = curNum * 10 + (grid[r][c] - '0');
+                if (at_least_one_neighbour_is_symbol(grid, r, c, ROWS-1, COLS-1))
+                {
+                    curNumIsValid = 1;
+                }
+            }
+            else
+            {
+                if (curNumIsValid) partNumberSum += curNum;
+                curNum = 0;
+                curNumIsValid = 0;
+            }
+            
+        }
+        if (curNumIsValid) partNumberSum += curNum;
+        curNum = 0;
+        curNumIsValid = 0;
+        
+    }
+        printf("Part 1: %i\n", partNumberSum);
+}
+
