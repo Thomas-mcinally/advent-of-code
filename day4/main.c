@@ -27,7 +27,8 @@ int main()
 {
     char **lines = NULL;
     int lineCount = read_file_to_lines(&lines);
-    int i_to_copies[204] = {[0 ... 203] = 1}; //todo: how do i need to modify script to use linecount instead of 204?
+    int *i_to_copies = malloc(lineCount * sizeof(int));
+    for (int i = 0; i < lineCount; i++) i_to_copies[i] = 1;
     int total_score = 0;
     int total_scratchcards = 0;
     for (int i = 0; i < lineCount; i++)
@@ -70,8 +71,12 @@ int main()
 
 
         total_scratchcards += i_to_copies[i];
-        for (int r = i+1; r < i+1+matches_found && r < 204; r++) i_to_copies[r] += i_to_copies[i];
+        for (int r = i+1; r < i+1+matches_found && r < lineCount; r++) i_to_copies[r] += i_to_copies[i];
+
+        free(lines[i]);
     }
+    free(lines);
+    free(i_to_copies);
     printf("Part1: %i \n", total_score);
     printf("Part2: %i \n", total_scratchcards);
 }
