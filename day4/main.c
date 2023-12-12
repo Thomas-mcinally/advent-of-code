@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 
 int read_file_to_lines(char ***lines){
     int MAX_LINE_LENGTH = 256;
@@ -26,7 +27,7 @@ int main()
 {
     char **lines = NULL;
     int lineCount = read_file_to_lines(&lines);
-
+    int i_to_copies[204] = {1}; //todo: how do i need to modify script to use linecount instead of 204?
 
     int total_score = 0;
     for (int i = 0; i < lineCount; i++)
@@ -50,7 +51,7 @@ int main()
 
 
         cur_num = 0;
-        int cur_score = 0;
+        int matches_found = 0;
         for (int j = 42; lines[i][j] != '\0'; j++)
         {
             if (isdigit(lines[i][j]))
@@ -60,14 +61,12 @@ int main()
             }
             else if (lines[i][j] == ' ')
             {
-                if (seen_nums[cur_num] && cur_score == 0) cur_score = 1;
-                else if (seen_nums[cur_num] && cur_score != 0) cur_score *= 2;
+                if (seen_nums[cur_num]) matches_found += 1;
                 cur_num = 0;
             }
         }
-        if (seen_nums[cur_num] && cur_score == 0) cur_score = 1;
-        else if (seen_nums[cur_num] && cur_score != 0) cur_score *= 2;
-        total_score += cur_score;
+        if (seen_nums[cur_num]) matches_found += 1;
+        if (matches_found != 0) total_score += pow(2, matches_found - 1);
 
     }
     printf("Part1: %i \n", total_score);
