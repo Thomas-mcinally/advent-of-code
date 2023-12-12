@@ -34,7 +34,7 @@ int main()
         int seen_nums[101] = {0}; 
 
         int cur_num = 0;
-        for (int j = 10; j < 40; j++)
+        for (int j = 10; lines[i][j] != '|'; j++)
         {
             if (isdigit(lines[i][j]))
             {
