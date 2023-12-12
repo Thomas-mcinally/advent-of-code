@@ -41,7 +41,7 @@ int main()
                 cur_num *= 10;
                 cur_num += lines[i][j] - '0';
             }
-            else if (lines[i][j] == ' ')
+            else if (lines[i][j] == ' ' && cur_num != 0)
             {
                 seen_nums[cur_num] = 1;
                 cur_num = 0;
@@ -60,16 +60,13 @@ int main()
             }
             else if (lines[i][j] == ' ')
             {
-                if (cur_num != 0 && seen_nums[cur_num])
-                {
-                    if (cur_score == 0) cur_score = 1;
-                    else cur_score *= 2;
-                }
+                if (seen_nums[cur_num] && cur_score == 0) cur_score = 1;
+                else if (seen_nums[cur_num] && cur_score != 0) cur_score *= 2;
                 cur_num = 0;
             }
         }
-        if (cur_num != 0 && seen_nums[cur_num] && cur_score == 0) cur_score = 1;
-        if (cur_num != 0 && seen_nums[cur_num] && cur_score != 0) cur_score *= 2;
+        if (seen_nums[cur_num] && cur_score == 0) cur_score = 1;
+        else if (seen_nums[cur_num] && cur_score != 0) cur_score *= 2;
         total_score += cur_score;
 
     }
