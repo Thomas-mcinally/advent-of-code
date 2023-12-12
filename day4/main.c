@@ -33,7 +33,7 @@ int main()
     int total_scratchcards = 0;
     for (int i = 0; i < lineCount; i++)
     {
-        int seen_nums[101] = {0}; 
+        int seen_nums[101] = {0}; // max num is 99
 
         int cur_num = 0;
         for (int j = 10; lines[i][j] != '|'; j++)
