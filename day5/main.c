@@ -26,7 +26,7 @@ void get_list_of_intervals_from_raw_input(char **raw_input_lines, int list_of_in
 {    
     for (int i=start_line; i<end_line; i++)
     {
-        int first_num = 0;
+        unsigned int first_num = 0;
         int j = 0;
         while (raw_input_lines[i][j] != ' ')
         {
@@ -35,7 +35,7 @@ void get_list_of_intervals_from_raw_input(char **raw_input_lines, int list_of_in
             j++;
         }
 
-        int second_num = 0;
+        unsigned int second_num = 0;
         j++;
         while (raw_input_lines[i][j] != ' ')
         {
@@ -44,9 +44,9 @@ void get_list_of_intervals_from_raw_input(char **raw_input_lines, int list_of_in
             j++;
         }
 
-        int third_num = 0;
+        unsigned int third_num = 0;
         j++;
-        while (raw_input_lines[i][j] != '\0')
+        while (raw_input_lines[i][j] != '\n')
         {
             third_num *= 10;
             third_num += raw_input_lines[i][j] - '0';
@@ -56,7 +56,6 @@ void get_list_of_intervals_from_raw_input(char **raw_input_lines, int list_of_in
         list_of_intervals[i - start_line][0] = second_num;
         list_of_intervals[i - start_line][1] = second_num + third_num - 1;
         list_of_intervals[i - start_line][2] = first_num - second_num;
-        // TODO: Numbers are overflowing (larger than max_int). Specifically, in first line of seed_to_soil, first num (3305253869) is larger than max_int (2147483647)
 
     }
     list_of_intervals[end_line][0] = -1; // denote end of array
