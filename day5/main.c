@@ -83,6 +83,12 @@ void get_list_of_seeds_from_raw_input(char **raw_input_lines, unsigned int seeds
         }
         j++;
     }
+    if(cur_num != 0)
+    {
+        seeds[i] = cur_num;
+        i++;
+    }
+    seeds[i] = -1; // denote end of array
 }
 int main()
 {
