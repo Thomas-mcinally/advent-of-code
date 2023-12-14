@@ -22,7 +22,7 @@ int read_file_to_lines(char ***lines){
     return lineCount;
 }
 
-void get_list_of_intervals_from_raw_input(char **raw_input_lines, int list_of_intervals[100][3], int start_line, int end_line)
+void get_list_of_intervals_from_raw_input(char **raw_input_lines, unsigned int list_of_intervals[100][4], int start_line, int end_line)
 {    
     for (int i=start_line; i<end_line; i++)
     {
@@ -53,10 +53,22 @@ void get_list_of_intervals_from_raw_input(char **raw_input_lines, int list_of_in
             j++;
         }
 
+        unsigned int diff;
+        int diff_is_positive; // because was forced to use unsigned int type
+        if (first_num >= second_num) {
+            diff = first_num - second_num;
+            diff_is_positive = 1;
+        }
+        else 
+        {
+            diff = second_num - first_num;
+            diff_is_positive = 0;
+        }
+
         list_of_intervals[i - start_line][0] = second_num;
         list_of_intervals[i - start_line][1] = second_num + third_num - 1;
-        list_of_intervals[i - start_line][2] = first_num - second_num;
-        // TODO: I am putting unsigned integers into an array of integers, is this an issue?
+        list_of_intervals[i - start_line][2] = diff;
+        list_of_intervals[i - start_line][3] = diff_is_positive;
     }
 
     list_of_intervals[end_line][0] = -1; // denote end of array
@@ -90,6 +102,18 @@ void get_list_of_seeds_from_raw_input(char **raw_input_lines, unsigned int seeds
     }
     seeds[i] = -1; // denote end of array
 }
+unsigned int get_destination_from_source_and_intervals(unsigned int list_of_intervals[100][4], unsigned int source_val)
+{
+  for (int j=0; list_of_intervals[j][0] != -1; j++)
+    {
+        if (source_val >= list_of_intervals[j][0] && source_val <= list_of_intervals[j][1])
+        {
+            if (list_of_intervals[j][3] == 1) return source_val + list_of_intervals[j][2];
+            if (list_of_intervals[j][3] == 0) return source_val - list_of_intervals[j][2];
+        }
+    }
+    return source_val; 
+}
 int main()
 {
     char **lines = NULL;
@@ -97,26 +121,45 @@ int main()
     
 
     // preprocess inputs
-    int seed_to_soil_intervals[100][3]; // [(start1, end1, diff1), (start2, end2, diff2), ...] Unsorted list of non-overlapping intervals. Inclusive start and end
+    unsigned int seed_to_soil_intervals[100][4]; // [(start1, end1, diff1, diffPositive1), (start2, end2, diff2, diffPositive2), ...] Unsorted list of non-overlapping intervals. Inclusive start and end
     get_list_of_intervals_from_raw_input(lines, seed_to_soil_intervals, 3, 12);
-    int soil_to_fertilizer_intervals[100][3];
+    unsigned int soil_to_fertilizer_intervals[100][4];
     get_list_of_intervals_from_raw_input(lines, soil_to_fertilizer_intervals, 14, 40);
-    int fertilizer_to_water_intervals[100][3];
+    unsigned int fertilizer_to_water_intervals[100][4];
     get_list_of_intervals_from_raw_input(lines, fertilizer_to_water_intervals, 42, 71);
-    int water_to_light_intervals[100][3];
+    unsigned int water_to_light_intervals[100][4];
     get_list_of_intervals_from_raw_input(lines, water_to_light_intervals, 73, 94);
-    int light_to_temperature_intervals[100][3];
+    unsigned int light_to_temperature_intervals[100][4];
     get_list_of_intervals_from_raw_input(lines, light_to_temperature_intervals, 96, 115);
-    int temperature_to_humidity_intervals[100][3];
+    unsigned int temperature_to_humidity_intervals[100][4];
     get_list_of_intervals_from_raw_input(lines, temperature_to_humidity_intervals, 117, 160);
-    int humidity_to_location_intervals[100][3];
+    unsigned int humidity_to_location_intervals[100][4];
     get_list_of_intervals_from_raw_input(lines, humidity_to_location_intervals, 162, 189);
 
     unsigned int seeds[100];
     get_list_of_seeds_from_raw_input(lines, seeds);
 
-}
+    unsigned int lowest_location = 4294967295; //max unsigned int
+    for (int i=0; seeds[i] != -1; i++)
+    {
+        unsigned int seed = seeds[i];
+        int soil = get_destination_from_source_and_intervals(seed_to_soil_intervals, seed);
+        int fertilizer = get_destination_from_source_and_intervals(soil_to_fertilizer_intervals, soil);
+        int water = get_destination_from_source_and_intervals(fertilizer_to_water_intervals, fertilizer);
+        int light = get_destination_from_source_and_intervals(water_to_light_intervals, water);
+        int temperature = get_destination_from_source_and_intervals(light_to_temperature_intervals, light);
+        int humidity = get_destination_from_source_and_intervals(temperature_to_humidity_intervals, temperature);
+        int location = get_destination_from_source_and_intervals(humidity_to_location_intervals, humidity);
 
+        if (location < lowest_location) 
+        {
+            lowest_location = location;
+            printf("new lowest location: %u, from seed: %u\n", lowest_location, seed);
+        }
+
+    }
+    printf("Part1 result: %u\n", lowest_location);
+}
 // Notes
 // In maps, key == value unless the input says otherwise
 // If in map, key: key + x, where x = value - key
