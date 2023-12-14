@@ -56,20 +56,59 @@ void get_list_of_intervals_from_raw_input(char **raw_input_lines, int list_of_in
         list_of_intervals[i - start_line][0] = second_num;
         list_of_intervals[i - start_line][1] = second_num + third_num - 1;
         list_of_intervals[i - start_line][2] = first_num - second_num;
-
+        // TODO: I am putting unsigned integers into an array of integers, is this an issue?
     }
+
     list_of_intervals[end_line][0] = -1; // denote end of array
+}
+
+void get_list_of_seeds_from_raw_input(char **raw_input_lines, unsigned int seeds[100])
+{   
+    int i=0;
+    int j=7;
+    unsigned int cur_num = 0;
+    while (raw_input_lines[0][j] != '\n')
+    {
+        if (isdigit(raw_input_lines[0][j]))
+        {
+            cur_num *= 10;
+            cur_num += raw_input_lines[0][j] - '0';
+            // printf("cur_num: %u\n", cur_num); //for debugging overflow
+        }
+        else if (raw_input_lines[0][j] == ' ')
+        {
+            seeds[i] = cur_num;
+            cur_num = 0;
+            i++;
+        }
+        j++;
+    }
 }
 int main()
 {
-    // preprocess inputs
     char **lines = NULL;
     int lineCount = read_file_to_lines(&lines);
     
 
+    // preprocess inputs
     int seed_to_soil_intervals[100][3]; // [(start1, end1, diff1), (start2, end2, diff2), ...] Unsorted list of non-overlapping intervals. Inclusive start and end
     get_list_of_intervals_from_raw_input(lines, seed_to_soil_intervals, 3, 12);
-    // ... same for other mappings
+    int soil_to_fertilizer_intervals[100][3];
+    get_list_of_intervals_from_raw_input(lines, soil_to_fertilizer_intervals, 14, 40);
+    int fertilizer_to_water_intervals[100][3];
+    get_list_of_intervals_from_raw_input(lines, fertilizer_to_water_intervals, 42, 71);
+    int water_to_light_intervals[100][3];
+    get_list_of_intervals_from_raw_input(lines, water_to_light_intervals, 73, 94);
+    int light_to_temperature_intervals[100][3];
+    get_list_of_intervals_from_raw_input(lines, light_to_temperature_intervals, 96, 115);
+    int temperature_to_humidity_intervals[100][3];
+    get_list_of_intervals_from_raw_input(lines, temperature_to_humidity_intervals, 117, 160);
+    int humidity_to_location_intervals[100][3];
+    get_list_of_intervals_from_raw_input(lines, humidity_to_location_intervals, 162, 189);
+
+    unsigned int seeds[100];
+    get_list_of_seeds_from_raw_input(lines, seeds);
+
 }
 
 // Notes
