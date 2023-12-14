@@ -22,6 +22,7 @@ int read_file_to_lines(char ***lines){
     return lineCount;
 }
 
+
 void get_list_of_intervals_from_raw_input(char **raw_input_lines, unsigned int list_of_intervals[100][4], int start_line, int end_line)
 {    
     for (int i=start_line; i<end_line; i++)
@@ -74,6 +75,7 @@ void get_list_of_intervals_from_raw_input(char **raw_input_lines, unsigned int l
     list_of_intervals[end_line][0] = -1; // denote end of array
 }
 
+
 void get_list_of_seeds_from_raw_input(char **raw_input_lines, unsigned int seeds[100])
 {   
     int i=0;
@@ -102,6 +104,8 @@ void get_list_of_seeds_from_raw_input(char **raw_input_lines, unsigned int seeds
     }
     seeds[i] = -1; // denote end of array
 }
+
+
 unsigned int get_destination_from_source_and_intervals(unsigned int list_of_intervals[100][4], unsigned int source_val)
 {
   for (int j=0; list_of_intervals[j][0] != -1; j++)
@@ -114,6 +118,8 @@ unsigned int get_destination_from_source_and_intervals(unsigned int list_of_inte
     }
     return source_val; 
 }
+
+
 int main()
 {
     char **lines = NULL;
