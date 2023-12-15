@@ -55,7 +55,7 @@ void get_list_of_intervals_from_raw_input(char **raw_input_lines, unsigned int l
         }
 
         unsigned int diff;
-        int diff_is_positive; // because was forced to use unsigned int type
+        int diff_is_positive; // 0/1,  because was forced to use unsigned int type
         if (first_num >= second_num) {
             diff = first_num - second_num;
             diff_is_positive = 1;
@@ -70,6 +70,8 @@ void get_list_of_intervals_from_raw_input(char **raw_input_lines, unsigned int l
         list_of_intervals[i - start_line][1] = second_num + third_num - 1;
         list_of_intervals[i - start_line][2] = diff;
         list_of_intervals[i - start_line][3] = diff_is_positive;
+
+        if (list_of_intervals[i - start_line][1] < second_num) printf("overflow detected\n"); // for debugging overflow
     }
 
     list_of_intervals[end_line][0] = -1; // denote end of array
@@ -97,11 +99,8 @@ void get_list_of_seeds_from_raw_input(char **raw_input_lines, unsigned int seeds
         }
         j++;
     }
-    if(cur_num != 0)
-    {
-        seeds[i] = cur_num;
-        i++;
-    }
+    seeds[i] = cur_num;
+    i++;
     seeds[i] = -1; // denote end of array
 }
 
@@ -165,6 +164,11 @@ int main()
 
     }
     printf("Part1 result: %u\n", lowest_location);
+
+    // can use uint64_t to avoid overflow
+    uint64_t my_num = 4294967295;
+    my_num += 10;
+    printf("my_num: %llu\n", my_num);
 }
 // Notes
 // In maps, key == value unless the input says otherwise
@@ -175,3 +179,4 @@ int main()
 
 
 // Think of as interval question, use input to form a list of non-overlapping intervals 
+// max value of unsigned int is 4294967295
