@@ -193,3 +193,9 @@ int main()
 
 
 // Strategies for iterating through an array in C: Use a "SENTINEL VALUE" i.e. a value which is never used in array. The function which constructs the array can return its length.
+
+
+
+// PART2:
+// Idea1: Determine all possible seed values and process each of them
+// Idea2: Start from location=0 and try figure out if the necessary seed value is available.
