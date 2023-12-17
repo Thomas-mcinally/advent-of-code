@@ -135,19 +135,19 @@ int main()
 
     // preprocess inputs
     unsigned int seed_to_soil_intervals[100][4]; // [(start1, end1, diff1, diffPositive1), (start2, end2, diff2, diffPositive2), ...] Unsorted list of non-overlapping intervals. Inclusive start and end
-    get_list_of_intervals_from_raw_input(lines, seed_to_soil_intervals, 3, 5);
+    get_list_of_intervals_from_raw_input(lines, seed_to_soil_intervals, 3, 12);
     unsigned int soil_to_fertilizer_intervals[100][4];
-    get_list_of_intervals_from_raw_input(lines, soil_to_fertilizer_intervals, 7, 10);
+    get_list_of_intervals_from_raw_input(lines, soil_to_fertilizer_intervals, 14, 40);
     unsigned int fertilizer_to_water_intervals[100][4];
-    get_list_of_intervals_from_raw_input(lines, fertilizer_to_water_intervals, 12, 16);
+    get_list_of_intervals_from_raw_input(lines, fertilizer_to_water_intervals, 42, 71);
     unsigned int water_to_light_intervals[100][4];
-    get_list_of_intervals_from_raw_input(lines, water_to_light_intervals, 18, 20);
+    get_list_of_intervals_from_raw_input(lines, water_to_light_intervals, 73, 94);
     unsigned int light_to_temperature_intervals[100][4];
-    get_list_of_intervals_from_raw_input(lines, light_to_temperature_intervals, 22, 25);
+    get_list_of_intervals_from_raw_input(lines, light_to_temperature_intervals, 96, 115);
     unsigned int temperature_to_humidity_intervals[100][4];
-    get_list_of_intervals_from_raw_input(lines, temperature_to_humidity_intervals, 27, 29);
+    get_list_of_intervals_from_raw_input(lines, temperature_to_humidity_intervals, 117, 160);
     unsigned int humidity_to_location_intervals[100][4];
-    get_list_of_intervals_from_raw_input(lines, humidity_to_location_intervals, 31, 33);
+    get_list_of_intervals_from_raw_input(lines, humidity_to_location_intervals, 162, 189);
 
     unsigned int seeds[100];
     get_list_of_seeds_from_raw_input(lines, seeds);
