@@ -75,7 +75,7 @@ void get_list_of_intervals_from_raw_input(char **raw_input_lines, unsigned int l
         if (list_of_intervals[i - start_line][1] < second_num) printf("overflow detected 1\n"); // for debugging overflow
     }
 
-    list_of_intervals[end_line][3] = 2; // denote end of array
+    list_of_intervals[end_line-start_line][3] = 2; // denote end of array
 }
 
 
@@ -90,7 +90,6 @@ void get_list_of_seeds_from_raw_input(char **raw_input_lines, unsigned int seeds
         {
             cur_num *= 10;
             cur_num += raw_input_lines[0][j] - '0';
-            // printf("cur_num: %u\n", cur_num); //for debugging overflow
         }
         else if (raw_input_lines[0][j] == ' ')
         {
@@ -110,7 +109,6 @@ unsigned int get_destination_from_source_and_intervals(unsigned int list_of_inte
 {
   for (int i=0; list_of_intervals[i][3] != 2; i++)
     {
-        printf("diff: %u, diff_is_positive: %u\n", list_of_intervals[i][2], list_of_intervals[i][3]);
         if (source_val >= list_of_intervals[i][0] && source_val <= list_of_intervals[i][1])
         {
             if (list_of_intervals[i][3] == 1) 
@@ -193,5 +191,5 @@ int main()
 // Think of as interval question, use input to form a list of non-overlapping intervals 
 // max value of unsigned int is 4294967295
 
-// TODO: Current problem is that when i call get_destination_from_source_and_intervals I loop through way too many items in intervals array
-    // Is my sentinel value used to denote end of intervals array not working?
+
+// Strategies for iterating through an array in C: Use a "SENTINEL VALUE" i.e. a value which is never used in array. The function which constructs the array can return its length.
