@@ -3,23 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-int read_file_to_lines(char ***lines){
-    int MAX_LINE_LENGTH = 256;
-    FILE *file = fopen("./input.txt", "r");
-    int lineCount = 0;
-
-    char buffer[MAX_LINE_LENGTH];
-    while (fgets(buffer, MAX_LINE_LENGTH, file) != NULL)
-    {
-        *lines = realloc(*lines, (lineCount + 1) * sizeof(char *));
-        (*lines)[lineCount] = malloc(strlen(buffer) + 1);
-
-        strcpy((*lines)[lineCount], buffer);
-        lineCount++;
-    }
-    fclose(file);
-    return lineCount;
-}
+#include "aoc_lib.h"
 
 int is_symbol(char c)
 {
@@ -114,11 +98,16 @@ int part2(char **grid, int ROWS, int COLS)
     // return gearratioSum
 
 }
-int main()
-{
+int main(int argc, char **argv) {
+    if (argc != 2) {
+        fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
+        exit(1);
+    }
+
+    char *file_path = argv[1];
     int partNumberSum = 0;
     char **lines = NULL;
-    int linecount = read_file_to_lines(&lines);
+    int linecount = read_file_to_lines(&lines, file_path);
 
     printf("Part 1: %i\n", part1(lines, linecount, strlen(lines[0]) - 1));
     char myChar = 'a';
