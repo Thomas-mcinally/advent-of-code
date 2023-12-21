@@ -49,3 +49,29 @@ char *read_entire_file(char *file_path) {
 }
 
 
+void split_string_by_delimiter_string(const char *string_to_split, const char *delimiter_string, char ***result_strings)
+{
+  // populates result_strings array
+  // does not modify input string
+  char buffer[strlen(string_to_split) + 1];
+  strcpy(buffer, string_to_split);
+  char *in = buffer;
+
+  char *token;
+  int result_count = 0;
+
+  do {
+    token = strstr(in,delimiter_string);
+
+    if (token) *token = '\0';
+
+    *result_strings = realloc(*result_strings, (result_count + 1) * sizeof(char *));
+    (*result_strings)[result_count] = malloc(strlen(in) + 1);
+    strcpy((*result_strings)[result_count], in);
+    result_count++;
+
+    in = token+strlen(delimiter_string);
+
+  }while(token!=NULL);
+
+}
