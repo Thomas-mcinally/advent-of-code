@@ -14,10 +14,10 @@
 // return 1;
 // }
 
-int read_file_to_lines(char ***lines)
+int read_file_to_lines(char ***lines, char *file_path)
 {
   int MAX_LINE_LENGTH = 256;
-  FILE *file = fopen("./input.txt", "r");
+  FILE *file = fopen(file_path, "r");
   int lineCount = 0;
 
   char buffer[MAX_LINE_LENGTH];
@@ -109,10 +109,15 @@ long long int get_destination_from_source_and_intervals(long long int list_of_in
   return source_val;
 }
 
-int main()
-{
+int main(int argc, char **argv) {
+  if (argc != 2) {
+    fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
+    exit(1);
+  }
+
+  char *file_path = argv[1];
   char **lines = NULL;
-  int lineCount = read_file_to_lines(&lines);
+  int lineCount = read_file_to_lines(&lines, file_path);
 
   // preprocess inputs
   long long int maps[7][100][3]; // Each map is [(start1, end1, diff1), (start2, end2, diff2), ...] Unsorted list of non-overlapping intervals. Inclusive start and end
