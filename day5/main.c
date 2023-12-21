@@ -5,6 +5,8 @@
 #include <math.h>
 #include <errno.h>
 
+#include "aoc_lib.h"
+
 #define SENTINEL_VALUE 9223372036854775807 // max long long int value
 
 // int split_string_by_char(char **string, char *delimiter_string)
@@ -13,25 +15,6 @@
 //   // OR should a pointer be passed in as an argument and be modified?
 // return 1;
 // }
-
-int read_file_to_lines(char ***lines, char *file_path)
-{
-  int MAX_LINE_LENGTH = 256;
-  FILE *file = fopen(file_path, "r");
-  int lineCount = 0;
-
-  char buffer[MAX_LINE_LENGTH];
-  while (fgets(buffer, MAX_LINE_LENGTH, file) != NULL)
-  {
-    *lines = realloc(*lines, (lineCount + 1) * sizeof(char *));
-    (*lines)[lineCount] = malloc(strlen(buffer) + 1);
-
-    strcpy((*lines)[lineCount], buffer);
-    lineCount++;
-  }
-  fclose(file);
-  return lineCount;
-}
 
 void get_list_of_intervals_from_raw_input(char **raw_input_lines, long long int list_of_intervals[100][3], int start_line, int end_line)
 {
