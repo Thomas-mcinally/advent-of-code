@@ -133,5 +133,6 @@ int main(int argc, char **argv) {
 // ASSUMPTIONS
 // - Can assume input given in predictable ladder format, where each map gives output that is input for the next map
 // - Currently assume each step in ladder has a certain start and end line
+// - Currently assume each map has a maximum of 100 lines.
 // TODO: refactor
 // - Grab array of maps dynamically, identify a new map by two newline characters in a row "\n\n"

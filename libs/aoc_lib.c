@@ -24,10 +24,28 @@ int read_file_to_lines(char ***lines, char *file_path)
   return lineCount;
 }
 
+char *read_entire_file(char *file_path) {
+  // Reads an entire file into a char array, and returns a ptr to this. The ptr should be freed by the caller
+  FILE *f = fopen(file_path, "r");
+  if (f==NULL) {
+    fprintf(stderr, "Could not read %s: %s\n", file_path, strerror(errno));
+    exit(1);
+  }
 
-// int split_string_by_char(char **string, char *delimiter_string)
-// {
-//   //should this be a function which returns an array pointer
-//   // OR should a pointer be passed in as an argument and be modified?
-// return 1;
-// }
+  fseek(f, 0L, SEEK_END);
+  int sz = ftell(f);
+  fseek(f, 0L, SEEK_SET);
+
+  char *contents = calloc(2*sz, sizeof(char));
+  if (contents==NULL) {
+    fprintf(stderr, "Could not allocate memory. Buy more RAM I guess?\n");
+    exit(1);
+  }
+  fread(contents, 1, sz, f);
+
+  fclose(f);
+  
+  return contents;
+}
+
+
