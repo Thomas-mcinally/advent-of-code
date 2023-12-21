@@ -24,10 +24,12 @@ int read_file_to_lines(char ***lines, char *file_path)
   return lineCount;
 }
 
-char *read_entire_file(char *file_path) {
+char *read_entire_file(char *file_path)
+{
   // Reads an entire file into a char array, and returns a ptr to this. The ptr should be freed by the caller
   FILE *f = fopen(file_path, "r");
-  if (f==NULL) {
+  if (f == NULL)
+  {
     fprintf(stderr, "Could not read %s: %s\n", file_path, strerror(errno));
     exit(1);
   }
@@ -36,18 +38,18 @@ char *read_entire_file(char *file_path) {
   int sz = ftell(f);
   fseek(f, 0L, SEEK_SET);
 
-  char *contents = calloc(2*sz, sizeof(char));
-  if (contents==NULL) {
+  char *contents = calloc(2 * sz, sizeof(char));
+  if (contents == NULL)
+  {
     fprintf(stderr, "Could not allocate memory. Buy more RAM I guess?\n");
     exit(1);
   }
   fread(contents, 1, sz, f);
 
   fclose(f);
-  
+
   return contents;
 }
-
 
 void split_string_by_delimiter_string(const char *string_to_split, const char *delimiter_string, char ***result_strings)
 {
@@ -60,18 +62,19 @@ void split_string_by_delimiter_string(const char *string_to_split, const char *d
   char *token;
   int result_count = 0;
 
-  do {
-    token = strstr(in,delimiter_string);
+  do
+  {
+    token = strstr(in, delimiter_string);
 
-    if (token) *token = '\0';
+    if (token)
+      *token = '\0';
 
     *result_strings = realloc(*result_strings, (result_count + 1) * sizeof(char *));
     (*result_strings)[result_count] = malloc(strlen(in) + 1);
     strcpy((*result_strings)[result_count], in);
     result_count++;
 
-    in = token+strlen(delimiter_string);
+    in = token + strlen(delimiter_string);
 
-  }while(token!=NULL);
-
+  } while (token != NULL);
 }
