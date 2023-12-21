@@ -9,12 +9,6 @@
 
 #define SENTINEL_VALUE 9223372036854775807 // max long long int value
 
-// int split_string_by_char(char **string, char *delimiter_string)
-// {
-//   //should this be a function which returns an array pointer
-//   // OR should a pointer be passed in as an argument and be modified?
-// return 1;
-// }
 
 void get_list_of_intervals_from_raw_input(char **raw_input_lines, long long int list_of_intervals[100][3], int start_line, int end_line)
 {
@@ -138,5 +132,6 @@ int main(int argc, char **argv) {
 
 // ASSUMPTIONS
 // - Can assume input given in predictable ladder format, where each map gives output that is input for the next map
+// - Currently assume each step in ladder has a certain start and end line
 // TODO: refactor
 // - Grab array of maps dynamically, identify a new map by two newline characters in a row "\n\n"

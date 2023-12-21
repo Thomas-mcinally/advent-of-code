@@ -23,3 +23,11 @@ int read_file_to_lines(char ***lines, char *file_path)
   fclose(file);
   return lineCount;
 }
+
+
+// int split_string_by_char(char **string, char *delimiter_string)
+// {
+//   //should this be a function which returns an array pointer
+//   // OR should a pointer be passed in as an argument and be modified?
+// return 1;
+// }
