@@ -3,29 +3,17 @@
 #include <string.h>
 #include <ctype.h>
 
-int read_file_to_lines(char ***lines){
-    int MAX_LINE_LENGTH = 256;
-    FILE *file = fopen("./input.txt", "r");
+#include "aoc_lib.h"
 
-    int lineCount = 0;
-
-    char buffer[MAX_LINE_LENGTH];
-    while (fgets(buffer, MAX_LINE_LENGTH, file) != NULL)
-    {
-        *lines = realloc(*lines, (lineCount + 1) * sizeof(char *));
-        (*lines)[lineCount] = malloc(strlen(buffer) + 1);
-
-        strcpy((*lines)[lineCount], buffer);
-        lineCount++;
+int main(int argc, char **argv) {
+    if (argc != 2) {
+        fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
+        exit(1);
     }
-    fclose(file);
-    return lineCount;
-}
 
-int main()
-{
+    char *file_path = argv[1];
     char **lines = NULL;
-    int lineCount = read_file_to_lines(&lines);
+    int lineCount = read_file_to_lines(&lines, file_path);
 
     int result = 0;
     int power = 0;
