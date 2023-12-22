@@ -51,7 +51,7 @@ char *read_entire_file(char *file_path)
   return contents;
 }
 
-void split_string_by_delimiter_string(const char *string_to_split, const char *delimiter_string, char ***result_strings)
+int split_string_by_delimiter_string(const char *string_to_split, const char *delimiter_string, char ***result_strings)
 {
   // populates result_strings array
   // does not modify input string
@@ -77,6 +77,7 @@ void split_string_by_delimiter_string(const char *string_to_split, const char *d
     in = token + strlen(delimiter_string);
 
   } while (token != NULL);
+  return result_count;
 }
 
 int string_to_lines(char *string, char ***lines) {
