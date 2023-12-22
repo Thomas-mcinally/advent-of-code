@@ -80,6 +80,15 @@ int split_string_by_delimiter_string(const char *string_to_split, const char *de
   return result_count;
 }
 
+int count_lines(char *contents) {
+  int result = 0;
+  while (*contents) {
+    if (*contents == '\n') result++;
+    contents++;
+  }
+  return result;
+}
+
 int string_to_lines(char *string, char ***lines) {
   // instead of this, could use built-in strtok function
 
