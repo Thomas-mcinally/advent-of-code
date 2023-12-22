@@ -79,17 +79,17 @@ void split_string_by_delimiter_string(const char *string_to_split, const char *d
   } while (token != NULL);
 }
 
-size_t string_to_lines(char *string, char ***lines) {
+int string_to_lines(char *string, char ***lines) {
   // instead of this, could use built-in strtok function
 
   // mutates input string
   // populates lines array with pointers to char arrays
   char *cursor = string;
-  size_t num_lines = count_lines(cursor);
+  int num_lines = count_lines(cursor);
 
   *lines = calloc(num_lines, sizeof(char*));
 
-  size_t line_ctr = 0;
+  int line_ctr = 0;
   while (*cursor) {
     (*lines)[line_ctr] = cursor;
     char *pos = strstr(cursor, "\n");

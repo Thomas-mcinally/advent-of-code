@@ -95,6 +95,7 @@ int main(int argc, char **argv) {
   char *file_path = argv[1];
   char **lines = NULL;
   int lineCount = read_file_to_lines(&lines, file_path);
+  
 
   // preprocess inputs
   long long int maps[7][100][3]; // Each map is [(start1, end1, diff1), (start2, end2, diff2), ...] Unsorted list of non-overlapping intervals. Inclusive start and end
