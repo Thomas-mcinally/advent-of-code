@@ -80,6 +80,8 @@ void split_string_by_delimiter_string(const char *string_to_split, const char *d
 }
 
 size_t string_to_lines(char *string, char ***lines) {
+  // instead of this, could use built-in strtok function
+
   // mutates input string
   // populates lines array with pointers to char arrays
   char *cursor = string;
