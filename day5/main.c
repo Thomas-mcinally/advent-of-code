@@ -110,6 +110,7 @@ int main(int argc, char **argv) {
     for (int j = 0; j < line_count; j++)
     {
       printf("%s\n", section_lines[j]);
+      free(section_lines[j]);
     }
     free(section_lines);
     free(sections[i]);  
