@@ -111,7 +111,8 @@ int main(int argc, char **argv) {
     {
       printf("%s\n", section_lines[j]);
     }
-    free(section_lines);  
+    free(section_lines);
+    free(sections[i]);  
   }
 
   free(sections);
