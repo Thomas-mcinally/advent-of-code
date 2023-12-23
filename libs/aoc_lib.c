@@ -93,11 +93,11 @@ int string_to_lines(char *string, char ***lines) {
     // populates lines array
     // does not modify input string
     char *cursor = string;
-    int num_lines = count_lines(cursor);
+    int num_lines = count_lines(cursor); 
     *lines = calloc(num_lines, sizeof(char *));
 
     int line_ctr = 0;
-    while (line_ctr + 1 < num_lines) {
+    while (line_ctr < num_lines) {
         size_t line_length = strcspn(cursor, "\n");
         (*lines)[line_ctr] = malloc(line_length + 1);
 
