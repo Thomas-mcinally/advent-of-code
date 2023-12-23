@@ -78,6 +78,7 @@ int split_string_by_delimiter_string(const char *string_to_split, const char *de
 
   } while (token != NULL);
   return result_count;
+  // TODO: change this function so that last section is also nullterminated?
 }
 
 int count_lines(char *contents) {

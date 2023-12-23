@@ -8,59 +8,59 @@
 
 #define SENTINEL_VALUE 9223372036854775807 // max long long int value
 
-
-void get_list_of_intervals_from_raw_input(char **raw_input_lines, long long int list_of_intervals[100][3], int start_line, int end_line)
+void get_list_of_intervals_from_raw_input(char **lines, long long int list_of_intervals[100][3], int line_count)
 {
-  for (int i = start_line; i < end_line; i++)
+  for (int i = 0; i < line_count; i++)
   {
     long long int first_num = 0;
     int j = 0;
-    while (raw_input_lines[i][j] != ' ')
+    while (lines[i][j] != ' ')
     {
       first_num *= 10;
-      first_num += raw_input_lines[i][j] - '0';
+      first_num += lines[i][j] - '0';
       j++;
     }
 
     long long int second_num = 0;
     j++;
-    while (raw_input_lines[i][j] != ' ')
+    while (lines[i][j] != ' ')
     {
       second_num *= 10;
-      second_num += raw_input_lines[i][j] - '0';
+      second_num += lines[i][j] - '0';
       j++;
     }
 
     long long int third_num = 0;
     j++;
-    while (raw_input_lines[i][j] != '\n')
+    while (lines[i][j] != '\0')
     {
       third_num *= 10;
-      third_num += raw_input_lines[i][j] - '0';
+      third_num += lines[i][j] - '0';
       j++;
     }
 
-    list_of_intervals[i - start_line][0] = second_num;
-    list_of_intervals[i - start_line][1] = second_num + third_num - 1;
-    list_of_intervals[i - start_line][2] = first_num - second_num;
+    list_of_intervals[i][0] = second_num;
+    list_of_intervals[i][1] = second_num + third_num - 1;
+    list_of_intervals[i][2] = first_num - second_num;
   }
 
-  list_of_intervals[end_line - start_line][0] = SENTINEL_VALUE; // denote end of array
+  list_of_intervals[line_count][0] = SENTINEL_VALUE; // denote end of array
 }
 
-void get_list_of_seeds_from_raw_input(char **raw_input_lines, long long int seeds[100])
+void get_list_of_seeds_from_raw_input(char *seed_line, long long int seeds[100])
 {
+  printf("processing seed line: %s\n", seed_line);
   int i = 0;
   int j = 7;
   long long int cur_num = 0;
-  while (raw_input_lines[0][j] != '\n')
+  while (seed_line[j] != '\0')
   {
-    if (isdigit(raw_input_lines[0][j]))
+    if (isdigit(seed_line[j]))
     {
       cur_num *= 10;
-      cur_num += raw_input_lines[0][j] - '0';
+      cur_num += seed_line[j] - '0';
     }
-    else if (raw_input_lines[0][j] == ' ')
+    else if (seed_line[j] == ' ')
     {
       seeds[i] = cur_num;
       cur_num = 0;
@@ -92,47 +92,27 @@ int main(int argc, char **argv) {
   }
 
   char *file_path = argv[1];
-  char **lines = NULL;
-  int lineCount = read_file_to_lines(&lines, file_path);
-  
-
-
   char *file_contents = read_entire_file(file_path);
   char **sections = NULL;
   int section_count = split_string_by_delimiter_string(file_contents, "\n\n", &sections);
-
-  // print each string in each section
-  for (int i = 0; i < section_count; i++)
+  long long int maps[section_count-1][100][3]; //assume each section has max 100 lines
+  for (int i = 1; i < section_count; i++)
   {
-    char **section_lines = NULL; //
-    int line_count = string_to_lines(sections[i], &section_lines); 
-
-    for (int j = 0; j < line_count; j++)
-    {
-      printf("%s\n", section_lines[j]);
-      free(section_lines[j]);
-    }
+    char **section_lines = NULL;
+    int line_count = string_to_lines(sections[i], &section_lines);
+    section_lines++; //first line is name of the map
+    get_list_of_intervals_from_raw_input(section_lines, maps[i-1], line_count-1);
+    section_lines--;
+    for (int j = 0; j < line_count; j++) free(section_lines[j]);
     free(section_lines);
-    free(sections[i]);  
   }
-
-  free(sections);
   free(file_contents);
   
+  long long int seeds[100]; //assume max 100 seeds
+  get_list_of_seeds_from_raw_input(sections[0], seeds);
 
-
-  // preprocess inputs
-  long long int maps[7][100][3]; // Each map is [(start1, end1, diff1), (start2, end2, diff2), ...] Unsorted list of non-overlapping intervals. Inclusive start and end
-  get_list_of_intervals_from_raw_input(lines, maps[0], 3, 12);
-  get_list_of_intervals_from_raw_input(lines, maps[1], 14, 40);
-  get_list_of_intervals_from_raw_input(lines, maps[2], 42, 71);
-  get_list_of_intervals_from_raw_input(lines, maps[3], 73, 94);
-  get_list_of_intervals_from_raw_input(lines, maps[4], 96, 115);
-  get_list_of_intervals_from_raw_input(lines, maps[5], 117, 160);
-  get_list_of_intervals_from_raw_input(lines, maps[6], 162, 189);
-
-  long long int seeds[100];
-  get_list_of_seeds_from_raw_input(lines, seeds);
+  for (int i = 0; i < section_count; i++) free(sections[i]);
+  free(sections);
 
   long long int lowest_location = SENTINEL_VALUE;
   for (int i = 0; seeds[i] != SENTINEL_VALUE; i++)
