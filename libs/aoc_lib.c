@@ -99,14 +99,13 @@ int string_to_lines(char *string, char ***lines) {
 
   int line_ctr = 0;
   while (line_ctr + 1 < num_lines) {
-    printf("loop count %i\n", line_ctr);
     (*lines)[line_ctr] = cursor;
     char *pos = strstr(cursor, "\n");
     *pos = '\0';
     cursor = pos + 1;
     line_ctr++;
   }
-  (*lines)[line_ctr] = cursor;
+  (*lines)[line_ctr] = cursor; // last line is null-terminated
 
   return num_lines;
 }
