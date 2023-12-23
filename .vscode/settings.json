@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "ctype.h": "c",
-        "__bit_reference": "c",
-        "bitset": "c",
-        "unordered_map": "c",
-        "aoc_lib.h": "c"
-    }
-}

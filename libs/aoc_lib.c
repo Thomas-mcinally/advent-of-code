@@ -81,7 +81,7 @@ int split_string_by_delimiter_string(const char *string_to_split, const char *de
 }
 
 int count_lines(char *contents) {
-  int result = 0;
+  int result = 1;
   while (*contents) {
     if (*contents == '\n') result++;
     contents++;
@@ -90,23 +90,23 @@ int count_lines(char *contents) {
 }
 
 int string_to_lines(char *string, char ***lines) {
-  // instead of this, could use built-in strtok function
-
   // mutates input string
+  // assumes input last lines in input string is null terminated, and other lines are terminated by \n
   // populates lines array with pointers to char arrays
   char *cursor = string;
   int num_lines = count_lines(cursor);
-
   *lines = calloc(num_lines, sizeof(char*));
 
   int line_ctr = 0;
-  while (*cursor) {
+  while (line_ctr + 1 < num_lines) {
+    printf("loop count %i\n", line_ctr);
     (*lines)[line_ctr] = cursor;
     char *pos = strstr(cursor, "\n");
     *pos = '\0';
     cursor = pos + 1;
     line_ctr++;
   }
+  (*lines)[line_ctr] = cursor;
 
   return num_lines;
 }

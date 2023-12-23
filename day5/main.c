@@ -4,7 +4,6 @@
 #include <ctype.h>
 #include <math.h>
 #include <errno.h>
-
 #include "aoc_lib.h"
 
 #define SENTINEL_VALUE 9223372036854775807 // max long long int value
@@ -96,6 +95,31 @@ int main(int argc, char **argv) {
   char **lines = NULL;
   int lineCount = read_file_to_lines(&lines, file_path);
   
+
+  // TODO: DEBUG THIS, getting segmentation fault
+  // Maybe I am freeing memory incorrectly?
+  char *file_contents = read_entire_file(file_path);
+  char **sections = NULL;
+  int section_count = split_string_by_delimiter_string(file_contents, "\n\n", &sections);
+  printf("section count: %i\n", section_count);
+  // print each string in each section
+  for (int i = 0; i < section_count; i++)
+  {
+    char **section_lines = NULL;
+    int line_count = string_to_lines(sections[i], &section_lines); //This is causing segmentation
+
+    // for (int j = 0; j < line_count; j++)
+    // {
+    //   printf("%s\n", section_lines[j]);
+    //   // free(lines[j]);
+    // }
+    // free(sections[i]);
+    // free(section_lines);  
+  }
+  // free(sections);
+  // free(file_contents);
+  
+
 
   // preprocess inputs
   long long int maps[7][100][3]; // Each map is [(start1, end1, diff1), (start2, end2, diff2), ...] Unsorted list of non-overlapping intervals. Inclusive start and end
