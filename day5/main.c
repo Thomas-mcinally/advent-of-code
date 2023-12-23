@@ -119,7 +119,7 @@ int main(int argc, char **argv) {
   {
     long long int step = seeds[i];
 
-    for (int j = 0; j < 7; j++)
+    for (int j = 0; j < section_count-1; j++)
     {
       step = get_destination_from_source_and_intervals(maps[j], step);
     }
