@@ -138,7 +138,9 @@ int main(int argc, char **argv) {
 
 // ASSUMPTIONS
 // - Can assume input given in predictable ladder format, where each map gives output that is input for the next map
-// - Currently assume each step in ladder has a certain start and end line
 // - Currently assume each map has a maximum of 100 lines.
+// - Currently assume there are max 100 initial seeds
 // TODO: refactor
-// - Grab array of maps dynamically, identify a new map by two newline characters in a row "\n\n"
+// - Some of the helper functions that populate array use sentinel value (e.g. get_list_of_seeds_from_raw_input), 
+//    while others return a count (e.g. split_string_by_delimiter_string). Make approach consistent?
+// - Improve split_string_by_delimiter_string. Doesnt currently nullterminate last section
