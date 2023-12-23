@@ -96,28 +96,26 @@ int main(int argc, char **argv) {
   int lineCount = read_file_to_lines(&lines, file_path);
   
 
-  // TODO: DEBUG THIS, getting segmentation fault
-  // Maybe I am freeing memory incorrectly?
+
   char *file_contents = read_entire_file(file_path);
   char **sections = NULL;
   int section_count = split_string_by_delimiter_string(file_contents, "\n\n", &sections);
-  printf("section count: %i\n", section_count);
+
   // print each string in each section
   for (int i = 0; i < section_count; i++)
   {
-    char **section_lines = NULL;
-    int line_count = string_to_lines(sections[i], &section_lines); //This is causing segmentation
+    char **section_lines = NULL; //
+    int line_count = string_to_lines(sections[i], &section_lines); 
 
-    // for (int j = 0; j < line_count; j++)
-    // {
-    //   printf("%s\n", section_lines[j]);
-    //   // free(lines[j]);
-    // }
-    // free(sections[i]);
-    // free(section_lines);  
+    for (int j = 0; j < line_count; j++)
+    {
+      printf("%s\n", section_lines[j]);
+    }
+    free(section_lines);  
   }
-  // free(sections);
-  // free(file_contents);
+
+  free(sections);
+  free(file_contents);
   
 
 
