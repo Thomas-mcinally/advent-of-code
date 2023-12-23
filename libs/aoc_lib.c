@@ -90,22 +90,22 @@ int count_lines(char *contents) {
 }
 
 int string_to_lines(char *string, char ***lines) {
-  // mutates input string
-  // assumes input last lines in input string is null terminated, and other lines are terminated by \n
-  // populates lines array with pointers to char arrays
-  char *cursor = string;
-  int num_lines = count_lines(cursor);
-  *lines = calloc(num_lines, sizeof(char*));
+    // populates lines array
+    // does not modify input string
+    char *cursor = string;
+    int num_lines = count_lines(cursor);
+    *lines = calloc(num_lines, sizeof(char *));
 
-  int line_ctr = 0;
-  while (line_ctr + 1 < num_lines) {
-    (*lines)[line_ctr] = cursor;
-    char *pos = strstr(cursor, "\n");
-    *pos = '\0';
-    cursor = pos + 1;
-    line_ctr++;
-  }
-  (*lines)[line_ctr] = cursor; // last line is null-terminated
+    int line_ctr = 0;
+    while (line_ctr + 1 < num_lines) {
+        size_t line_length = strcspn(cursor, "\n");
+        (*lines)[line_ctr] = malloc(line_length + 1);
 
-  return num_lines;
+        strncpy((*lines)[line_ctr], cursor, line_length);
+        (*lines)[line_ctr][line_length] = '\0'; 
+        cursor += line_length + 1; // Move cursor to the next line
+        line_ctr++;
+    }
+
+    return num_lines;
 }
