@@ -94,14 +94,15 @@ int main(int argc, char **argv) {
   char *file_path = argv[1];
   char *file_contents = read_entire_file(file_path);
   char **sections = NULL;
-  int section_count = split_string_by_delimiter_string(file_contents, "\n\n", &sections);
-  long long int maps[section_count-1][100][3]; //assume each section has max 100 lines
-  for (int i = 1; i < section_count; i++)
+  const int section_count = split_string_by_delimiter_string(file_contents, "\n\n", &sections);
+  const int number_of_maps = section_count - 1;
+  long long int maps[number_of_maps][100][3]; //assume each section has max 100 lines
+  for (int i = 0; i < number_of_maps; i++)
   {
     char **section_lines = NULL;
-    int line_count = string_to_lines(sections[i], &section_lines);
+    const int line_count = string_to_lines(sections[i+1], &section_lines);
     section_lines++; //first line is name of the map
-    get_list_of_intervals_from_raw_input(section_lines, maps[i-1], line_count-1);
+    get_list_of_intervals_from_raw_input(section_lines, maps[i], line_count-1);
     section_lines--;
     for (int j = 0; j < line_count; j++) free(section_lines[j]);
     free(section_lines);
@@ -119,7 +120,7 @@ int main(int argc, char **argv) {
   {
     long long int step = seeds[i];
 
-    for (int j = 0; j < section_count-1; j++)
+    for (int j = 0; j < number_of_maps; j++)
     {
       step = get_destination_from_source_and_intervals(maps[j], step);
     }
