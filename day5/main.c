@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
   for (int i = 0; i < number_of_maps; i++)
   {
     char **section_lines = NULL;
-    const int line_count = string_to_lines(sections[i+1], &section_lines);
+    const int line_count = split_string_by_delimiter_string(sections[i+1],"\n", &section_lines);
     section_lines++; //first line is name of the map
     get_list_of_intervals_from_raw_input(section_lines, maps[i], line_count-1);
     section_lines--;

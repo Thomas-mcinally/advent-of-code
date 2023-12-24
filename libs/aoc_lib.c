@@ -88,25 +88,3 @@ int count_lines(char *contents)
   }
   return result;
 }
-
-int string_to_lines(char *string, char ***result_strings)
-// populates result_strings array with nullterminated char arrays
-// does not modify input string
-{
-  char *cursor = string;
-  int num_lines = count_lines(cursor);
-  *result_strings = calloc(num_lines, sizeof(char *));
-
-  int result_count = 0;
-  while (result_count < num_lines)
-  {
-    size_t length = strcspn(cursor, "\n");
-    (*result_strings)[result_count] = malloc(length + 1);
-    strncpy((*result_strings)[result_count], cursor, length);
-    result_count++;
-
-    cursor += length + 1; // Move cursor to the next line
-  }
-
-  return num_lines;
-}
