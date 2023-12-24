@@ -90,9 +90,9 @@ int count_lines(char *contents)
 }
 
 int string_to_lines(char *string, char ***result_strings)
+// populates result_strings array with nullterminated char arrays
+// does not modify input string
 {
-  // populates lines array
-  // does not modify input string
   char *cursor = string;
   int num_lines = count_lines(cursor);
   *result_strings = calloc(num_lines, sizeof(char *));
