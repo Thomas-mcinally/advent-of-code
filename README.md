@@ -6,6 +6,15 @@
 
 
 
+TODO:
+- Refactor day5 part2
+- Solve part2 for day1 and day3
+- Refactor days 1-4, look for easy wins
+- Solve days 6->
+
+
+
+
 TODO, to make this project professional:
 - Add tests
 - Add github actions that build and test code
