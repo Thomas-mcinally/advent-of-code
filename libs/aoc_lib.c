@@ -52,61 +52,63 @@ char *read_entire_file(char *file_path)
 }
 
 int split_string_by_delimiter_string(const char *string_to_split, const char *delimiter_string, char ***result_strings)
+// assumes string_to_split is nullterminated
+// populates result_strings array
+// does not modify input string
+// each result string is nullterminated
 {
-  // populates result_strings array
-  // does not modify input string
-  char buffer[strlen(string_to_split) + 1];
-  strcpy(buffer, string_to_split);
-  char *in = buffer;
-
-  char *token;
+  const char *in = string_to_split;
+  const char *token;
   int result_count = 0;
 
   do
   {
     token = strstr(in, delimiter_string);
 
-    if (token)
-      *token = '\0';
+    size_t length = (token != NULL) ? (token - in) : strlen(in); // If token is NULL, no delimiter found, so just copy the rest of the string
 
     *result_strings = realloc(*result_strings, (result_count + 1) * sizeof(char *));
-    (*result_strings)[result_count] = malloc(strlen(in) + 1);
-    strcpy((*result_strings)[result_count], in);
+    (*result_strings)[result_count] = malloc(length + 1);
+    strncpy((*result_strings)[result_count], in, length);
     result_count++;
 
-    in = token + strlen(delimiter_string);
-
+    in = (token != NULL) ? token + strlen(delimiter_string) : NULL;
   } while (token != NULL);
+
   return result_count;
-  // TODO: change this function so that last section is also nullterminated?
 }
 
-int count_lines(char *contents) {
+int count_lines(char *contents)
+{
   int result = 1;
-  while (*contents) {
-    if (*contents == '\n') result++;
+  while (*contents)
+  {
+    if (*contents == '\n')
+      result++;
     contents++;
   }
   return result;
 }
 
-int string_to_lines(char *string, char ***lines) {
-    // populates lines array
-    // does not modify input string
-    char *cursor = string;
-    int num_lines = count_lines(cursor); 
-    *lines = calloc(num_lines, sizeof(char *));
+int string_to_lines(char *string, char ***lines)
+{
+  // populates lines array
+  // does not modify input string
+  char *cursor = string;
+  int num_lines = count_lines(cursor);
+  *lines = calloc(num_lines, sizeof(char *));
 
-    int line_ctr = 0;
-    while (line_ctr < num_lines) {
-        size_t line_length = strcspn(cursor, "\n");
-        (*lines)[line_ctr] = malloc(line_length + 1);
+  int line_ctr = 0;
+  while (line_ctr < num_lines)
+  {
+    size_t line_length = strcspn(cursor, "\n");
+    (*lines)[line_ctr] = malloc(line_length + 1);
 
-        strncpy((*lines)[line_ctr], cursor, line_length);
-        (*lines)[line_ctr][line_length] = '\0'; 
-        cursor += line_length + 1; // Move cursor to the next line
-        line_ctr++;
-    }
+    strncpy((*lines)[line_ctr], cursor, line_length);
+    (*lines)[line_ctr][line_length] = '\0';
+    cursor += line_length + 1; // Move cursor to the next line
+    line_ctr++;
+  }
 
-    return num_lines;
+  return num_lines;
 }
