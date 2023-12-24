@@ -56,23 +56,23 @@ int split_string_by_delimiter_string(const char *string_to_split, const char *de
 // populates result_strings array with nullterminated char arrays
 // does not modify input string
 {
-  const char *in = string_to_split;
-  const char *token;
+  const char *substr_start = string_to_split;
+  const char *pos_delim;
   int result_count = 0;
 
   do
   {
-    token = strstr(in, delimiter_string);
+    pos_delim = strstr(substr_start, delimiter_string);
 
-    size_t length = (token != NULL) ? (token - in) : strlen(in); // If token is NULL, no delimiter found, so just copy the rest of the string
+    size_t length = (pos_delim != NULL) ? (pos_delim - substr_start) : strlen(substr_start); // If pos_delim is NULL, no delimiter found, so just copy the rest of the string
 
     *result_strings = realloc(*result_strings, (result_count + 1) * sizeof(char *));
     (*result_strings)[result_count] = malloc(length + 1);
-    strncpy((*result_strings)[result_count], in, length);
+    strncpy((*result_strings)[result_count], substr_start, length);
     result_count++;
 
-    in = (token != NULL) ? token + strlen(delimiter_string) : NULL;
-  } while (token != NULL);
+    substr_start = (pos_delim != NULL) ? pos_delim + strlen(delimiter_string) : NULL;
+  } while (pos_delim != NULL);
 
   return result_count;
 }
