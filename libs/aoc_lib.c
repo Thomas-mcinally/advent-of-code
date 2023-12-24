@@ -100,12 +100,12 @@ int string_to_lines(char *string, char ***result_strings)
   int result_count = 0;
   while (result_count < num_lines)
   {
-    size_t line_length = strcspn(cursor, "\n");
-    (*result_strings)[result_count] = malloc(line_length + 1);
-    strncpy((*result_strings)[result_count], cursor, line_length);
+    size_t length = strcspn(cursor, "\n");
+    (*result_strings)[result_count] = malloc(length + 1);
+    strncpy((*result_strings)[result_count], cursor, length);
     result_count++;
 
-    cursor += line_length + 1; // Move cursor to the next line
+    cursor += length + 1; // Move cursor to the next line
   }
 
   return num_lines;
