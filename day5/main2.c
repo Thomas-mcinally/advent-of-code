@@ -146,6 +146,7 @@ int main(int argc, char **argv)
     }
     lowest_location++;
   }
+  printf("No solution found\n");
 }
 
 // PART2:
