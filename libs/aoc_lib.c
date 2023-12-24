@@ -60,21 +60,10 @@ int split_string_by_delimiter_string(const char *string_to_split, const char *de
 
 int read_file_to_lines(char ***lines, char *file_path)
 {
-  int MAX_LINE_LENGTH = 256;
-  FILE *file = fopen(file_path, "r");
-  int lineCount = 0;
-
-  char buffer[MAX_LINE_LENGTH];
-  while (fgets(buffer, MAX_LINE_LENGTH, file) != NULL)
-  {
-    *lines = realloc(*lines, (lineCount + 1) * sizeof(char *));
-    (*lines)[lineCount] = malloc(strlen(buffer) + 1);
-
-    strcpy((*lines)[lineCount], buffer);
-    lineCount++;
-  }
-  fclose(file);
-  return lineCount;
+  char *content = read_entire_file(file_path);
+  int line_count = split_string_by_delimiter_string(content, "\n", lines);
+  free(content);
+  return line_count;
 }
 
 int count_lines(char *contents)

@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
 
     int count = 0;
     // Iterate over each line
-    for (int i = 0; i < lineCount; i++)
+    for (int i = 0; i < lineCount-1; i++)
     {
         int j = 0;
         while (1)
