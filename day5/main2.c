@@ -3,96 +3,63 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
+#include <errno.h>
+#include "aoc_lib.h"
 
-#define SENTINEL_VALUE 0xFFFFFFFF // Using the maximum value for unsigned int
+#define SENTINEL_VALUE 9223372036854775807 // max long long int value
 
-int read_file_to_lines(char ***lines){
-    int MAX_LINE_LENGTH = 256;
-    FILE *file = fopen("./input.txt", "r");
-    int lineCount = 0;
-
-    char buffer[MAX_LINE_LENGTH];
-    while (fgets(buffer, MAX_LINE_LENGTH, file) != NULL)
+void get_list_of_intervals_from_raw_input(char **lines, long long int list_of_intervals[100][3], int line_count)
+{
+  for (int i = 0; i < line_count; i++)
+  {
+    long long int first_num = 0;
+    int j = 0;
+    while (lines[i][j] != ' ')
     {
-        *lines = realloc(*lines, (lineCount + 1) * sizeof(char *));
-        (*lines)[lineCount] = malloc(strlen(buffer) + 1);
-
-        strcpy((*lines)[lineCount], buffer);
-        lineCount++;
-    }
-    fclose(file);
-    return lineCount;
-}
-
-
-void get_list_of_intervals_from_raw_input(char **raw_input_lines, unsigned int list_of_intervals[100][4], int start_line, int end_line)
-{    
-    for (int i=start_line; i<end_line; i++)
-    {
-        unsigned int first_num = 0;
-        int j = 0;
-        while (raw_input_lines[i][j] != ' ')
-        {
-            first_num *= 10;
-            first_num += raw_input_lines[i][j] - '0';
-            j++;
-        }
-
-        unsigned int second_num = 0;
-        j++;
-        while (raw_input_lines[i][j] != ' ')
-        {
-            second_num *= 10;
-            second_num += raw_input_lines[i][j] - '0';
-            j++;
-        }
-
-        unsigned int third_num = 0;
-        j++;
-        while (raw_input_lines[i][j] != '\n')
-        {
-            third_num *= 10;
-            third_num += raw_input_lines[i][j] - '0';
-            j++;
-        }
-
-        unsigned int diff;
-        unsigned int diff_is_positive; // 0/1,  because was forced to use unsigned int type
-        if (second_num >= first_num) {
-            diff = second_num - first_num;
-            diff_is_positive = 1;
-        }
-        else 
-        {
-            diff = first_num - second_num;
-            diff_is_positive = 0;
-        }
-
-        list_of_intervals[i - start_line][0] = first_num;
-        list_of_intervals[i - start_line][1] = first_num + third_num - 1; // assume this will not overflow
-        list_of_intervals[i - start_line][2] = diff;
-        list_of_intervals[i - start_line][3] = diff_is_positive;
-        if (list_of_intervals[i - start_line][1] < first_num) printf("overflow detected 1\n"); // for debugging overflow
+      first_num *= 10;
+      first_num += lines[i][j] - '0';
+      j++;
     }
 
-    list_of_intervals[end_line-start_line][3] = 2; // denote end of array
+    long long int second_num = 0;
+    j++;
+    while (lines[i][j] != ' ')
+    {
+      second_num *= 10;
+      second_num += lines[i][j] - '0';
+      j++;
+    }
+
+    long long int third_num = 0;
+    j++;
+    while (lines[i][j] != '\0')
+    {
+      third_num *= 10;
+      third_num += lines[i][j] - '0';
+      j++;
+    }
+
+    list_of_intervals[i][0] = first_num;
+    list_of_intervals[i][1] = first_num + third_num - 1; 
+    list_of_intervals[i][2] = second_num - first_num;
+  }
+
+  list_of_intervals[line_count][0] = SENTINEL_VALUE; // denote end of array
 }
-
-
-void get_list_of_seeds_from_raw_input(char **raw_input_lines, unsigned int seeds[100][2])
+void get_list_of_seeds_from_raw_input(char *seed_line, long long int seeds[100][2])
 {   
     int i=0;
     int j=7;
-    unsigned int cur_num = 0;
-    unsigned int cur_start = 0;
-    while (raw_input_lines[0][j] != '\n')
+    long long int cur_num = 0;
+    long long int cur_start = 0;
+    while (seed_line[j] != '\0')
     {
-        if (isdigit(raw_input_lines[0][j]))
+        if (isdigit(seed_line[j]))
         {
             cur_num *= 10;
-            cur_num += raw_input_lines[0][j] - '0';
+            cur_num += seed_line[j] - '0';
         }
-        else if (raw_input_lines[0][j] == ' ' || raw_input_lines[0][j] == '\n')
+        else if (seed_line[j] == ' ' || seed_line[j] == '\n')
         {
             if (cur_start == 0)
             {
@@ -112,79 +79,71 @@ void get_list_of_seeds_from_raw_input(char **raw_input_lines, unsigned int seeds
     seeds[i][0] = SENTINEL_VALUE; // denote end of array
 }
 
-
-unsigned int get_destination_from_source_and_intervals(unsigned int list_of_intervals[100][4], unsigned int source_val)
+long long int get_destination_from_source_and_intervals(long long int list_of_intervals[100][3], long long int source_val)
 {
-  for (int i=0; list_of_intervals[i][3] != 2; i++)
+  for (int i = 0; list_of_intervals[i][0] != SENTINEL_VALUE; i++)
+  {
+    if (source_val >= list_of_intervals[i][0] && source_val <= list_of_intervals[i][1])
     {
-        if (source_val >= list_of_intervals[i][0] && source_val <= list_of_intervals[i][1])
-        {
-            if (list_of_intervals[i][3] == 1) 
-            {
-                if (source_val + list_of_intervals[i][2] < source_val) return SENTINEL_VALUE; // return max value when overflow. Here we ASSUME that no range will ever contain a value greater than max val
-                return source_val + list_of_intervals[i][2];
-            
-            }
-
-            if (list_of_intervals[i][3] == 0) {
-                return source_val - list_of_intervals[i][2];
-            }    
-        }
+      return source_val + list_of_intervals[i][2];
     }
-    return source_val; 
+  }
+  return source_val;
 }
 
+int main(int argc, char **argv) {
+  if (argc != 2) {
+    fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
+    exit(1);
+  }
 
-int main()
-{
-    char **lines = NULL;
-    int lineCount = read_file_to_lines(&lines);
-    
-
-    // preprocess inputs
-    unsigned int soil_to_seed_intervals[100][4]; // [(start1, end1, diff1, diffPositive1), (start2, end2, diff2, diffPositive2), ...] Unsorted list of non-overlapping intervals. Inclusive start and end
-    get_list_of_intervals_from_raw_input(lines, soil_to_seed_intervals, 3, 12);
-    unsigned int fertilizer_to_soil_intervals[100][4];
-    get_list_of_intervals_from_raw_input(lines, fertilizer_to_soil_intervals, 14, 40);
-    unsigned int water_to_fertilizer_intervals[100][4];
-    get_list_of_intervals_from_raw_input(lines, water_to_fertilizer_intervals, 42, 71);
-    unsigned int light_to_water_intervals[100][4];
-    get_list_of_intervals_from_raw_input(lines, light_to_water_intervals, 73, 94);
-    unsigned int temperature_to_light_intervals[100][4];
-    get_list_of_intervals_from_raw_input(lines, temperature_to_light_intervals, 96, 115);
-    unsigned int humidity_to_temperature_intervals[100][4];
-    get_list_of_intervals_from_raw_input(lines, humidity_to_temperature_intervals, 117, 160);
-    unsigned int location_to_humidity_intervals[100][4];
-    get_list_of_intervals_from_raw_input(lines, location_to_humidity_intervals, 162, 189);
-
-    unsigned int seeds[100][2]; // [[start1, size1], [start2, size2], ...]
-    get_list_of_seeds_from_raw_input(lines, seeds);
+  char *file_path = argv[1];
+  char *file_contents = read_entire_file(file_path);
+  char **sections = NULL;
+  const int section_count = split_string_by_delimiter_string(file_contents, "\n\n", &sections);
+  const int number_of_maps = section_count - 1;
+  long long int maps[number_of_maps][100][3]; //assume each section has max 100 lines
+  for (int i = 0; i < number_of_maps; i++)
+  {
+    char **section_lines = NULL;
+    const int line_count = split_string_by_delimiter_string(sections[i+1],"\n", &section_lines);
+    section_lines++; //first line is name of the map
+    get_list_of_intervals_from_raw_input(section_lines, maps[i], line_count-1);
+    section_lines--;
+    for (int j = 0; j < line_count; j++) free(section_lines[j]);
+    free(section_lines);
+  }
+  free(file_contents);
+  
+  long long int seeds[100][2]; // [[start1, size1], [start2, size2], ...]
+  get_list_of_seeds_from_raw_input(sections[0], seeds);
 
 
-    unsigned int lowest_location = 0;
-    while (lowest_location < SENTINEL_VALUE)
+  for (int i = 0; i < section_count; i++) free(sections[i]);
+  free(sections);
+
+  
+  long long int lowest_location = 0;
+  while (lowest_location < SENTINEL_VALUE)
+  {
+    // find seed that produces location
+    long long int cur = lowest_location;
+    for (int i=number_of_maps-1; i>=0; i--)
     {
-        // find seed that produces location
-        unsigned int humidity = get_destination_from_source_and_intervals(location_to_humidity_intervals, lowest_location);
-        unsigned int temperature = get_destination_from_source_and_intervals(humidity_to_temperature_intervals, humidity);
-        unsigned int light = get_destination_from_source_and_intervals(temperature_to_light_intervals, temperature);
-        unsigned int water = get_destination_from_source_and_intervals(light_to_water_intervals, light);
-        unsigned int fertilizer = get_destination_from_source_and_intervals(water_to_fertilizer_intervals, water);
-        unsigned int soil = get_destination_from_source_and_intervals(fertilizer_to_soil_intervals, fertilizer);
-        unsigned int seed = get_destination_from_source_and_intervals(soil_to_seed_intervals, soil);
+        cur = get_destination_from_source_and_intervals(maps[i], cur);
+    }
 
-        // check if this seed is in any of the seed ranges
-        for (int i=0; seeds[i][0] != SENTINEL_VALUE; i++)
+    //check if this seed is in any of the seed ranges
+    for (int i=0; seeds[i][0] != SENTINEL_VALUE; i++)
         {
-            if (seed >= seeds[i][0] && seed <= seeds[i][0] + seeds[i][1] - 1)
+            if (cur >= seeds[i][0] && cur <= seeds[i][0] + seeds[i][1] - 1)
             {
-                printf("Part 2 sol: %u\n", lowest_location);
+                printf("Part 2 sol: %lli\n", lowest_location);
                 return 0;
             }
         }
-        lowest_location++;
-    }
-    printf("couldnt find solution\n");
+    lowest_location++;
+  }
 }
 
 
@@ -193,3 +152,8 @@ int main()
 // Idea1: Determine all possible seed values and process each of them
     // Not feasible since there are so many
 // Idea2: Start from location=0 and try figure out if the necessary seed value is available.
+
+// Differences from part1 sol:
+// - get_list_of_intervals_from_raw_input slightly different
+// - Ranges of seeds rather than single values
+// - What we do after generating maps is different
