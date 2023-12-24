@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
     int result = 0;
     int power = 0;
 
-    for (int i = 0; i < lineCount; i++)
+    for (int i = 0; i < lineCount-1; i++)
     {
         int game_id = 0;
         int j = 5;
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
         int game_max_green_count = 0;
         int game_max_blue_count = 0;
 
-        while (lines[i][j] != '\n')
+        while (lines[i][j] != '\0')
         {
             int cur_count = 0;
             while (lines[i][j] != ' ')

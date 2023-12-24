@@ -12,5 +12,3 @@ TODO, to make this project professional:
 - Improved folder structure and refactor code to be professional
 - Get feedback from experienced C developer
 - Redo in C++ to see main differences?
-
-- Make sure day2 work with new read_file_to_lines func
