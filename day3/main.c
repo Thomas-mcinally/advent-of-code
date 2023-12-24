@@ -29,7 +29,7 @@ int part1(char **grid, int ROWS, int COLS)
 {
     if (ROWS != COLS)
     {
-        printf("ERROR: ROWS != COLS\n");
+        printf("ERROR: ROWS != COLS, ROWS: %i, COLS: %i\n", ROWS, COLS);
         return 1;
     }
 
@@ -68,7 +68,7 @@ int part2(char **grid, int ROWS, int COLS)
 {
     if (ROWS != COLS)
     {
-        printf("ERROR: ROWS != COLS\n");
+        printf("ERROR: ROWS != COLS, ROWS: %i, COLS: %i\n", ROWS, COLS);
         return 1;
     }
 
@@ -96,7 +96,7 @@ int part2(char **grid, int ROWS, int COLS)
     // Calculate gearratioSum
 
     // return gearratioSum
-
+    return 1;
 }
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -109,10 +109,7 @@ int main(int argc, char **argv) {
     char **lines = NULL;
     int linecount = read_file_to_lines(&lines, file_path);
 
-    printf("Part 1: %i\n", part1(lines, linecount, strlen(lines[0]) - 1));
-    char myChar = 'a';
-    myChar += 28;
-    printf("%c\n", myChar);
-
+    printf("Part 1: %i\n", part1(lines, linecount-1, strlen(lines[0])));
+    return 0;
 }
 
