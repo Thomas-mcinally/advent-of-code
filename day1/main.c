@@ -4,8 +4,11 @@
 #include <ctype.h>
 
 #include "aoc_lib.h"
+// The newly-improved calibration document consists of lines of text; each line originally contained a 
+// specific calibration value that the Elves now need to recover. On each line, the calibration value can 
+// be found by combining the first digit and the last digit (in that order) to form a single two-digit number.
 
-
+// What is the sum of all the calibration values?
 int main(int argc, char **argv) {
     if (argc != 2) {
         fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
@@ -29,7 +32,7 @@ int main(int argc, char **argv) {
                 break;
             }
 
-            j += 1;
+            j++;
         }
 
         j = strlen(lines[i]) - 1;
@@ -40,11 +43,12 @@ int main(int argc, char **argv) {
                 count += lines[i][j] - '0';
                 break;
             }
-            j -= 1;
+            j--;
         }
         free(lines[i]);
     }
     free(lines);
-    printf("%i", count);
+    printf("Part1 sol: %i", count);
     return 0;
 }
+
