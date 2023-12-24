@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     for (int i = 0; i < lineCount; i++) i_to_copies[i] = 1;
     int total_score = 0;
     int total_scratchcards = 0;
-    for (int i = 0; i < lineCount; i++)
+    for (int i = 0; i < lineCount-1; i++)
     {
         int seen_nums[101] = {0}; // max num is 99
 

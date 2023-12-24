@@ -13,4 +13,4 @@ TODO, to make this project professional:
 - Get feedback from experienced C developer
 - Redo in C++ to see main differences?
 
-- Make sure day2, day4 work with new read_file_to_lines func
+- Make sure day2 work with new read_file_to_lines func
