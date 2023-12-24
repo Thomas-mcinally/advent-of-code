@@ -53,9 +53,8 @@ char *read_entire_file(char *file_path)
 
 int split_string_by_delimiter_string(const char *string_to_split, const char *delimiter_string, char ***result_strings)
 // assumes string_to_split is nullterminated
-// populates result_strings array
+// populates result_strings array with nullterminated char arrays
 // does not modify input string
-// each result string is nullterminated
 {
   const char *in = string_to_split;
   const char *token;
@@ -90,24 +89,23 @@ int count_lines(char *contents)
   return result;
 }
 
-int string_to_lines(char *string, char ***lines)
+int string_to_lines(char *string, char ***result_strings)
 {
   // populates lines array
   // does not modify input string
   char *cursor = string;
   int num_lines = count_lines(cursor);
-  *lines = calloc(num_lines, sizeof(char *));
+  *result_strings = calloc(num_lines, sizeof(char *));
 
-  int line_ctr = 0;
-  while (line_ctr < num_lines)
+  int result_count = 0;
+  while (result_count < num_lines)
   {
     size_t line_length = strcspn(cursor, "\n");
-    (*lines)[line_ctr] = malloc(line_length + 1);
+    (*result_strings)[result_count] = malloc(line_length + 1);
+    strncpy((*result_strings)[result_count], cursor, line_length);
+    result_count++;
 
-    strncpy((*lines)[line_ctr], cursor, line_length);
-    (*lines)[line_ctr][line_length] = '\0';
     cursor += line_length + 1; // Move cursor to the next line
-    line_ctr++;
   }
 
   return num_lines;
