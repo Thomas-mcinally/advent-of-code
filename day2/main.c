@@ -31,27 +31,24 @@ int main(int argc, char **argv) {
 
         while (lines[i][j] != '\0')
         {
-            int cur_count = extract_number_from_string(lines[i], &j);
+            int count = extract_number_from_string(lines[i], &j);
             j++;
             if (strncmp(&lines[i][j], "red", 3) == 0)
             {
-                game_max_red_count = cur_count > game_max_red_count ? cur_count : game_max_red_count;
+                game_max_red_count = count > game_max_red_count ? count : game_max_red_count;
                 j += 3;
             }
             else if (strncmp(&lines[i][j], "green", 5) == 0)
             {
-                game_max_green_count = cur_count > game_max_green_count ? cur_count : game_max_green_count;
+                game_max_green_count = count > game_max_green_count ? count : game_max_green_count;
                 j += 5;
             }
             else if (strncmp(&lines[i][j], "blue", 4) == 0)
             {
-                game_max_blue_count = cur_count > game_max_blue_count ? cur_count : game_max_blue_count;
+                game_max_blue_count = count > game_max_blue_count ? count : game_max_blue_count;
                 j += 4;
             }
-            while (lines[i][j] == ' ' || lines[i][j] == ',' || lines[i][j] == ';')
-            {
-                j++;
-            }
+            while (lines[i][j] == ' ' || lines[i][j] == ',' || lines[i][j] == ';') j++;
         }
     if (game_max_red_count <= 12 && game_max_green_count <= 13 && game_max_blue_count <= 14)
     {
