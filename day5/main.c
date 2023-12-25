@@ -32,24 +32,14 @@ void get_list_of_seeds_from_raw_input(char *seed_line, long long int seeds[100])
   printf("processing seed line: %s\n", seed_line);
   int i = 0;
   int j = 7;
-  long long int cur_num = 0;
+
   while (seed_line[j] != '\0')
   {
-    if (isdigit(seed_line[j]))
-    {
-      cur_num *= 10;
-      cur_num += seed_line[j] - '0';
-    }
-    else if (seed_line[j] == ' ')
-    {
-      seeds[i] = cur_num;
-      cur_num = 0;
-      i++;
-    }
-    j++;
-  }
-  seeds[i] = cur_num;
-  i++;
+    long long int next_num = extract_number_from_string(seed_line, &j);
+    if (seed_line[j] == ' ') j++;
+    seeds[i] = next_num;
+    i++;
+  };
   seeds[i] = SENTINEL_VALUE; // denote end of array
 }
 
