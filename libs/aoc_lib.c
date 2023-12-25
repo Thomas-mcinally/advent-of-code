@@ -78,3 +78,15 @@ int count_lines(char *contents)
   }
   return result;
 }
+
+long long int extract_number_from_string(const char *str, int *index)
+{
+  long long int result = 0;
+  while (isdigit(str[*index]))
+  {
+    result *= 10;
+    result += str[*index] - '0';
+    (*index)++;
+  }
+  return result;
+}

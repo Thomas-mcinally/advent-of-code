@@ -12,32 +12,12 @@ void get_list_of_intervals_from_raw_input(char **lines, long long int list_of_in
 {
   for (int i = 0; i < line_count; i++)
   {
-    long long int first_num = 0;
     int j = 0;
-    while (lines[i][j] != ' ')
-    {
-      first_num *= 10;
-      first_num += lines[i][j] - '0';
-      j++;
-    }
-
-    long long int second_num = 0;
+    long long int first_num = extract_number_from_string(lines[i], &j);
     j++;
-    while (lines[i][j] != ' ')
-    {
-      second_num *= 10;
-      second_num += lines[i][j] - '0';
-      j++;
-    }
-
-    long long int third_num = 0;
+    long long int second_num = extract_number_from_string(lines[i], &j);
     j++;
-    while (lines[i][j] != '\0')
-    {
-      third_num *= 10;
-      third_num += lines[i][j] - '0';
-      j++;
-    }
+    long long int third_num = extract_number_from_string(lines[i], &j);
 
     list_of_intervals[i][0] = second_num;
     list_of_intervals[i][1] = second_num + third_num - 1;

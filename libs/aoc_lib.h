@@ -12,4 +12,6 @@ int count_lines(char *contents);
 
 int string_to_lines(char *string, char ***lines);
 
+long long int extract_number_from_string(const char *str, int *index);
+
 #endif // AOC_LIB_H
