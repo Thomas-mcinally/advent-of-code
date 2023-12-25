@@ -75,17 +75,9 @@ int main(int argc, char **argv) {
 }
 
 
-// PART2
-// Your calculation isn't quite right. It looks like some of the digits are actually spelled out with 
-// letters: one, two, three, four, five, six, seven, eight, and nine also count as valid "digits".
 
-// Equipped with this new information, you now need to find the real first and last digit on each line. For example:
-
-// two1nine
-// eightwothree
-// abcone2threexyz
-// xtwone3four
-// 4nineeightseven2
-// zoneight234
-// 7pqrstsixteen
-// In this example, the calibration values are 29, 83, 13, 24, 42, 14, and 76. Adding these together produces 281.
+// Can improve time complexity by using a Trie
+// Be careful with chars in middle of num that is start of other num -> cant discard all prev seen chars when new char can't be added to cur_word.
+// When new_char can't be added to cur_word: 1) If can be added to prev_char, do so. 2) Else, discard all prev chars and start new word.
+// for example ninine, threight, seveight
+// Example implementation, in Python: https://pastebin.com/HMuKKJqQ
