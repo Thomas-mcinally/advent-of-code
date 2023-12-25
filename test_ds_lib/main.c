@@ -17,6 +17,15 @@ typedef struct {
 } Map_Element_Struct_Keys;
 
 
+typedef struct {
+    int arr[10];
+} Node;
+
+typedef struct {
+    int key;
+    Node value;
+} Map_Element_Struct_Values;
+
 int main() {
     // Test hashmap
     printf("Testing hashmap\n");
@@ -42,6 +51,15 @@ int main() {
     hmput(map_struct_keys, key2, 2);
     printf("map[key1]: %d\n", hmget(map_struct_keys, key1));
     printf("map[key2]: %d\n", hmget(map_struct_keys, key2));
+
+    // Test hashmap with struct values
+    printf("Testing hashmap with struct values\n");
+    Map_Element_Struct_Values *map_struct_values = NULL;
+    Node value1 = {{0,0,0,0,0,0,0,0,0,0}};
+    hmput(map_struct_values, 1, value1);
+    hmget(map_struct_values, 1).arr[0] = 100;
+    printf("first val of map[1]: %d\n", hmget(map_struct_values, 1).arr[0]); //except 100
+
 
     // test dynamic array
     printf("Testing dynamic array\n");
