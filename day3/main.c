@@ -5,6 +5,11 @@
 
 #include "aoc_lib.h"
 
+typedef struct {
+    int x;
+    int y;
+} Point;
+
 int is_symbol(char c)
 {
     if (isdigit(c) || c == '.') return 0;
@@ -73,7 +78,8 @@ int part2(char **grid, int ROWS, int COLS)
     }
 
     int curNum = 0;
-    // curNumStarNeighbours = [(x,y), (x,y), (x,y), (x,y)]
+
+    Point *curNumStarNeighbours = NULL; // Dynamic array [(x,y), (x,y), (x,y), (x,y)]
     for (int r = 0; r < ROWS; r++)
     {
         for (int c = 0; c < COLS; c++)

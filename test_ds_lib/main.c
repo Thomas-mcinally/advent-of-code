@@ -1,6 +1,10 @@
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 #include <stdio.h>
+typedef struct {
+    int x;
+    int y;
+} Coordinates;
 
 typedef struct {
     int key;
@@ -8,18 +12,39 @@ typedef struct {
 } Map_Element;
 
 typedef struct {
-    int x;
-    int y;
-} Coordinates;
+    Coordinates key;
+    int value;
+} Map_Element_Struct_Keys;
+
 
 int main() {
     // Test hashmap
+    printf("Testing hashmap\n");
     Map_Element *map = NULL;
     hmput(map, 0, 100);
     printf("value of key 0: %u\n", hmget(map, 0));
     hmfree(map);
 
+    //Test hashmap with default values
+    printf("Testing hashmap with default values\n");
+    Map_Element *map_default = NULL;
+    hmput(map_default, 1, 100);
+    hmdefault(map_default, 1337);
+    printf("value of key 1: %d\n", hmget(map_default, 1));
+    printf("value of key 2: %d\n", hmget(map_default, 2));
+
+    //Test hasmap with struct keys
+    printf("Testing hashmap with struct keys\n");
+    Map_Element_Struct_Keys *map_struct_keys = NULL;
+    Coordinates key1 = {1, 100};
+    Coordinates key2 = {2, 200};
+    hmput(map_struct_keys, key1, 1);
+    hmput(map_struct_keys, key2, 2);
+    printf("map[key1]: %d\n", hmget(map_struct_keys, key1));
+    printf("map[key2]: %d\n", hmget(map_struct_keys, key2));
+
     // test dynamic array
+    printf("Testing dynamic array\n");
     int *arr = NULL;
     arrput(arr, 1);
     arrput(arr, 2);
@@ -30,6 +55,7 @@ int main() {
     arrfree(arr);
 
     // test dynamic array of structs
+    printf("Testing dynamic array of structs\n");
     Coordinates *coords = NULL;
     Coordinates my_point = {1, 100};
     Coordinates my_point2 = {2, 200};
