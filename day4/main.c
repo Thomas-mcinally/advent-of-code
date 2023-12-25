@@ -24,38 +24,24 @@ int main(int argc, char **argv) {
     {
         int seen_nums[101] = {0}; // max num is 99
 
-        int cur_num = 0;
-        for (int j = 10; lines[i][j] != '|'; j++)
+
+        int j = 10;
+        while (lines[i][j] != '|') 
         {
-            if (isdigit(lines[i][j]))
-            {
-                cur_num *= 10;
-                cur_num += lines[i][j] - '0';
-            }
-            else if (lines[i][j] == ' ' && cur_num != 0)
-            {
-                seen_nums[cur_num] = 1;
-                cur_num = 0;
-            }
+            int next_num = extract_number_from_string(lines[i], &j);
+            if (next_num != 0) seen_nums[next_num] = 1;
+            if (lines[i][j] == ' ') j++;
         }
 
-
-        cur_num = 0;
+        j += 2;
         int matches_found = 0;
-        for (int j = 42; lines[i][j] != '\0'; j++)
+        while (lines[i][j] != '\0')
         {
-            if (isdigit(lines[i][j]))
-            {
-                cur_num *= 10;
-                cur_num += lines[i][j] - '0';
-            }
-            else if (lines[i][j] == ' ')
-            {
-                if (seen_nums[cur_num]) matches_found += 1;
-                cur_num = 0;
-            }
+            int next_num = extract_number_from_string(lines[i], &j);
+            if (seen_nums[next_num]) matches_found += 1;
+            if (lines[i][j] == ' ') j++;
         }
-        if (seen_nums[cur_num]) matches_found += 1;
+
         if (matches_found != 0) total_score += pow(2, matches_found - 1);
 
 
