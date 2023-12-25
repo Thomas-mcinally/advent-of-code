@@ -21,13 +21,8 @@ int main(int argc, char **argv) {
 
     for (int i = 0; i < lineCount-1; i++)
     {
-        int game_id = 0;
         int j = 5;
-        while (lines[i][j] != ':')
-        {
-            game_id = game_id * 10 + (lines[i][j] - '0');
-            j++;
-        }
+        int game_id = extract_number_from_string(lines[i], &j);
         j += 2;
 
         int game_max_red_count = 0;
@@ -36,12 +31,7 @@ int main(int argc, char **argv) {
 
         while (lines[i][j] != '\0')
         {
-            int cur_count = 0;
-            while (lines[i][j] != ' ')
-            {
-                cur_count = cur_count * 10 + (lines[i][j] - '0');
-                j++;
-            }
+            int cur_count = extract_number_from_string(lines[i], &j);
             j++;
             if (strncmp(&lines[i][j], "red", 3) == 0)
             {
