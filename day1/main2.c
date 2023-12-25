@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
                 count += lines[i][j] - '0';
                 break;
             }
-            int string_digit = read_reverse_string_digit_starting_at(&lines[i][j]);
+            int string_digit = read_string_digit_ending_at(&lines[i][j]);
             if (i==2) printf("reverse string digit result: %i\n", string_digit);
             if (string_digit != -1)
             {
