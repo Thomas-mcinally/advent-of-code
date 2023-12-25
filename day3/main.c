@@ -105,7 +105,6 @@ int main(int argc, char **argv) {
     }
 
     char *file_path = argv[1];
-    int partNumberSum = 0;
     char **lines = NULL;
     int linecount = read_file_to_lines(&lines, file_path);
 
