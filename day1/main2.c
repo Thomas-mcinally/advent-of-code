@@ -19,7 +19,7 @@ int read_string_digit_starting_at(char *string)
     if (strncmp(string, "nine", 4) == 0) return 9;
     return -1;
 }
-int read_reverse_string_digit_starting_at(char *string)
+int read_string_digit_ending_at(char *string)
 {
     if (strncmp(string-3, "zero", 4) == 0) return 0;
     if (strncmp(string-2, "one", 3) == 0) return 1;
