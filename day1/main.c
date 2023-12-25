@@ -44,22 +44,6 @@ int main(int argc, char **argv) {
         free(lines[i]);
     }
     free(lines);
-    printf("Part1 sol: %i", count);
+    printf("Part1 sol: %i\n", count);
     return 0;
 }
-
-
-// PART2
-// Your calculation isn't quite right. It looks like some of the digits are actually spelled out with 
-// letters: one, two, three, four, five, six, seven, eight, and nine also count as valid "digits".
-
-// Equipped with this new information, you now need to find the real first and last digit on each line. For example:
-
-// two1nine
-// eightwothree
-// abcone2threexyz
-// xtwone3four
-// 4nineeightseven2
-// zoneight234
-// 7pqrstsixteen
-// In this example, the calibration values are 29, 83, 13, 24, 42, 14, and 76. Adding these together produces 281.
