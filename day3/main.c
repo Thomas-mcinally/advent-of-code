@@ -79,6 +79,18 @@ Point_Set *updateStarNeighbourSet(Point_To_Star_Info_Map *starToInfo, Point_Set 
     return starNeighbourSet;   
 }
 
+long long int calculate_gear_ratio_from_star_info(Point_To_Star_Info_Map *starToInfo)
+{
+    long long int total_gear_ratio = 0;
+    for (int i=0; i<hmlen(starToInfo); i++)
+    {
+        Star star_info = starToInfo[i].value;
+        if (star_info.neighbourCount != 2) continue;
+        total_gear_ratio += star_info.neighbourProduct;
+    }
+    return total_gear_ratio;
+}
+
 int part1(char **grid, int ROWS, int COLS)
 {
     if (ROWS != COLS)
@@ -166,13 +178,7 @@ long long int part2(char **grid, int ROWS, int COLS)
         curNum = 0;
     }
 
-    long long int total_gear_ratio = 0;
-    for (int i=0; i<hmlen(starToInfo); i++)
-    {
-        Star star_info = starToInfo[i].value;
-        if (star_info.neighbourCount != 2) continue;
-        total_gear_ratio += star_info.neighbourProduct;
-    }
+    long long int total_gear_ratio = calculate_gear_ratio_from_star_info(starToInfo);
 
     hmfree(starToInfo);
     return total_gear_ratio;
