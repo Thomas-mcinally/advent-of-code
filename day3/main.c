@@ -122,42 +122,42 @@ long long int part2(char **grid, int ROWS, int COLS)
                 curNum = curNum * 10 + (grid[r][c] - '0');
                 // Check if any neighbour is star and update curNumStarNeighbours
                 Point neighbour1 = {r-1, c};
-                if (r > 0 && grid[r-1][c] == '*' )
+                if (hmgeti(starToInfo, neighbour1) >= 0)
                 {
                     hmput(curNumStarNeighboursSet, neighbour1, 1);
                 }
                 Point neighbour2 = {r+1, c};
-                if (r<ROWS-2 && grid[r+1][c] == '*')
+                if (hmgeti(starToInfo, neighbour2) >= 0)
                 {
                     hmput(curNumStarNeighboursSet, neighbour2, 1);
                 }
                 Point neighbour3 = {r, c-1};
-                if (c>0 && grid[r][c-1] == '*')
+                if (hmgeti(starToInfo, neighbour3) >= 0)
                 {
                     hmput(curNumStarNeighboursSet, neighbour3, 1);
                 }
                 Point neighbour4 = {r, c+1};
-                if (c < COLS-2 && grid[r][c+1] == '*')
+                if (hmgeti(starToInfo, neighbour4) >= 0)
                 {
                     hmput(curNumStarNeighboursSet, neighbour4, 1);
                 }
                 Point neighbour5 = {r-1, c-1};
-                if (r>0 && c > 0 && grid[r-1][c-1] == '*')
+                if (hmgeti(starToInfo, neighbour5) >= 0)
                 {
                     hmput(curNumStarNeighboursSet, neighbour5, 1);
                 }
                 Point neighbour6 = {r-1, c+1};
-                if (r>0 && c < COLS-2 && grid[r-1][c+1] == '*')
+                if (hmgeti(starToInfo, neighbour6) >= 0)
                 {
                     hmput(curNumStarNeighboursSet, neighbour6, 1);
                 }
                 Point neighbour7 = {r+1, c-1};
-                if (r<ROWS-2 && c > 0 && grid[r+1][c-1] == '*')
+                if (hmgeti(starToInfo, neighbour7) >= 0)
                 {
                     hmput(curNumStarNeighboursSet, neighbour7, 1);
                 }
                 Point neighbour8 = {r+1, c+1};
-                if (r<ROWS-2 && c<COLS-2 && grid[r+1][c+1] == '*')
+                if (hmgeti(starToInfo, neighbour8) >= 0)
                 {
                     hmput(curNumStarNeighboursSet, neighbour8, 1);
                 }
@@ -202,8 +202,6 @@ long long int part2(char **grid, int ROWS, int COLS)
     }
 
     hmfree(starToInfo);
-    printf("total stars checked: %i\n", total_stars);
-    printf("total gears found: %i\n", total_gears);
     return total_gear_ratio;
 }
 int main(int argc, char **argv) {
