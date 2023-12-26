@@ -49,6 +49,16 @@ int at_least_one_neighbour_is_symbol(char **lines, int i, int j, int max_i, int 
 
 }
 
+void updateStarToInfo(Point_To_Star_Info_Map *starToInfo, Point_Set *numStarNeighboursSet, int num) {
+    for (int i = 0; i < hmlen(numStarNeighboursSet); i++) {
+        Point starCoordinates = numStarNeighboursSet[i].key;
+        Star starInfo = hmget(starToInfo, starCoordinates);
+        starInfo.neighbourProduct *= num;
+        starInfo.neighbourCount += 1;
+        hmput(starToInfo, starCoordinates, starInfo);
+    }
+}
+
 int part1(char **grid, int ROWS, int COLS)
 {
     if (ROWS != COLS)
@@ -136,27 +146,13 @@ long long int part2(char **grid, int ROWS, int COLS)
             }
             else
             {
-                for(int i=0; i<hmlen(curNumStarNeighboursSet); i++)
-                {
-                    Point star_coordinates = curNumStarNeighboursSet[i].key;
-                    Star star_info = hmget(starToInfo, star_coordinates);
-                    star_info.neighbourProduct *= curNum;
-                    star_info.neighbourCount += 1;
-                    hmput(starToInfo, star_coordinates, star_info);
-                }
+                updateStarToInfo(starToInfo, curNumStarNeighboursSet, curNum);
                 hmfree(curNumStarNeighboursSet);
                 curNum = 0;
             }
             
         }
-        for(int i=0; i<hmlen(curNumStarNeighboursSet); i++)
-        {
-            Point star_coordinates = curNumStarNeighboursSet[i].key;
-            Star star_info = hmget(starToInfo, star_coordinates);
-            star_info.neighbourProduct *= curNum;
-            star_info.neighbourCount += 1;
-            hmput(starToInfo, star_coordinates, star_info);
-        }
+        updateStarToInfo(starToInfo, curNumStarNeighboursSet, curNum);
         hmfree(curNumStarNeighboursSet);
         curNum = 0;
     }
