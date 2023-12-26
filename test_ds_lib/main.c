@@ -31,6 +31,11 @@ typedef struct {
     int (*value)[3];
 } Map_Element_Arr_Values;
 
+typedef struct {
+    int key;
+    int *value;
+} Map_Element_Dynamic_Arr_Values;
+
 
 
 int main() {
@@ -83,6 +88,19 @@ int main() {
     printf("first val of map[1] before change: %d\n", (*hmget(map_arr_values, 1))[0]); //expect 0
     (*hmget(map_arr_values, 1))[0] = 100;
     printf("first val of map[1] after change: %d\n", (*hmget(map_arr_values, 1))[0]); //expect 100
+
+    // Test hashmap with dynamic arr values
+    printf("Testing hashmap with dynamic arr values\n");
+    Map_Element_Dynamic_Arr_Values *map_dynamic_arr_values = NULL;
+    int *value_arr = NULL;
+    arrput(value_arr, 1);
+    arrput(value_arr, 2);
+    hmput(map_dynamic_arr_values, 1, value_arr);
+    printf("map[1][0]: %d\n", hmget(map_dynamic_arr_values, 1)[0]); //expect 1
+    printf("map[1][1]: %d\n", hmget(map_dynamic_arr_values, 1)[1]); //expect 2
+    int *temp = hmget(map_dynamic_arr_values, 1);
+    temp[0] = 100;
+    printf("map[1][0] after change: %d\n", hmget(map_dynamic_arr_values, 1)[0]); //expect 100
 
     // test dynamic array
     printf("Testing dynamic array\n");
