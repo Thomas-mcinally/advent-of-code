@@ -5,10 +5,23 @@
 
 #include "aoc_lib.h"
 
+#define STB_DS_IMPLEMENTATION
+#include "stb_ds.h"
+
 typedef struct {
     int x;
     int y;
 } Point;
+
+typedef struct {
+    int neighbourProduct;
+    int neighbourCount;
+} Star;
+
+typedef struct {
+    Point key;
+    Star value;
+} Point_To_Star_Info_Map;
 
 int is_symbol(char c)
 {
@@ -78,30 +91,49 @@ int part2(char **grid, int ROWS, int COLS)
     }
 
     int curNum = 0;
-
-    Point *curNumStarNeighbours = NULL; // Dynamic array [(x,y), (x,y), (x,y), (x,y)]
-    for (int r = 0; r < ROWS; r++)
+    Point_To_Star_Info_Map *starToInfo = NULL;    // (star_x, star_y): {neighbourProduct, neighbourCount}
+    //find all stars
+    for (int r=0; r<ROWS; r++)
     {
-        for (int c = 0; c < COLS; c++)
+        for (int c=0; c<COLS; c++)
         {
-            if (isdigit(grid[r][c]))
+            if (grid[r][c] == '*')
             {
-                curNum = curNum * 10 + (grid[r][c] - '0');
-                // Check if any neighbour is star and update curNumStarNeighbours
+                Point star_coordinates = {r, c};
+                Star star_info = {1, 0};
+                hmput(starToInfo, star_coordinates, star_info);
             }
-            else
-            {
-                curNum = 0;
-                // update star: neighbouring nums hashmap
-            }
-            
         }
-        curNum = 0;
-        // update star: neighbouring nums hashmap
     }
-    // Calculate gearratioSum
+    //print out coordinates for all stars
+    for (int i=0; i<hmlen(starToInfo); i++)
+    {
+        printf("Star (%i, %i)\n",starToInfo[i].key.x, starToInfo[i].key.y);
+    }
+    // Point *curNumStarNeighbours = NULL; // Dynamic array [(x,y), (x,y), (x,y), (x,y)]
+    // for (int r = 0; r < ROWS; r++)
+    // {
+    //     for (int c = 0; c < COLS; c++)
+    //     {
+    //         if (isdigit(grid[r][c]))
+    //         {
+    //             curNum = curNum * 10 + (grid[r][c] - '0');
 
-    // return gearratioSum
+    //             // Check if any neighbour is star and update curNumStarNeighbours
+    //         }
+    //         else
+    //         {
+    //             curNum = 0;
+    //             // update Point_To_Star_Info_Map
+    //         }
+            
+    //     }
+    //     curNum = 0;
+    //     // update Point_To_Star_Info_Map
+    // }
+    // // Calculate gearratioSum
+
+    // // return gearratioSum
     return 1;
 }
 int main(int argc, char **argv) {
@@ -115,6 +147,7 @@ int main(int argc, char **argv) {
     int linecount = read_file_to_lines(&lines, file_path);
 
     printf("Part 1: %i\n", part1(lines, linecount-1, strlen(lines[0])));
+    part2(lines, linecount-1, strlen(lines[0]));
     return 0;
 }
 
