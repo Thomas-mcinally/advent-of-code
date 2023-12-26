@@ -23,6 +23,12 @@ typedef struct {
     Star value;
 } Point_To_Star_Info_Map;
 
+typedef struct {
+    Point key;
+    int value; //dummy value
+} Point_Set;
+
+
 int is_symbol(char c)
 {
     if (isdigit(c) || c == '.') return 0;
@@ -105,7 +111,8 @@ long long int part2(char **grid, int ROWS, int COLS)
     }
 
     int curNum = 0;
-    Point *curNumStarNeighbours = NULL; // Dynamic array [(x,y), (x,y), (x,y), (x,y)]
+
+    Point_Set *curNumStarNeighboursSet = NULL; // Set {(x,y), (x,y), (x,y), (x,y)}
     for (int r = 0; r < ROWS; r++)
     {
         for (int c = 0; c < COLS; c++)
@@ -115,82 +122,88 @@ long long int part2(char **grid, int ROWS, int COLS)
                 curNum = curNum * 10 + (grid[r][c] - '0');
                 // Check if any neighbour is star and update curNumStarNeighbours
                 Point neighbour1 = {r-1, c};
-                if (r > 0 && grid[r-1][c] == '*')
+                if (r > 0 && grid[r-1][c] == '*' )
                 {
-                    arrput(curNumStarNeighbours, neighbour1);
+                    hmput(curNumStarNeighboursSet, neighbour1, 1);
                 }
                 Point neighbour2 = {r+1, c};
                 if (r<ROWS-2 && grid[r+1][c] == '*')
                 {
-                    arrput(curNumStarNeighbours, neighbour2);
+                    hmput(curNumStarNeighboursSet, neighbour2, 1);
                 }
                 Point neighbour3 = {r, c-1};
                 if (c>0 && grid[r][c-1] == '*')
                 {
-                    arrput(curNumStarNeighbours, neighbour3);
+                    hmput(curNumStarNeighboursSet, neighbour3, 1);
                 }
                 Point neighbour4 = {r, c+1};
                 if (c < COLS-2 && grid[r][c+1] == '*')
                 {
-                    arrput(curNumStarNeighbours, neighbour4);
+                    hmput(curNumStarNeighboursSet, neighbour4, 1);
                 }
                 Point neighbour5 = {r-1, c-1};
                 if (r>0 && c > 0 && grid[r-1][c-1] == '*')
                 {
-                    arrput(curNumStarNeighbours, neighbour5);
+                    hmput(curNumStarNeighboursSet, neighbour5, 1);
                 }
                 Point neighbour6 = {r-1, c+1};
                 if (r>0 && c < COLS-2 && grid[r-1][c+1] == '*')
                 {
-                    arrput(curNumStarNeighbours, neighbour6);
+                    hmput(curNumStarNeighboursSet, neighbour6, 1);
                 }
                 Point neighbour7 = {r+1, c-1};
                 if (r<ROWS-2 && c > 0 && grid[r+1][c-1] == '*')
                 {
-                    arrput(curNumStarNeighbours, neighbour7);
+                    hmput(curNumStarNeighboursSet, neighbour7, 1);
                 }
                 Point neighbour8 = {r+1, c+1};
                 if (r<ROWS-2 && c<COLS-2 && grid[r+1][c+1] == '*')
                 {
-                    arrput(curNumStarNeighbours, neighbour8);
+                    hmput(curNumStarNeighboursSet, neighbour8, 1);
                 }
             }
             else
             {
-                while (arrlen(curNumStarNeighbours) > 0)
+                for(int i=0; i<hmlen(curNumStarNeighboursSet); i++)
                 {
-                    Point star_coordinates = arrpop(curNumStarNeighbours);
+                    Point star_coordinates = curNumStarNeighboursSet[i].key;
                     Star star_info = hmget(starToInfo, star_coordinates);
                     star_info.neighbourProduct *= curNum;
                     star_info.neighbourCount += 1;
                     hmput(starToInfo, star_coordinates, star_info);
                 }
+                hmfree(curNumStarNeighboursSet);
                 curNum = 0;
             }
             
         }
-        while (arrlen(curNumStarNeighbours) > 0)
+        for(int i=0; i<hmlen(curNumStarNeighboursSet); i++)
         {
-            Point star_coordinates = arrpop(curNumStarNeighbours);
+            Point star_coordinates = curNumStarNeighboursSet[i].key;
             Star star_info = hmget(starToInfo, star_coordinates);
-            if (curNum == 0) printf("ERROR: curNum == 0\n");
             star_info.neighbourProduct *= curNum;
             star_info.neighbourCount += 1;
             hmput(starToInfo, star_coordinates, star_info);
         }
+        hmfree(curNumStarNeighboursSet);
         curNum = 0;
     }
 
-    arrfree(curNumStarNeighbours);
     long long int total_gear_ratio = 0;
+    int total_stars = 0;
+    int total_gears = 0;
     for (int i=0; i<hmlen(starToInfo); i++)
     {
+        total_stars++;
         Star star_info = starToInfo[i].value;
         if (star_info.neighbourCount != 2) continue;
+        total_gears++;
         total_gear_ratio += star_info.neighbourProduct;
     }
 
     hmfree(starToInfo);
+    printf("total stars checked: %i\n", total_stars);
+    printf("total gears found: %i\n", total_gears);
     return total_gear_ratio;
 }
 int main(int argc, char **argv) {
@@ -207,5 +220,3 @@ int main(int argc, char **argv) {
     printf("Part 2: %lli\n", part2(lines, linecount-1, strlen(lines[0])));
     return 0;
 }
-
-// 29458644 too low
