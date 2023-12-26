@@ -49,7 +49,7 @@ int at_least_one_neighbour_is_symbol(char **lines, int i, int j, int max_i, int 
 
 }
 
-void updateStarToInfo(Point_To_Star_Info_Map *starToInfo, Point_Set *numStarNeighboursSet, int num) {
+Point_To_Star_Info_Map *updateStarToInfo(Point_To_Star_Info_Map *starToInfo, Point_Set *numStarNeighboursSet, int num) {
     for (int i = 0; i < hmlen(numStarNeighboursSet); i++) {
         Point starCoordinates = numStarNeighboursSet[i].key;
         Star starInfo = hmget(starToInfo, starCoordinates);
@@ -57,6 +57,26 @@ void updateStarToInfo(Point_To_Star_Info_Map *starToInfo, Point_Set *numStarNeig
         starInfo.neighbourCount += 1;
         hmput(starToInfo, starCoordinates, starInfo);
     }
+    return starToInfo;
+}
+
+Point_Set *updateStarNeighbourSet(Point_To_Star_Info_Map *starToInfo, Point_Set *starNeighbourSet, Point position)
+{
+    int r = position.x;
+    int c = position.y;
+    Point neighbours[] = {
+        {r - 1, c}, {r + 1, c},
+        {r, c - 1}, {r, c + 1},
+        {r - 1, c - 1}, {r - 1, c + 1},
+        {r + 1, c - 1}, {r + 1, c + 1}
+    };
+
+    for (int i = 0; i < 8; i++) {
+        if (hmgeti(starToInfo, neighbours[i]) >= 0) {
+            hmput(starNeighbourSet, neighbours[i], 1);
+        }
+    }
+    return starNeighbourSet;   
 }
 
 int part1(char **grid, int ROWS, int COLS)
@@ -130,48 +150,35 @@ long long int part2(char **grid, int ROWS, int COLS)
             if (isdigit(grid[r][c]))
             {
                 curNum = curNum * 10 + (grid[r][c] - '0');
-                // Check if any neighbour is star and update curNumStarNeighbours
-                Point neighbours[] = {
-                            {r - 1, c}, {r + 1, c},
-                            {r, c - 1}, {r, c + 1},
-                            {r - 1, c - 1}, {r - 1, c + 1},
-                            {r + 1, c - 1}, {r + 1, c + 1}
-                        };
-
-                for (int i = 0; i < 8; i++) {
-                    if (hmgeti(starToInfo, neighbours[i]) >= 0) {
-                        hmput(curNumStarNeighboursSet, neighbours[i], 1);
-                    }
-                }
+                Point position = {r, c};
+                curNumStarNeighboursSet = updateStarNeighbourSet(starToInfo, curNumStarNeighboursSet, position);
             }
             else
             {
-                updateStarToInfo(starToInfo, curNumStarNeighboursSet, curNum);
+                starToInfo = updateStarToInfo(starToInfo, curNumStarNeighboursSet, curNum);
                 hmfree(curNumStarNeighboursSet);
                 curNum = 0;
             }
             
         }
-        updateStarToInfo(starToInfo, curNumStarNeighboursSet, curNum);
+        starToInfo = updateStarToInfo(starToInfo, curNumStarNeighboursSet, curNum);
         hmfree(curNumStarNeighboursSet);
         curNum = 0;
     }
 
     long long int total_gear_ratio = 0;
-    int total_stars = 0;
-    int total_gears = 0;
     for (int i=0; i<hmlen(starToInfo); i++)
     {
-        total_stars++;
         Star star_info = starToInfo[i].value;
         if (star_info.neighbourCount != 2) continue;
-        total_gears++;
         total_gear_ratio += star_info.neighbourProduct;
     }
 
     hmfree(starToInfo);
     return total_gear_ratio;
 }
+
+
 int main(int argc, char **argv) {
     if (argc != 2) {
         fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
