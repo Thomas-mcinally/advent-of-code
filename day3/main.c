@@ -24,7 +24,7 @@ typedef struct
 {
     Point key;
     Star value;
-} Point_To_Star_Info_Map;
+} Point_To_Star_Map;
 
 typedef struct
 {
@@ -60,20 +60,20 @@ int at_least_one_neighbour_is_symbol(char **lines, int i, int j, int max_i, int 
     return 0;
 }
 
-Point_To_Star_Info_Map *updateStarToInfo(Point_To_Star_Info_Map *starToInfo, Point_Set *numStarNeighboursSet, int num)
+Point_To_Star_Map *update_star_info(Point_To_Star_Map *point_to_star, Point_Set *star_neighbour_set, int num)
 {
-    for (int i = 0; i < hmlen(numStarNeighboursSet); i++)
+    for (int i = 0; i < hmlen(star_neighbour_set); i++)
     {
-        Point starCoordinates = numStarNeighboursSet[i].key;
-        Star starInfo = hmget(starToInfo, starCoordinates);
+        Point starCoordinates = star_neighbour_set[i].key;
+        Star starInfo = hmget(point_to_star, starCoordinates);
         starInfo.neighbourProduct *= num;
         starInfo.neighbourCount += 1;
-        hmput(starToInfo, starCoordinates, starInfo);
+        hmput(point_to_star, starCoordinates, starInfo);
     }
-    return starToInfo;
+    return point_to_star;
 }
 
-Point_Set *updateStarNeighbourSet(Point_To_Star_Info_Map *starToInfo, Point_Set *starNeighbourSet, Point position)
+Point_Set *update_star_neighbour_set(Point_To_Star_Map *point_to_star, Point_Set *star_neighbour_set, Point position)
 {
     int r = position.x;
     int c = position.y;
@@ -82,23 +82,23 @@ Point_Set *updateStarNeighbourSet(Point_To_Star_Info_Map *starToInfo, Point_Set 
 
     for (int i = 0; i < 8; i++)
     {
-        if (hmgeti(starToInfo, neighbours[i]) >= 0)
+        if (hmgeti(point_to_star, neighbours[i]) >= 0)
         {
-            hmput(starNeighbourSet, neighbours[i], 1);
+            hmput(star_neighbour_set, neighbours[i], 1);
         }
     }
-    return starNeighbourSet;
+    return star_neighbour_set;
 }
 
-long long int calculate_gear_ratio_from_star_info(Point_To_Star_Info_Map *starToInfo)
+long long int calculate_gear_ratio_from_star_info(Point_To_Star_Map *point_to_star)
 {
     long long int total_gear_ratio = 0;
-    for (int i = 0; i < hmlen(starToInfo); i++)
+    for (int i = 0; i < hmlen(point_to_star); i++)
     {
-        Star star_info = starToInfo[i].value;
-        if (star_info.neighbourCount != 2)
+        Star star = point_to_star[i].value;
+        if (star.neighbourCount != 2)
             continue;
-        total_gear_ratio += star_info.neighbourProduct;
+        total_gear_ratio += star.neighbourProduct;
     }
     return total_gear_ratio;
 }
@@ -111,35 +111,35 @@ int part1(char **grid, int ROWS, int COLS)
         return 1;
     }
 
-    int partNumberSum = 0;
-    int curNum = 0;
-    int curNumIsValid = 0;
+    int part_number_sum = 0;
+    int cur_num = 0;
+    int is_cur_num_valid = 0;
     for (int r = 0; r < ROWS; r++)
     {
         for (int c = 0; c < COLS; c++)
         {
             if (isdigit(grid[r][c]))
             {
-                curNum = curNum * 10 + (grid[r][c] - '0');
+                cur_num = cur_num * 10 + (grid[r][c] - '0');
                 if (at_least_one_neighbour_is_symbol(grid, r, c, ROWS - 1, COLS - 1))
                 {
-                    curNumIsValid = 1;
+                    is_cur_num_valid = 1;
                 }
             }
             else
             {
-                if (curNumIsValid)
-                    partNumberSum += curNum;
-                curNum = 0;
-                curNumIsValid = 0;
+                if (is_cur_num_valid)
+                    part_number_sum += cur_num;
+                cur_num = 0;
+                is_cur_num_valid = 0;
             }
         }
-        if (curNumIsValid)
-            partNumberSum += curNum;
-        curNum = 0;
-        curNumIsValid = 0;
+        if (is_cur_num_valid)
+            part_number_sum += cur_num;
+        cur_num = 0;
+        is_cur_num_valid = 0;
     }
-    return partNumberSum;
+    return part_number_sum;
 }
 
 long long int part2(char **grid, int ROWS, int COLS)
@@ -150,7 +150,7 @@ long long int part2(char **grid, int ROWS, int COLS)
         return 1;
     }
 
-    Point_To_Star_Info_Map *starToInfo = NULL; // (star_x, star_y): {neighbourProduct, neighbourCount}
+    Point_To_Star_Map *point_to_star = NULL; // (star_x, star_y): {neighbourProduct, neighbourCount}
     // find all stars
     for (int r = 0; r < ROWS; r++)
     {
@@ -159,40 +159,40 @@ long long int part2(char **grid, int ROWS, int COLS)
             if (grid[r][c] == '*')
             {
                 Point star_coordinates = {r, c};
-                Star star_info = {1, 0};
-                hmput(starToInfo, star_coordinates, star_info);
+                Star new_star = {1, 0};
+                hmput(point_to_star, star_coordinates, new_star);
             }
         }
     }
 
-    int curNum = 0;
+    int cur_num = 0;
 
-    Point_Set *curNumStarNeighboursSet = NULL; // Set {(x,y), (x,y), (x,y), (x,y)}
+    Point_Set *cur_star_neighbours_set = NULL; // Set {(x,y), (x,y), (x,y), (x,y)}
     for (int r = 0; r < ROWS; r++)
     {
         for (int c = 0; c < COLS; c++)
         {
             if (isdigit(grid[r][c]))
             {
-                curNum = curNum * 10 + (grid[r][c] - '0');
+                cur_num = cur_num * 10 + (grid[r][c] - '0');
                 Point position = {r, c};
-                curNumStarNeighboursSet = updateStarNeighbourSet(starToInfo, curNumStarNeighboursSet, position);
+                cur_star_neighbours_set = update_star_neighbour_set(point_to_star, cur_star_neighbours_set, position);
             }
             else
             {
-                starToInfo = updateStarToInfo(starToInfo, curNumStarNeighboursSet, curNum);
-                hmfree(curNumStarNeighboursSet);
-                curNum = 0;
+                point_to_star = update_star_info(point_to_star, cur_star_neighbours_set, cur_num);
+                hmfree(cur_star_neighbours_set);
+                cur_num = 0;
             }
         }
-        starToInfo = updateStarToInfo(starToInfo, curNumStarNeighboursSet, curNum);
-        hmfree(curNumStarNeighboursSet);
-        curNum = 0;
+        point_to_star = update_star_info(point_to_star, cur_star_neighbours_set, cur_num);
+        hmfree(cur_star_neighbours_set);
+        cur_num = 0;
     }
 
-    long long int total_gear_ratio = calculate_gear_ratio_from_star_info(starToInfo);
+    long long int total_gear_ratio = calculate_gear_ratio_from_star_info(point_to_star);
 
-    hmfree(starToInfo);
+    hmfree(point_to_star);
     return total_gear_ratio;
 }
 
