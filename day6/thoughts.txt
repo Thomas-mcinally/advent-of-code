@@ -1,0 +1,18 @@
+// Try all t values from 1 to max_t-1 and find the first one that works.
+// distance_traveled = (max_t-t) * t
+// NOTE: the graph distance_traveled vs t is symmetrical, so can use the first t that works to calculate last t that works.
+
+
+// binary search to find minimum t to beat race
+// while l <= r
+// choose mid
+// if distance_traveled > record_distance, move left (right pointer moves left)
+// else: move right (left pointer moves right)
+// right pointer ends up on first value before distance_traveled > record_distance
+
+// sol = max_t - r*2 - 1 (-1 at end because can't win with r=0)
+// example1: 7-1*2 -1= 4 (actual ans 4)
+// example2: 15-3*2  -1= 8 (actual ans 8)
+// example3: 30-10*2 -1= 9 (actual ans 9)
+// for each t,d  , figure out number of ways to beat race. 
+// multiply all together
