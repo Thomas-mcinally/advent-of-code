@@ -15,3 +15,8 @@ int main() {
 
     return 0;
 }
+
+
+// Maximum built-in int my system can hold is 2^64 -1. This fits in the type "long long unsigned int" or in "size_t"
+// If need to deal with larger number than this, use the "gmp" library, 
+    // which lets you do arithmetic operations with arbitrarily large numbers
