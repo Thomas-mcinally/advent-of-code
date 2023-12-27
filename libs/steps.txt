@@ -1,0 +1,12 @@
+How to use GMP library:
+    Configure, Compile, and Install: 
+        Navigate to the directory containing the extracted source code and run the following commands in the terminal:
+        ./configure
+        make
+        sudo make install
+
+    Include in your C code:
+        #include <gmp.h>
+
+    Include when you compile with gcc:
+        gcc your_program.c -lgmp
