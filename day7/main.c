@@ -91,11 +91,13 @@ int main(int argc, char **argv)
         for (int j=0; j<arrlen(buckets[i]); j++)
         {
             int bid = extract_number_from_string(buckets[i][j]+6);
-            printf("line: %s, bid: %d\n", buckets[i][j], bid);
             total += bid * rank;
             rank--;
+            free(buckets[i][j]);
         }
+        arrfree(buckets[i]);
     }
+    free(lines);
 
     printf("part1: %llu\n", total);
 

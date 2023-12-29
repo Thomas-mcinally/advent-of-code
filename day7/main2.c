@@ -100,9 +100,11 @@ int main(int argc, char **argv)
             int bid = extract_number_from_string(buckets[i][j] + 6);
             total += bid * rank;
             rank--;
+            free(buckets[i][j]);
         }
+        arrfree(buckets[i]);
     }
-
+    free(lines);
     printf("part2: %llu\n", total);
 
     return 0;
