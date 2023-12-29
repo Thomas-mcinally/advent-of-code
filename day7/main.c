@@ -1,13 +1,3 @@
-// O(N) time complexity
-// 7 buckets, one for each hand type. Bucket 1 is for high card, bucket 7 is for 5-of-a-kind
-// iterate through hands and place them in buckets
-
-// Sort each bucket by card value. (Value order A, K, Q, J, T, 9, 8, 7, 6, 5, 4, 3, 2)
-// Maybe there is a smart way to do this?
-
-// O(N) time complexity
-// Iterate through each hand and add up total.
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -149,3 +139,15 @@ int main(int argc, char **argv)
     printf("part2: %llu\n", part2_total);
     return 0;
 }
+
+
+// O(N) time complexity
+// 7 buckets, one for each hand type. Bucket 1 is for high card, bucket 7 is for 5-of-a-kind
+// iterate through hands and place them in buckets
+
+// O(N^2) with qsort
+// Sort each bucket by card value. (Value order A, K, Q, J, T, 9, 8, 7, 6, 5, 4, 3, 2)
+// Maybe there is a smart way to do this?
+
+// O(N) time complexity
+// Iterate through each hand and add up total.
