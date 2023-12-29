@@ -66,9 +66,9 @@ void sort_hands_into_buckets(char **hands, size_t num_hands, char **buckets[]) {
     }
 }
 
-long long unsigned int calculate_score_from_buckets(char **buckets[]) {
+long long unsigned int calculate_score_from_buckets(char **buckets[], int item_count) {
     long long unsigned int total = 0;
-    int rank = 1000;
+    int rank = item_count;
     for (int i=0; i<7; i++) {
         if (*buckets[i] == NULL) continue;
         order_hands(buckets[i], arrlen(buckets[i]));
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 
     sort_hands_into_buckets(lines, linecount, buckets);
 
-    long long unsigned int total = calculate_score_from_buckets(buckets);
+    long long unsigned int total = calculate_score_from_buckets(buckets, linecount);
 
     printf("part1: %llu\n", total);
 
