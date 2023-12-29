@@ -16,7 +16,7 @@
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 
-const char order_of_chars[] = "AKQJT98765432";
+char order_of_chars[] = "AKQJT98765432";
 
 int custom_compare(const void *a, const void *b) {
     const char *str_a = *(const char **)a;
@@ -66,6 +66,49 @@ void sort_hands_into_buckets(char **hands, size_t num_hands, char **buckets[]) {
     }
 }
 
+void sort_hands_into_buckets_part2(char **hands, size_t num_hands, char **buckets[]){
+    for (int i = 0; i < num_hands; i++)
+    {
+        int counts[13] = {0};
+        int three_of_a_kind = 0;
+        int two_of_a_kind = 0;
+        int four_of_a_kind = 0;
+        int five_of_a_kind = 0;
+        for (int j = 0; j < 5; j++)
+        {
+            int index = strchr(order_of_chars, hands[i][j]) - order_of_chars;
+            counts[index]++;
+            if (index == 12)
+                continue;
+            else if (counts[index] == 2)
+                two_of_a_kind++;
+            else if (counts[index] == 3)
+            {
+                three_of_a_kind++;
+                two_of_a_kind--;
+            }
+            else if (counts[index] == 4)
+                four_of_a_kind++;
+            else if (counts[index] == 5)
+                five_of_a_kind++;
+        }
+        if (five_of_a_kind || (counts[12] == 1 && four_of_a_kind) || (counts[12] == 2 && three_of_a_kind) || (counts[12] == 3 && two_of_a_kind) || (counts[12] == 4) || (counts[12] == 5))
+            arrput(buckets[0], hands[i]);
+        else if (four_of_a_kind || (counts[12] == 1 && three_of_a_kind) || (counts[12] == 2 && two_of_a_kind) || (counts[12] == 3))
+            arrput(buckets[1], hands[i]);
+        else if ((three_of_a_kind && two_of_a_kind) || (counts[12] == 1 && two_of_a_kind == 2))
+            arrput(buckets[2], hands[i]);
+        else if (three_of_a_kind || (counts[12] == 1 && two_of_a_kind) || counts[12] == 2)
+            arrput(buckets[3], hands[i]);
+        else if (two_of_a_kind == 2)
+            arrput(buckets[4], hands[i]);
+        else if (two_of_a_kind || (counts[12] == 1))
+            arrput(buckets[5], hands[i]);
+        else
+            arrput(buckets[6], hands[i]);
+    }
+}
+
 long long unsigned int calculate_score_from_buckets(char **buckets[], int item_count) {
     long long unsigned int total = 0;
     int rank = item_count;
@@ -95,16 +138,18 @@ int main(int argc, char **argv)
     int linecount = read_file_to_lines(&lines, file_path);
 
     char **buckets[7] = {NULL};
-
     sort_hands_into_buckets(lines, linecount, buckets);
-
-    long long unsigned int total = calculate_score_from_buckets(buckets, linecount);
-
-    printf("part1: %llu\n", total);
-
-
+    long long unsigned int part1_total = calculate_score_from_buckets(buckets, linecount);
+    for (int i=0; i<7; i++) arrfree(buckets[i]);
+    
+    strcpy(order_of_chars, "AKQT98765432J");
+    sort_hands_into_buckets_part2(lines, linecount, buckets);
+    long long unsigned int part2_total = calculate_score_from_buckets(buckets, linecount);
     for (int i=0; i<7; i++) arrfree(buckets[i]);
     for (int i=0; i<linecount; i++) free(lines[i]);
     free(lines);
+
+    printf("part1: %llu\n", part1_total);
+    printf("part2: %llu\n", part2_total);
     return 0;
 }
