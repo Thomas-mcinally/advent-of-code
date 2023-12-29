@@ -13,11 +13,11 @@ void get_list_of_intervals_from_raw_input(char **lines, long long int list_of_in
   for (int i = 0; i < line_count; i++)
   {
     int j = 0;
-    long long int first_num = extract_number_from_string(lines[i], &j);
+    long long int first_num = extract_number_from_string_starting_from(lines[i], &j);
     j++;
-    long long int second_num = extract_number_from_string(lines[i], &j);
+    long long int second_num = extract_number_from_string_starting_from(lines[i], &j);
     j++;
-    long long int third_num = extract_number_from_string(lines[i], &j);
+    long long int third_num = extract_number_from_string_starting_from(lines[i], &j);
 
     list_of_intervals[i][0] = second_num;
     list_of_intervals[i][1] = second_num + third_num - 1;
@@ -35,7 +35,7 @@ void get_list_of_seeds_from_raw_input(char *seed_line, long long int seeds[100])
 
   while (seed_line[j] != '\0')
   {
-    long long int next_num = extract_number_from_string(seed_line, &j);
+    long long int next_num = extract_number_from_string_starting_from(seed_line, &j);
     if (seed_line[j] == ' ') j++;
     seeds[i] = next_num;
     i++;

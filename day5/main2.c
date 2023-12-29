@@ -13,11 +13,11 @@ void get_list_of_intervals_from_raw_input(char **lines, long long int list_of_in
   for (int i = 0; i < line_count; i++)
   {
     int j = 0;
-    long long int first_num = extract_number_from_string(lines[i], &j);
+    long long int first_num = extract_number_from_string_starting_from(lines[i], &j);
     j++;
-    long long int second_num = extract_number_from_string(lines[i], &j);
+    long long int second_num = extract_number_from_string_starting_from(lines[i], &j);
     j++;
-    long long int third_num = extract_number_from_string(lines[i], &j);
+    long long int third_num = extract_number_from_string_starting_from(lines[i], &j);
 
     list_of_intervals[i][0] = first_num;
     list_of_intervals[i][1] = first_num + third_num - 1;

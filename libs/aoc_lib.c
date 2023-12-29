@@ -79,7 +79,7 @@ int count_lines(char *contents)
   return result;
 }
 
-long long int extract_number_from_string(const char *str, int *index)
+long long int extract_number_from_string_starting_from(const char *str, int *index)
 {
   long long int result = 0;
   while (isdigit(str[*index]))
@@ -87,6 +87,19 @@ long long int extract_number_from_string(const char *str, int *index)
     result *= 10;
     result += str[*index] - '0';
     (*index)++;
+  }
+  return result;
+}
+
+long long int extract_number_from_string(const char *str)
+{
+  size_t index = 0;
+  long long int result = 0;
+  while (isdigit(str[index]))
+  {
+    result *= 10;
+    result += str[index] - '0';
+    (index)++;
   }
   return result;
 }

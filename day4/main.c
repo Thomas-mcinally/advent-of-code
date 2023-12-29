@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
         int j = 10;
         while (lines[i][j] != '|') 
         {
-            int next_num = extract_number_from_string(lines[i], &j);
+            int next_num = extract_number_from_string_starting_from(lines[i], &j);
             if (next_num != 0) seen_nums[next_num] = 1;
             if (lines[i][j] == ' ') j++;
         }
@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
         int matches_found = 0;
         while (lines[i][j] != '\0')
         {
-            int next_num = extract_number_from_string(lines[i], &j);
+            int next_num = extract_number_from_string_starting_from(lines[i], &j);
             if (seen_nums[next_num]) matches_found += 1;
             if (lines[i][j] == ' ') j++;
         }
