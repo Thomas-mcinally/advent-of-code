@@ -25,6 +25,7 @@ int custom_compare(const void *a, const void *b) {
 }
 
 void sort_hands_into_buckets(char **hands, size_t num_hands, char **buckets[]) {
+    char possible_chars[] = "AKQJT98765432";
     for (int i=0; i<num_hands; i++) {
         int counts[13] = {0};
         int three_of_a_kind = 0;
@@ -32,7 +33,7 @@ void sort_hands_into_buckets(char **hands, size_t num_hands, char **buckets[]) {
         int four_of_a_kind = 0;
         int five_of_a_kind = 0;
         for (int j=0; j<5; j++) {
-            int index = strchr(order_of_chars, hands[i][j]) - order_of_chars;
+            int index = strchr(possible_chars, hands[i][j]) - possible_chars;
             counts[index]++;
             if (counts[index] == 2) two_of_a_kind++;
             else if (counts[index] == 3) {
@@ -53,6 +54,7 @@ void sort_hands_into_buckets(char **hands, size_t num_hands, char **buckets[]) {
 }
 
 void sort_hands_into_buckets_part2(char **hands, size_t num_hands, char **buckets[]){
+    char possible_chars[] = "JAKQT98765432";
     for (int i = 0; i < num_hands; i++)
     {
         int counts[13] = {0};
@@ -62,10 +64,9 @@ void sort_hands_into_buckets_part2(char **hands, size_t num_hands, char **bucket
         int five_of_a_kind = 0;
         for (int j = 0; j < 5; j++)
         {
-            int index = strchr(order_of_chars, hands[i][j]) - order_of_chars;
+            int index = strchr(possible_chars, hands[i][j]) - possible_chars;
             counts[index]++;
-            if (index == 12)
-                continue;
+            if (index ==0) continue;
             else if (counts[index] == 2)
                 two_of_a_kind++;
             else if (counts[index] == 3)
@@ -78,20 +79,20 @@ void sort_hands_into_buckets_part2(char **hands, size_t num_hands, char **bucket
             else if (counts[index] == 5)
                 five_of_a_kind++;
         }
-        if (five_of_a_kind || (counts[12] == 1 && four_of_a_kind) || (counts[12] == 2 && three_of_a_kind) || (counts[12] == 3 && two_of_a_kind) || (counts[12] == 4) || (counts[12] == 5))
-            arrput(buckets[0], hands[i]);
-        else if (four_of_a_kind || (counts[12] == 1 && three_of_a_kind) || (counts[12] == 2 && two_of_a_kind) || (counts[12] == 3))
-            arrput(buckets[1], hands[i]);
-        else if ((three_of_a_kind && two_of_a_kind) || (counts[12] == 1 && two_of_a_kind == 2))
-            arrput(buckets[2], hands[i]);
-        else if (three_of_a_kind || (counts[12] == 1 && two_of_a_kind) || counts[12] == 2)
-            arrput(buckets[3], hands[i]);
-        else if (two_of_a_kind == 2)
-            arrput(buckets[4], hands[i]);
-        else if (two_of_a_kind || (counts[12] == 1))
-            arrput(buckets[5], hands[i]);
-        else
-            arrput(buckets[6], hands[i]);
+        while (counts[0] > 0)
+        {
+            if (four_of_a_kind) {four_of_a_kind--;five_of_a_kind++;counts[0]--;continue;}
+            if (three_of_a_kind) {three_of_a_kind--;four_of_a_kind++;counts[0]--;continue;}
+            if (two_of_a_kind) {two_of_a_kind--;three_of_a_kind++;counts[0]--;continue;}
+            two_of_a_kind++;counts[0]--;
+        }
+        if (five_of_a_kind) arrput(buckets[0], hands[i]);
+        else if (four_of_a_kind) arrput(buckets[1], hands[i]);
+        else if (three_of_a_kind && two_of_a_kind) arrput(buckets[2], hands[i]);
+        else if (three_of_a_kind) arrput(buckets[3], hands[i]);
+        else if (two_of_a_kind == 2) arrput(buckets[4], hands[i]);
+        else if (two_of_a_kind) arrput(buckets[5], hands[i]);
+        else arrput(buckets[6], hands[i]);
     }
 }
 
