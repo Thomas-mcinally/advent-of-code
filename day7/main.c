@@ -34,10 +34,6 @@ int custom_compare(const void *a, const void *b) {
     return 0;
 }
 
-void order_hands(char *hands[], size_t num_hands) {
-    qsort(hands, num_hands, sizeof(hands[0]), custom_compare);
-}
-
 void sort_hands_into_buckets(char **hands, size_t num_hands, char **buckets[]) {
     for (int i=0; i<num_hands; i++) {
         int counts[13] = {0};
@@ -114,7 +110,7 @@ long long unsigned int calculate_score_from_buckets(char **buckets[], int item_c
     int rank = item_count;
     for (int i=0; i<7; i++) {
         if (*buckets[i] == NULL) continue;
-        order_hands(buckets[i], arrlen(buckets[i]));
+        qsort(buckets[i], arrlen(buckets[i]), sizeof(buckets[i][0]), custom_compare);
         
         for (int j=0; j<arrlen(buckets[i]); j++) {
             int bid = extract_number_from_string(buckets[i][j]+6);
