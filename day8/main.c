@@ -37,8 +37,7 @@ void part1(Node_To_Neighbours *adj, char *instructions, int instruction_length)
         if (instructions[i] == 'L') current_node = current_node_neighbours[0];
         else current_node = current_node_neighbours[1];
         step_count++;
-        i++;
-        if (i == instruction_length) i = 0;
+        i = (i+1) % instruction_length;
     }
     printf("Part1: %d\n", step_count);
 }
@@ -55,22 +54,21 @@ void part2_lcm(Node_To_Neighbours *adj, char *instructions, int instruction_leng
     }
     int N = arrlen(level);
 
-    int steps_taken[N];
+    int steps_to_reach_end[N];
     for (int i=0;i<N;i++) {
-        steps_taken[i] = 0;
+        steps_to_reach_end[i] = 0;
         char *current_node = level[i];
         int j=0;
         while(current_node[2] != 'Z'){
             char **current_node_neighbours = shget(adj, current_node);
             if (instructions[j] == 'L') current_node = current_node_neighbours[0];
             else current_node = current_node_neighbours[1];
-            steps_taken[i]++;
-            j++;
-            if (j == instruction_length) j = 0;
+            steps_to_reach_end[i]++;
+            j = (j+1) % instruction_length;
         }
     }
 
-    size_t ans = lcm(steps_taken, N);
+    size_t ans = lcm(steps_to_reach_end, N);
     printf("Part2: %zu\n", ans);
     arrfree(level);
 }
@@ -90,7 +88,6 @@ void part2_brute_force(Node_To_Neighbours *adj, char *instructions, int instruct
     while (1)
     {
         int is_next_level_all_z = 1;
-        int z_count = 0;
         for (int i=0; i < N; i++)
         {
             char *current_node = level[i];
@@ -99,15 +96,10 @@ void part2_brute_force(Node_To_Neighbours *adj, char *instructions, int instruct
             if (instructions[j] == 'L') next_node = current_node_neighbours[0];
             else next_node = current_node_neighbours[1];
             if (next_node[2] != 'Z') is_next_level_all_z = 0;
-            else {
-                z_count++;
-            }
             level[i] = next_node;
         }
         step_count++;
-        j++;
-        if (z_count > 2) printf("step: %zu had z_count: %d\n", step_count, z_count);
-        if (j == instruction_length) j = 0;
+        j = (j+1) % instruction_length;
         if (is_next_level_all_z == 1) break;      
     }
 
@@ -149,10 +141,10 @@ int main(int argc, char **argv)
     part2_lcm(adj, instructions, instruction_length);
 
 
-    for (int i = 0; i < linecount; i++) free(lines[i]);
-    free(lines);
     for (int i = 0; i < shlen(adj); i++) free(adj[i].value);
     hmfree(adj);
+    for (int i = 0; i < linecount; i++) free(lines[i]);
+    free(lines);
     return 0;
 }
 
