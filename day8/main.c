@@ -10,6 +10,20 @@ typedef struct {
     char **value;
 } Node_To_Neighbours;
 
+size_t gcd(size_t a, size_t b) {
+    if (b == 0) return a;
+    return gcd(b, a % b);
+}
+ 
+size_t lcm(int arr[], size_t n) {
+  size_t ans = arr[0];
+ 
+  for (size_t i = 1; i < n; i++)
+    ans = (((arr[i] * ans)) / (gcd(arr[i], ans)));
+ 
+  return ans;
+}
+
 void part1(Node_To_Neighbours *adj, char *instructions, int instruction_length)
 {
     char *current_node = "AAA";
@@ -26,6 +40,81 @@ void part1(Node_To_Neighbours *adj, char *instructions, int instruction_length)
     }
     printf("Part1: %d\n", step_count);
 }
+
+void part2_lcm(Node_To_Neighbours *adj, char *instructions, int instruction_length)
+{
+    // Hidden assumption in problem statement: After each Z node, the next node is the same as the second node on the path to this Z-node
+    // i.e. There are N isolated paths, each of which has exactly one A node and one Z node
+    // Need to find the Lowest Common Multiple of the path lengths
+    char **level = NULL;
+    for (int i = 0; i < shlen(adj); i++)
+    {
+        if (adj[i].key[2] == 'A') arrput(level, adj[i].key);
+    }
+    int N = arrlen(level);
+
+    int steps_taken[N];
+    for (int i=0;i<N;i++) {
+        steps_taken[i] = 0;
+        char *current_node = level[i];
+        int j=0;
+        while(current_node[2] != 'Z'){
+            char **current_node_neighbours = shget(adj, current_node);
+            if (instructions[j] == 'L') current_node = current_node_neighbours[0];
+            else current_node = current_node_neighbours[1];
+            steps_taken[i]++;
+            j++;
+            if (j == instruction_length) j = 0;
+        }
+    }
+
+    size_t ans = lcm(steps_taken, N);
+    printf("Part2: %zu\n", ans);
+    arrfree(level);
+}
+
+void part2_brute_force(Node_To_Neighbours *adj, char *instructions, int instruction_length)
+{
+    // Takes a very long time
+    char **level = NULL;
+    for (int i = 0; i < shlen(adj); i++)
+    {
+        if (adj[i].key[2] == 'A') arrput(level, adj[i].key);
+    }
+    int N = arrlen(level);
+
+    size_t step_count = 0;
+    int j = 0;
+    while (1)
+    {
+        int is_next_level_all_z = 1;
+        int z_count = 0;
+        for (int i=0; i < N; i++)
+        {
+            char *current_node = level[i];
+            char **current_node_neighbours = shget(adj, current_node);
+            char *next_node;
+            if (instructions[j] == 'L') next_node = current_node_neighbours[0];
+            else next_node = current_node_neighbours[1];
+            if (next_node[2] != 'Z') is_next_level_all_z = 0;
+            else {
+                z_count++;
+            }
+            level[i] = next_node;
+        }
+        step_count++;
+        j++;
+        if (z_count > 2) printf("step: %zu had z_count: %d\n", step_count, z_count);
+        if (j == instruction_length) j = 0;
+        if (is_next_level_all_z == 1) break;      
+    }
+
+    printf("Part2: %zu\n", step_count);
+    arrfree(level);
+}
+
+
+
 int main(int argc, char **argv)
 {
     if (argc != 2)
@@ -55,36 +144,13 @@ int main(int argc, char **argv)
         shput(adj, line, neighbours);
     }
     part1(adj, instructions, instruction_length);
+    part2_lcm(adj, instructions, instruction_length);
 
 
     for (int i = 0; i < linecount; i++) free(lines[i]);
     free(lines);
     for (int i = 0; i < shlen(adj); i++) free(adj[i].value);
     hmfree(adj);
-
-
-// Part2 pseudocode
-// queue "level" with N items in it, ["BBA", "AAA", "CCA"], N is number of nodes that end in A
-
-// int step_count = 0
-// while (1)
-    // int queue_all_z = 1
-    // char *next_level[N] = {}
-    // for (int i = 0; i < N; i++)
-        // char *current_node = level[i]
-        // char **current_node_neighbours = shget(adj, current_node)
-        // if instructions[j] == 'L' next_node = current_node_neighbours[0]
-        // else next_node = current_node_neighbours[1]
-        // if next_node[2] != 'Z' queue_all_z = 0
-        // next_level[i] = next_node
-    // step_count++
-    // if queue_all_z == 1 return step_count
-
-
-
-
-
-
     return 0;
 }
 
@@ -93,4 +159,8 @@ int main(int argc, char **argv)
     // First line -> char array "instructions"
     // All other lines -> graph adjacency list, i.e.  hashmap {node: [neighbourL, neighbourR]}
 
+// Part1
 // Traverse graph using adjacency list and insturctions, until reach node ZZZ. Assume able to reach ZZZ.
+
+// Part2
+// LCM trick, see notes inside part2_lcm function
