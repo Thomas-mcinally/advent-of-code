@@ -44,7 +44,7 @@ void part1(Node_To_Neighbours *adj, char *instructions, int instruction_length)
 
 void part2_lcm(Node_To_Neighbours *adj, char *instructions, int instruction_length)
 {
-    // Hidden assumption in problem statement: After each Z node, the next node is the same as the second node on the path to this Z-node
+    // Assumption we can make(not evident from problem statement): After each Z node, the next node is the same as the second node on the path to this Z-node
     // i.e. There are N isolated paths, each of which has exactly one A node and one Z node
     // Need to find the Lowest Common Multiple of the path lengths
     char **level = NULL;
