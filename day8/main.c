@@ -26,7 +26,7 @@ int main(int argc, char **argv)
     int instruction_length = strlen(instructions);
 
     Node_To_Neighbours *adj = NULL;
-    for (int i = 2; i < linecount-1; i++)
+    for (int i = 2; i < linecount; i++)
     {
         char *line = lines[i];
         line[3] = '\0';
@@ -37,17 +37,17 @@ int main(int argc, char **argv)
         neighbours[0] = line + 7;
         neighbours[1] = line + 12;
         shput(adj, line, neighbours);
+        if (i == linecount-1) printf("last line processed: %s\n", line);
     }
-    char **val = shget(adj, "AAA"); 
-    printf("neighbours of AAA: %s, %s\n", val[0], val[1]);
 
     char *current_node = "AAA";
     int step_count = 0;
     int i = 0;
     while (strcmp(current_node, "ZZZ") != 0)
     {
-        if (instructions[i] == 'L') current_node = shget(adj, current_node)[0];
-        else current_node = shget(adj, current_node)[1];
+        char **current_node_neighbours = shget(adj, current_node);
+        if (instructions[i] == 'L') current_node = current_node_neighbours[0];
+        else current_node = current_node_neighbours[1];
         step_count++;
         i++;
         if (i == instruction_length) i = 0;
