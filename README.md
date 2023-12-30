@@ -19,3 +19,7 @@ TODO, to make this project professional:
 - Improved folder structure and refactor code to be professional
 - Get feedback from experienced C developer
 - Redo in C++ to see main differences?
+
+
+Useful scripts:
+- gcc main.c ../libs/aoc_lib.c -I ../libs

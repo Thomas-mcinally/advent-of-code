@@ -76,13 +76,6 @@ int main() {
     printf("Testing hashmap with arr values\n");
     Map_Element_Arr_Values *map_arr_values = NULL;
     int value2[3] = {0,2,4};
-    int (*ptr_arr)[3] = &value2;
-    printf("ptr_arr[0]: %d\n", (*ptr_arr)[0]); // expect 0
-    printf("ptr_arr[1]: %d\n", (*ptr_arr)[1]); // expect 2
-    printf("ptr_arr[2]: %d\n", (*ptr_arr)[2]); // expect 4
-    printf("arr[0]: %d\n", value2[0]); // expect 0
-    printf("arr[1]: %d\n", value2[1]); // expect 2
-    printf("arr[2]: %d\n", value2[2]); // expect 4
 
     hmput(map_arr_values, 1, &value2);
     printf("first val of map[1] before change: %d\n", (*hmget(map_arr_values, 1))[0]); //expect 0
