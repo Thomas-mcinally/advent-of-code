@@ -11,6 +11,7 @@ typedef struct {
 } Node_To_Neighbours;
 
 size_t gcd(size_t a, size_t b) {
+    // Euclidean algorithm
     if (b == 0) return a;
     return gcd(b, a % b);
 }
@@ -18,8 +19,9 @@ size_t gcd(size_t a, size_t b) {
 size_t lcm(int arr[], size_t n) {
   size_t ans = arr[0];
  
-  for (size_t i = 1; i < n; i++)
-    ans = (((arr[i] * ans)) / (gcd(arr[i], ans)));
+  for (size_t i = 1; i < n; i++){
+    ans = (ans * arr[i]) / gcd(ans, arr[i]);
+  }
  
   return ans;
 }
