@@ -20,6 +20,9 @@ TODO, to make this project professional:
 - Get feedback from experienced C developer
 - Redo in C++ to see main differences?
 
+TODO - implement optimal solutions:
+- Day9: https://www.reddit.com/r/adventofcode/comments/18eiv3z/2023_day_9_how_to_solve_it_by_only_iterating/
+
 
 Useful scripts:
 - gcc main.c ../libs/aoc_lib.c -I ../libs
