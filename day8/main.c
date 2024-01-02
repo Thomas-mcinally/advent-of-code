@@ -1,6 +1,6 @@
 #include <string.h>
 #include <stdio.h>
-
+#include <stdbool.h>
 #include "aoc_lib.h"
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
@@ -87,7 +87,7 @@ void part2_brute_force(Node_To_Neighbours *adj, char *instructions, int instruct
     int j = 0;
     while (1)
     {
-        int is_next_level_all_z = 1;
+        bool is_next_level_all_z = true;
         for (int i=0; i < N; i++)
         {
             char *current_node = level[i];
@@ -95,12 +95,12 @@ void part2_brute_force(Node_To_Neighbours *adj, char *instructions, int instruct
             char *next_node;
             if (instructions[j] == 'L') next_node = current_node_neighbours[0];
             else next_node = current_node_neighbours[1];
-            if (next_node[2] != 'Z') is_next_level_all_z = 0;
+            if (next_node[2] != 'Z') is_next_level_all_z = false;
             level[i] = next_node;
         }
         step_count++;
         j = (j+1) % instruction_length;
-        if (is_next_level_all_z == 1) break;      
+        if (is_next_level_all_z) break;      
     }
 
     printf("Part2: %zu\n", step_count);

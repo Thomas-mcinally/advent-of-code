@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -32,32 +33,32 @@ typedef struct
     int value; // dummy value
 } Point_Set;
 
-int is_symbol(char c)
+bool is_symbol(char c)
 {
     if (isdigit(c) || c == '.')
-        return 0;
-    return 1;
+        return false;
+    return true;
 }
 
-int at_least_one_neighbour_is_symbol(char **lines, int i, int j, int max_i, int max_j)
+bool at_least_one_neighbour_is_symbol(char **lines, int i, int j, int max_i, int max_j)
 {
     if (j > 0 && is_symbol(lines[i][j - 1]))
-        return 1;
+        return true;
     if (j < max_j && is_symbol(lines[i][j + 1]))
-        return 1;
+        return true;
     if (i > 0 && is_symbol(lines[i - 1][j]))
-        return 1;
+        return true;
     if (i < max_i && is_symbol(lines[i + 1][j]))
-        return 1;
+        return true;
     if (i > 0 && j > 0 && is_symbol(lines[i - 1][j - 1]))
-        return 1;
+        return true;
     if (i > 0 && j < max_j && is_symbol(lines[i - 1][j + 1]))
-        return 1;
+        return true;
     if (i < max_i && j > 0 && is_symbol(lines[i + 1][j - 1]))
-        return 1;
+        return true;
     if (i < max_i && j < max_j && is_symbol(lines[i + 1][j + 1]))
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 Point_To_Star_Map *update_star_info(Point_To_Star_Map *point_to_star, Point_Set *star_neighbour_set, int num)
@@ -113,7 +114,7 @@ int part1(char **grid, int ROWS, int COLS)
 
     int part_number_sum = 0;
     int cur_num = 0;
-    int is_cur_num_valid = 0;
+    bool is_cur_num_valid = false;
     for (int r = 0; r < ROWS; r++)
     {
         for (int c = 0; c < COLS; c++)
@@ -123,7 +124,7 @@ int part1(char **grid, int ROWS, int COLS)
                 cur_num = cur_num * 10 + (grid[r][c] - '0');
                 if (at_least_one_neighbour_is_symbol(grid, r, c, ROWS - 1, COLS - 1))
                 {
-                    is_cur_num_valid = 1;
+                    is_cur_num_valid = true;
                 }
             }
             else
@@ -131,13 +132,13 @@ int part1(char **grid, int ROWS, int COLS)
                 if (is_cur_num_valid)
                     part_number_sum += cur_num;
                 cur_num = 0;
-                is_cur_num_valid = 0;
+                is_cur_num_valid = false;
             }
         }
         if (is_cur_num_valid)
             part_number_sum += cur_num;
         cur_num = 0;
-        is_cur_num_valid = 0;
+        is_cur_num_valid = false;
     }
     return part_number_sum;
 }

@@ -1,27 +1,28 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "aoc_lib.h"
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 
-int extrapolate_next_val(int *nums, int num_count, int is_part1){
+int extrapolate_next_val(int *nums, int num_count, bool is_part1){
     int *operands = NULL;
     int *cur_arr = NULL;
     int *next_arr = NULL;
 
     for (int i=0; i<num_count; i++) arrput(cur_arr, nums[i]);
 
-    int next_arr_all_zeroes = 0;
-    while (next_arr_all_zeroes == 0) {
+    bool is_next_arr_all_zeroes = false;
+    while (!is_next_arr_all_zeroes) {
         if (is_part1) arrpush(operands, arrlast(cur_arr));
         else arrpush(operands, cur_arr[0]);
 
-        next_arr_all_zeroes = 1;
+        is_next_arr_all_zeroes = true;
         for (int i = 1; i < arrlen(cur_arr); i++)
         {
             int diff = cur_arr[i] - cur_arr[i-1];
-            if (diff != 0) next_arr_all_zeroes = 0;
+            if (diff != 0) is_next_arr_all_zeroes = false;
             arrput(next_arr, diff);
         }
         arrfree(cur_arr);
@@ -86,8 +87,8 @@ int main(int argc, char **argv)
     {
         int *num_arr = num_arrs[i];
         int num_count = arrlen(num_arr);
-        part1_result += extrapolate_next_val(num_arr, num_count, 1);
-        part2_result += extrapolate_next_val(num_arr, num_count, 0);
+        part1_result += extrapolate_next_val(num_arr, num_count, true);
+        part2_result += extrapolate_next_val(num_arr, num_count, false);
         arrfree(num_arr);
     }
     arrfree(num_arrs);

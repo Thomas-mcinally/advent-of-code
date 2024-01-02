@@ -1,22 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 
 #include "aoc_lib.h"
 
-int read_string_digit(char *string, int is_start)
+int read_string_digit(char *string, bool is_start)
 {
-    if (strncmp(is_start==1?string:string-3, "zero", 4) == 0) return 0;
-    if (strncmp(is_start==1?string:string-2, "one", 3) == 0) return 1;
-    if (strncmp(is_start==1?string:string-2, "two", 3) == 0) return 2;
-    if (strncmp(is_start==1?string:string-4, "three", 5) == 0) return 3;
-    if (strncmp(is_start==1?string:string-3, "four", 4) == 0) return 4;
-    if (strncmp(is_start==1?string:string-3, "five", 4) == 0) return 5;
-    if (strncmp(is_start==1?string:string-2, "six", 3) == 0) return 6;
-    if (strncmp(is_start==1?string:string-4, "seven", 5) == 0) return 7;
-    if (strncmp(is_start==1?string:string-4, "eight", 5) == 0) return 8;
-    if (strncmp(is_start==1?string:string-3, "nine", 4) == 0) return 9;
+    if (strncmp(is_start?string:string-3, "zero", 4) == 0) return 0;
+    if (strncmp(is_start?string:string-2, "one", 3) == 0) return 1;
+    if (strncmp(is_start?string:string-2, "two", 3) == 0) return 2;
+    if (strncmp(is_start?string:string-4, "three", 5) == 0) return 3;
+    if (strncmp(is_start?string:string-3, "four", 4) == 0) return 4;
+    if (strncmp(is_start?string:string-3, "five", 4) == 0) return 5;
+    if (strncmp(is_start?string:string-2, "six", 3) == 0) return 6;
+    if (strncmp(is_start?string:string-4, "seven", 5) == 0) return 7;
+    if (strncmp(is_start?string:string-4, "eight", 5) == 0) return 8;
+    if (strncmp(is_start?string:string-3, "nine", 4) == 0) return 9;
     return -1;
 }
 
@@ -42,7 +43,7 @@ int main(int argc, char **argv) {
                 count += (lines[i][j] - '0') * 10;
                 break;
             }
-            int string_digit = read_string_digit(&lines[i][j], 1);
+            int string_digit = read_string_digit(&lines[i][j], true);
             if (string_digit != -1)
             {
                 count += string_digit * 10;
@@ -59,7 +60,7 @@ int main(int argc, char **argv) {
                 count += lines[i][j] - '0';
                 break;
             }
-            int string_digit = read_string_digit(&lines[i][j], 0);
+            int string_digit = read_string_digit(&lines[i][j], false);
             if (string_digit != -1)
             {
                 count += string_digit;

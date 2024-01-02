@@ -7,6 +7,7 @@
         "string.h": "c",
         "ctype.h": "c",
         "stdio.h": "c",
-        "stb_ds.h": "c"
+        "stb_ds.h": "c",
+        "stdbool.h": "c"
     }
 }
