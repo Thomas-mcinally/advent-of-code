@@ -5,7 +5,7 @@
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 
-int calculate_next_val(int *nums, int num_count, int is_part1){
+int extrapolate_next_val(int *nums, int num_count, int is_part1){
     int *operands = NULL;
     int *cur_arr = NULL;
     int *next_arr = NULL;
@@ -45,6 +45,27 @@ int calculate_next_val(int *nums, int num_count, int is_part1){
     return result;
 }
 
+int **split_string_lines_into_int_lines(char **string_lines, int linecount, char *separator)
+// output nums must be freed by caller
+{
+  int **nums = NULL;
+  for (int i = 0; i < linecount; i++)
+    {
+        char **substrings = NULL;
+        int substring_count = split_string_by_delimiter_string(string_lines[i], " ", &substrings);
+
+        int *num_arr = NULL;
+        for (int i=0; i<substring_count; i++) {
+            int num = atoi(substrings[i]);
+            arrput(num_arr, num);
+            free(substrings[i]);
+        }
+        arrput(nums, num_arr);
+        free(substrings);
+    }
+  return nums;
+}
+
 int main(int argc, char **argv)
 {
     if (argc != 2)
@@ -57,35 +78,24 @@ int main(int argc, char **argv)
     char **lines = NULL;
     int linecount = read_file_to_lines(&lines, file_path);
 
-    // turn input into array of array of ints
-    int **nums = NULL;
-    for (int i = 0; i < linecount; i++)
-    {
-        char *line = lines[i];
-        int *num_arr = NULL;
-        char *token = strtok(line, " ");
-        while (token != NULL)
-        {
-            int num = atoi(token);
-            arrput(num_arr, num);
-            token = strtok(NULL, " ");
-        }
-        arrput(nums, num_arr);
-    }
-
+    int **num_arrs = split_string_lines_into_int_lines(lines, linecount, " ");
 
     int part1_result = 0;
     int part2_result = 0;
     for (int i = 0; i < linecount; i++)
     {
-        int *num_arr = nums[i];
+        int *num_arr = num_arrs[i];
         int num_count = arrlen(num_arr);
-        part1_result += calculate_next_val(num_arr, num_count, 1);
-        part2_result += calculate_next_val(num_arr, num_count, 0);
+        part1_result += extrapolate_next_val(num_arr, num_count, 1);
+        part2_result += extrapolate_next_val(num_arr, num_count, 0);
         arrfree(num_arr);
     }
-    arrfree(nums);
+    arrfree(num_arrs);
 
     printf("Part1: %d\n", part1_result);
     printf("Part2: %d\n", part2_result);
+
+    for (int i = 0; i < linecount; i++) free(lines[i]);
+    free(lines);
+    return 0;
 }
