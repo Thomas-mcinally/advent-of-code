@@ -73,14 +73,17 @@ int main(int argc, char **argv)
 
 
     int part1_result = 0;
+    int part2_result = 0;
     for (int i = 0; i < linecount; i++)
     {
         int *num_arr = nums[i];
         int num_count = arrlen(num_arr);
-        int next_val = calculate_next_val(num_arr, num_count, 1);
-        part1_result += next_val;
+        part1_result += calculate_next_val(num_arr, num_count, 1);
+        part2_result += calculate_next_val(num_arr, num_count, 0);
         arrfree(num_arr);
     }
     arrfree(nums);
+
     printf("Part1: %d\n", part1_result);
+    printf("Part2: %d\n", part2_result);
 }
