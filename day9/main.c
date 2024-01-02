@@ -5,15 +5,18 @@
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 
-int calculate_next_val(int *nums, int num_count){
-    int result = nums[num_count-1];
-
+int calculate_next_val(int *nums, int num_count, int is_part1){
+    int *operands = NULL;
     int *cur_arr = NULL;
-    for (int i=0; i<num_count; i++) arrput(cur_arr, nums[i]);
     int *next_arr = NULL;
+
+    for (int i=0; i<num_count; i++) arrput(cur_arr, nums[i]);
 
     int next_arr_all_zeroes = 0;
     while (next_arr_all_zeroes == 0) {
+        if (is_part1) arrpush(operands, arrlast(cur_arr));
+        else arrpush(operands, cur_arr[0]);
+
         next_arr_all_zeroes = 1;
         for (int i = 1; i < arrlen(cur_arr); i++)
         {
@@ -21,11 +24,21 @@ int calculate_next_val(int *nums, int num_count){
             if (diff != 0) next_arr_all_zeroes = 0;
             arrput(next_arr, diff);
         }
-        result += arrlast(next_arr);
         arrfree(cur_arr);
         cur_arr = next_arr;
         next_arr = NULL;
     }
+
+    int result_from_operands = 0;
+    while (arrlen(operands) > 1) {
+        int b = arrpop(operands);
+        int a = arrpop(operands);
+        if (is_part1) arrpush(operands, a+b);
+        else arrpush(operands, a-b);
+    }
+
+    int result = operands[0];
+    arrfree(operands);
 
     return result;
 }
@@ -64,7 +77,7 @@ int main(int argc, char **argv)
     {
         int *num_arr = nums[i];
         int num_count = arrlen(num_arr);
-        int next_val = calculate_next_val(num_arr, num_count);
+        int next_val = calculate_next_val(num_arr, num_count, 1);
         part1_result += next_val;
         arrfree(num_arr);
     }
