@@ -6,36 +6,39 @@
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 
-int extrapolate_next_val(int *nums, int num_count, bool is_part1){
-    int *diff_array = calloc(num_count-1, sizeof(int));
+int extrapolate_next_val(int *nums, int num_count, bool is_part1)
+{
+    int *diff_array = calloc(num_count - 1, sizeof(int));
     bool is_next_arr_all_zeroes = true;
     for (int i = 1; i < num_count; i++)
     {
-        int diff = nums[i] - nums[i-1];
-        if (diff != 0) is_next_arr_all_zeroes = false;
-        diff_array[i-1] = diff;
+        int diff = nums[i] - nums[i - 1];
+        if (diff != 0)
+            is_next_arr_all_zeroes = false;
+        diff_array[i - 1] = diff;
     }
 
-    int next_result =  is_next_arr_all_zeroes ? next_result = 0 : extrapolate_next_val(diff_array, num_count-1, is_part1);
+    int next_result = is_next_arr_all_zeroes ? next_result = 0 : extrapolate_next_val(diff_array, num_count - 1, is_part1);
     free(diff_array);
 
-
-    if (is_part1) return nums[num_count-1] + next_result;
-    else return nums[0] - next_result;
+    if (is_part1)
+        return nums[num_count - 1] + next_result;
+    else
+        return nums[0] - next_result;
 }
-
 
 int **split_string_lines_into_int_lines(char **string_lines, int linecount, char *separator)
 // output nums must be freed by caller
 {
-  int **nums = NULL;
-  for (int i = 0; i < linecount; i++)
+    int **nums = NULL;
+    for (int i = 0; i < linecount; i++)
     {
         char **substrings = NULL;
         int substring_count = split_string_by_delimiter_string(string_lines[i], " ", &substrings);
 
         int *num_arr = NULL;
-        for (int i=0; i<substring_count; i++) {
+        for (int i = 0; i < substring_count; i++)
+        {
             int num = atoi(substrings[i]);
             arrput(num_arr, num);
             free(substrings[i]);
@@ -43,7 +46,7 @@ int **split_string_lines_into_int_lines(char **string_lines, int linecount, char
         arrput(nums, num_arr);
         free(substrings);
     }
-  return nums;
+    return nums;
 }
 
 int main(int argc, char **argv)
@@ -75,7 +78,8 @@ int main(int argc, char **argv)
     printf("Part1: %d\n", part1_result);
     printf("Part2: %d\n", part2_result);
 
-    for (int i = 0; i < linecount; i++) free(lines[i]);
+    for (int i = 0; i < linecount; i++)
+        free(lines[i]);
     free(lines);
     return 0;
 }
