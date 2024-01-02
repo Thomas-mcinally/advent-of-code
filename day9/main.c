@@ -28,8 +28,10 @@ int calculate_next_val(int *nums, int num_count, int is_part1){
         cur_arr = next_arr;
         next_arr = NULL;
     }
+    arrfree(next_arr);
+    arrfree(cur_arr);
 
-    int result_from_operands = 0;
+
     while (arrlen(operands) > 1) {
         int b = arrpop(operands);
         int a = arrpop(operands);
