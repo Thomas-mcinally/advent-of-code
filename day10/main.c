@@ -108,10 +108,10 @@ int main(int argc, char **argv)
         {starting_position.r, starting_position.c - 1}
     };
     
+    int *visited = malloc(ROWS * COLS * sizeof(int));
     int res;
     for (int i = 0; i < 4; i++)
     {
-        int *visited = malloc(ROWS * COLS * sizeof(int));
         res = dfs(grid, ROWS, COLS, first_positions[i], visited, starting_position, starting_position);
         if (res != -1) break;
     }
