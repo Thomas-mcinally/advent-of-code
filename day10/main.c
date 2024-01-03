@@ -28,7 +28,7 @@ Point find_starting_position(char **grid, int ROWS, int COLS)
     return starting_position;
 }
 
-int dfs(char **grid, int ROWS, int COLS, Point pos, int *visited, Point prev_pos)
+int distance_to_end_of_loop(char **grid, int ROWS, int COLS, Point pos, int *visited, Point prev_pos)
 {
     if (pos.r < 0 || pos.r >= ROWS || pos.c < 0 || pos.c >= COLS || grid[pos.r][pos.c] == '.'|| visited[pos.r * COLS + pos.c])
     {
@@ -36,51 +36,52 @@ int dfs(char **grid, int ROWS, int COLS, Point pos, int *visited, Point prev_pos
     }
     if (grid[pos.r][pos.c] == 'S')
     {
-        return 1;
+        return 0;
     }
 
     visited[pos.r * COLS + pos.c] = 1;
 
     int res;
     if (grid[pos.r][pos.c] == '|' && prev_pos.r < pos.r){
-        res = dfs(grid, ROWS, COLS, (Point){pos.r + 1, pos.c}, visited, pos);
+        res = distance_to_end_of_loop(grid, ROWS, COLS, (Point){pos.r + 1, pos.c}, visited, pos);
     }
     else if (grid[pos.r][pos.c] == '|' && prev_pos.r > pos.r){
-        res = dfs(grid, ROWS, COLS, (Point){pos.r - 1, pos.c}, visited, pos);
+        res = distance_to_end_of_loop(grid, ROWS, COLS, (Point){pos.r - 1, pos.c}, visited, pos);
     }
     else if (grid[pos.r][pos.c] == '-' && prev_pos.c < pos.c){
-        res = dfs(grid, ROWS, COLS, (Point){pos.r, pos.c + 1}, visited, pos);
+        res = distance_to_end_of_loop(grid, ROWS, COLS, (Point){pos.r, pos.c + 1}, visited, pos);
     }
     else if (grid[pos.r][pos.c] == '-' && prev_pos.c > pos.c){
-        res = dfs(grid, ROWS, COLS, (Point){pos.r, pos.c - 1}, visited, pos);
+        res = distance_to_end_of_loop(grid, ROWS, COLS, (Point){pos.r, pos.c - 1}, visited, pos);
     }
     else if (grid[pos.r][pos.c] == 'L' && prev_pos.c == pos.c){
-        res = dfs(grid, ROWS, COLS, (Point){pos.r, pos.c + 1}, visited, pos);
+        res = distance_to_end_of_loop(grid, ROWS, COLS, (Point){pos.r, pos.c + 1}, visited, pos);
     }
     else if (grid[pos.r][pos.c] == 'L' && prev_pos.c != pos.c){
-        res = dfs(grid, ROWS, COLS, (Point){pos.r - 1, pos.c}, visited, pos);
+        res = distance_to_end_of_loop(grid, ROWS, COLS, (Point){pos.r - 1, pos.c}, visited, pos);
     }
     else if (grid[pos.r][pos.c] == 'J' && prev_pos.c == pos.c){
-        res = dfs(grid, ROWS, COLS, (Point){pos.r, pos.c - 1}, visited, pos);
+        res = distance_to_end_of_loop(grid, ROWS, COLS, (Point){pos.r, pos.c - 1}, visited, pos);
     }
     else if (grid[pos.r][pos.c] == 'J' && prev_pos.c != pos.c){
-        res = dfs(grid, ROWS, COLS, (Point){pos.r - 1, pos.c}, visited, pos);
+        res = distance_to_end_of_loop(grid, ROWS, COLS, (Point){pos.r - 1, pos.c}, visited, pos);
     }
     else if (grid[pos.r][pos.c] == '7' && prev_pos.c == pos.c){
-        res = dfs(grid, ROWS, COLS, (Point){pos.r, pos.c - 1}, visited, pos);
+        res = distance_to_end_of_loop(grid, ROWS, COLS, (Point){pos.r, pos.c - 1}, visited, pos);
     }
     else if (grid[pos.r][pos.c] == '7' && prev_pos.c != pos.c){
-        res = dfs(grid, ROWS, COLS, (Point){pos.r + 1, pos.c}, visited, pos);
+        res = distance_to_end_of_loop(grid, ROWS, COLS, (Point){pos.r + 1, pos.c}, visited, pos);
     }
     else if (grid[pos.r][pos.c] == 'F' && prev_pos.c == pos.c){
-        res = dfs(grid, ROWS, COLS, (Point){pos.r, pos.c + 1}, visited, pos);
+        res = distance_to_end_of_loop(grid, ROWS, COLS, (Point){pos.r, pos.c + 1}, visited, pos);
     }
     else if (grid[pos.r][pos.c] == 'F' && prev_pos.c != pos.c){
-        res = dfs(grid, ROWS, COLS, (Point){pos.r + 1, pos.c}, visited, pos);
+        res = distance_to_end_of_loop(grid, ROWS, COLS, (Point){pos.r + 1, pos.c}, visited, pos);
     }
 
 
     if (res != -1){
+        visited[pos.r * COLS + pos.c] = 2;
         return res + 1;
     }
     return -1;
@@ -108,13 +109,15 @@ int main(int argc, char **argv)
         {starting_position.r, starting_position.c - 1}
     };
     
-    int *visited = malloc(ROWS * COLS * sizeof(int));
-    int res;
+    int *visited = malloc(ROWS * COLS * sizeof(int)); // 0->univisited, 1-> visited and not in loop, 2-> visited and in loop
+    int loop_length;
     for (int i = 0; i < 4; i++)
     {
-        res = dfs(grid, ROWS, COLS, first_positions[i], visited, starting_position);
-        if (res != -1) break;
+        loop_length = distance_to_end_of_loop(grid, ROWS, COLS, first_positions[i], visited, starting_position);
+        if (loop_length != -1) break;
     }
     
-    printf("Part1: %d\n", (res) / 2);
+
+
+    printf("Part1: %d\n", (loop_length + 1) / 2);
 }
