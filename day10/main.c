@@ -152,7 +152,6 @@ int main(int argc, char **argv)
                 if (
                     !(grid[r][c] == 'J' && last_corner == 'F') &&
                     !(grid[r][c] == '7' && last_corner == 'L')
-                    // special cases where corner can be considered a continuation of "wall" formed by opening corner
                 ) is_enclosed = !is_enclosed;
 
                 if (grid[r][c] != '|') last_corner = grid[r][c];
