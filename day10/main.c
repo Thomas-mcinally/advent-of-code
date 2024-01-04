@@ -160,4 +160,11 @@ int main(int argc, char **argv)
         }
     }
     printf("Part2: %d\n", total_enclosed_land);
-} 
+}
+
+// For part2:
+// can determine if a point is enclosed by looking at all cells to left (or right)
+// Only care about cells that are a part of large circle
+// everytime cross border we become enclosed/unenclosed
+// Everytime find opening corner, it WILL BE FOLLOWED by a closing corner BEFORE any cell which is not part of circle
+// If the second corner is in opposite direction of the first (e.g. L---7), we don't consider it a bordercrossing
