@@ -88,17 +88,9 @@ int main(int argc, char **argv)
 
 }
 
-    // BFS starting from each galaxy
-    // once find a galaxy with higher galaxy_count -> increment total
-    // determine empty rows and empty cols beforehand
-    // if grid[r][c] == '.' && empty row
-
-
-    // part2 -> expands more than just double
-
-    // if total_rows = R, total_cols = C, number of galaxies = G
-    // total edges ~ R*C*4/2 = E
-    // BFS from each galaxy -> O(G*E)
-    // Dijkstras from each galaxy -> O(G*Elog(E))
-
-    // Impossible to find shortcut,have to cross the same columns and rws for all shortest paths, so dijkstras is overkill
+    // Approaches considered:
+    // 1. BFS from each galaxy
+    // 2. Dijkstras from each galaxy
+    // Dijkstras is not more optimal because: have to cross the same columns and rws for all shortest paths. 
+    // wherever you cross a row/column, it yields the same result, so BFS will always find the optimal path.
+    // Dijkstras would also find optimal path, but has higher time-complexity
