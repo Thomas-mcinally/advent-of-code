@@ -30,14 +30,14 @@ size_t calculate_total_distance(int expansion_factor, char **grid, int ROWS, int
             arrput(galxy_positions, galaxy_position);
         }
     }
+    Point *queue = NULL;
     size_t total_distance = 0;
     for (int i=0; i<arrlen(galxy_positions); i++){
         int *seen_points = calloc(ROWS*COLS, sizeof(int));
         Point starting_galaxy = galxy_positions[i];
 
-        Point *queue = NULL;
-        arrput(queue, starting_galaxy);
 
+        arrput(queue, starting_galaxy);
         while (arrlen(queue) > 0){
             Point cur = queue[0];
             arrdel(queue, 0);
@@ -59,7 +59,11 @@ size_t calculate_total_distance(int expansion_factor, char **grid, int ROWS, int
             arrput(queue, next_point_up);
             arrput(queue, next_point_down);
         }
+        free(seen_points);
     }
+
+    arrfree(galxy_positions);
+    arrfree(queue);
     return total_distance;
 }
 
