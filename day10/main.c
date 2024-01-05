@@ -108,7 +108,7 @@ int get_total_enclosed_land(char **grid, int ROWS, int COLS)
     for (int r = 0; r < ROWS; r++)
     {
         char last_corner = '.';
-        bool is_enclosed = 0;
+        bool is_enclosed = false;
         for (int c = 0; c < COLS; c++)
         {
             if (grid[r][c] == '.')
