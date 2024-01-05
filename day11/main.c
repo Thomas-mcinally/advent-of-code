@@ -17,14 +17,14 @@ size_t calculate_total_distance(int expansion_factor, char **grid, int ROWS, int
     int galaxy_count = 0;
     int *col_is_not_empty = calloc(COLS, sizeof(int));
     int *row_is_not_empty = calloc(ROWS, sizeof(int));
-    int *galaxy_counts = calloc(ROWS*COLS, sizeof(int));
+    int *galaxy_labels = calloc(ROWS*COLS, sizeof(int));
     Point *galxy_positions = NULL;
     for (int r=0;r<ROWS;r++){
         for (int c=0;c<COLS;c++){
             if (grid[r][c] == '.') continue;
             col_is_not_empty[c] = 1;
             row_is_not_empty[r] = 1;
-            galaxy_counts[r*COLS + c] = galaxy_count;
+            galaxy_labels[r*COLS + c] = galaxy_count;
             galaxy_count++;
             Point galaxy_position = {r, c, 0};
             arrput(galxy_positions, galaxy_position);
@@ -32,11 +32,10 @@ size_t calculate_total_distance(int expansion_factor, char **grid, int ROWS, int
     }
     Point *queue = NULL;
     size_t total_distance = 0;
-    for (int i=0; i<arrlen(galxy_positions); i++){
+    for (int i=0; i<galaxy_count; i++){
         int *seen_points = calloc(ROWS*COLS, sizeof(int));
+
         Point starting_galaxy = galxy_positions[i];
-
-
         arrput(queue, starting_galaxy);
         while (arrlen(queue) > 0){
             Point cur = queue[0];
@@ -44,7 +43,7 @@ size_t calculate_total_distance(int expansion_factor, char **grid, int ROWS, int
             if (cur.r<0 || cur.c<0 || cur.r>=ROWS || cur.c >= COLS || seen_points[cur.r*COLS + cur.c] == 1) continue;
             seen_points[cur.r*COLS + cur.c] = 1;
 
-            if (grid[cur.r][cur.c] == '#' && galaxy_counts[cur.r*COLS + cur.c] > galaxy_counts[starting_galaxy.r*COLS + starting_galaxy.c]){
+            if (grid[cur.r][cur.c] == '#' && galaxy_labels[cur.r*COLS + cur.c] > galaxy_labels[starting_galaxy.r*COLS + starting_galaxy.c]){
                 total_distance += cur.distance_travelled;
             }
             int row_increment = row_is_not_empty[cur.r] ? 1 : expansion_factor;
@@ -64,6 +63,9 @@ size_t calculate_total_distance(int expansion_factor, char **grid, int ROWS, int
 
     arrfree(galxy_positions);
     arrfree(queue);
+    free(col_is_not_empty);
+    free(row_is_not_empty);
+    free(galaxy_labels);
     return total_distance;
 }
 
