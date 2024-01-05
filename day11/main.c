@@ -10,7 +10,7 @@
 typedef struct {
     int r;
     int c;
-    int distance_travelled;
+    size_t distance_travelled;
 } Point;
 
 
@@ -61,8 +61,8 @@ int main(int argc, char **argv)
             if (grid[cur.r][cur.c] == '#' && galaxy_counts[cur.r*COLS + cur.c] > galaxy_counts[starting_galaxy.r*COLS + starting_galaxy.c]){
                 total_distance += cur.distance_travelled;
             }
-            int row_increment = row_is_not_empty[cur.r] ? 1 : 2;
-            int col_increment = col_is_not_empty[cur.c] ? 1 : 2;
+            int row_increment = row_is_not_empty[cur.r] ? 1 : 1000000;
+            int col_increment = col_is_not_empty[cur.c] ? 1 : 1000000;
 
             Point next_point_right = {cur.r+1, cur.c, cur.distance_travelled+row_increment};
             Point next_point_left = {cur.r-1, cur.c, cur.distance_travelled+row_increment};
@@ -76,7 +76,7 @@ int main(int argc, char **argv)
     }
 
     
-    printf("part1: %zu\n", total_distance);
+    printf("part2: %zu\n", total_distance);
 
 }
 
