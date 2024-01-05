@@ -1,4 +1,3 @@
-// number of pairs = n(n-1)/2. 9*8/2 = 72/2 = 36
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
