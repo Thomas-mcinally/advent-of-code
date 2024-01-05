@@ -102,7 +102,33 @@ int distance_to_end_of_loop(char **grid, int ROWS, int COLS, Point pos, int *vis
     return -1;
 }
 
+int get_total_enclosed_land(char **grid, int ROWS, int COLS, int *visited)
+{
+    int total_enclosed_land = 0;
+    for (int r = 0; r < ROWS; r++)
+    {
+        char last_corner = '.';
+        bool is_enclosed = 0;
+        for (int c = 0; c < COLS; c++)
+        {
+            if (visited[r * COLS + c] != 2 && is_enclosed)
+            {
+                total_enclosed_land++;
+            }
+            if (grid[r][c] != '-' && visited[r * COLS + c] == 2)
+            {
+                if (
+                    !(grid[r][c] == 'J' && last_corner == 'F') &&
+                    !(grid[r][c] == '7' && last_corner == 'L'))
+                    is_enclosed = !is_enclosed;
 
+                if (grid[r][c] != '|')
+                    last_corner = grid[r][c];
+            }
+        }
+    }
+    return total_enclosed_land;
+}
 
 int main(int argc, char **argv)
 {
@@ -138,26 +164,7 @@ int main(int argc, char **argv)
     }
     printf("Part1: %d\n", (loop_length + 1) / 2);
 
-    int total_enclosed_land = 0;
-    for (int r = 0; r < ROWS; r++)
-    {
-        char last_corner = '.';
-        bool is_enclosed = 0;
-        for (int c = 0; c < COLS; c++)
-        {
-            if (visited[r*COLS + c] != 2 && is_enclosed) {
-                total_enclosed_land++;
-                }
-            if (grid[r][c] != '-' && visited[r*COLS + c] == 2) {
-                if (
-                    !(grid[r][c] == 'J' && last_corner == 'F') &&
-                    !(grid[r][c] == '7' && last_corner == 'L')
-                ) is_enclosed = !is_enclosed;
-
-                if (grid[r][c] != '|') last_corner = grid[r][c];
-            }
-        }
-    }
+    int total_enclosed_land = get_total_enclosed_land(grid, ROWS, COLS, visited);
     printf("Part2: %d\n", total_enclosed_land);
 }
 
