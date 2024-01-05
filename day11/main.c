@@ -13,20 +13,7 @@ typedef struct {
     size_t distance_travelled;
 } Point;
 
-
-int main(int argc, char **argv)
-{
-    if (argc != 2)
-    {
-        fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
-        exit(1);
-    }
-
-    char *file_path = argv[1];
-    char **grid = NULL;
-    int ROWS = read_file_to_lines(&grid, file_path);
-    int COLS = strlen(grid[0]);
-
+size_t calculate_total_distance(int expansion_factor, char **grid, int ROWS, int COLS){
     int galaxy_count = 0;
     int *col_is_not_empty = calloc(COLS, sizeof(int));
     int *row_is_not_empty = calloc(ROWS, sizeof(int));
@@ -43,7 +30,6 @@ int main(int argc, char **argv)
             arrput(galxy_positions, galaxy_position);
         }
     }
-
     size_t total_distance = 0;
     for (int i=0; i<arrlen(galxy_positions); i++){
         int *seen_points = calloc(ROWS*COLS, sizeof(int));
@@ -61,8 +47,8 @@ int main(int argc, char **argv)
             if (grid[cur.r][cur.c] == '#' && galaxy_counts[cur.r*COLS + cur.c] > galaxy_counts[starting_galaxy.r*COLS + starting_galaxy.c]){
                 total_distance += cur.distance_travelled;
             }
-            int row_increment = row_is_not_empty[cur.r] ? 1 : 1000000;
-            int col_increment = col_is_not_empty[cur.c] ? 1 : 1000000;
+            int row_increment = row_is_not_empty[cur.r] ? 1 : expansion_factor;
+            int col_increment = col_is_not_empty[cur.c] ? 1 : expansion_factor;
 
             Point next_point_right = {cur.r+1, cur.c, cur.distance_travelled+row_increment};
             Point next_point_left = {cur.r-1, cur.c, cur.distance_travelled+row_increment};
@@ -74,9 +60,25 @@ int main(int argc, char **argv)
             arrput(queue, next_point_down);
         }
     }
+    return total_distance;
+}
+
+int main(int argc, char **argv)
+{
+    if (argc != 2)
+    {
+        fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
+        exit(1);
+    }
+
+    char *file_path = argv[1];
+    char **grid = NULL;
+    int ROWS = read_file_to_lines(&grid, file_path);
+    int COLS = strlen(grid[0]);
 
     
-    printf("part2: %zu\n", total_distance);
+    printf("part1: %zu\n", calculate_total_distance(2, grid, ROWS, COLS));
+    printf("part2: %zu\n", calculate_total_distance(1000000, grid, ROWS, COLS));
 
 }
 
