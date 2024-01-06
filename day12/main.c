@@ -8,11 +8,11 @@
 
 
 
-size_t num_valid_combos_starting_from(const char *s, const int *key, const size_t s_len, const int key_len, int i, int j, size_t *memo){
+size_t num_valid_combos_starting_from(const char *s, const int *key, const size_t s_len, const int key_len, int i, int j, size_t *memo, const int *dot_count_s){
     if (i>=s_len && j==key_len) return 1;
     if (i >= s_len ) return 0;
     if (j == key_len){
-        if (s[i] != '#') return num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo);
+        if (s[i] != '#') return num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo, dot_count_s);
         else return 0;
     }
     if (memo[i*key_len + j] != 0) {
@@ -20,10 +20,9 @@ size_t num_valid_combos_starting_from(const char *s, const int *key, const size_
     }
 
     size_t res = 0;
-    char *next_dot = strchr(s+i, '.');
-    int distance_to_next_dot = (next_dot==NULL) ? s_len-i : next_dot - (s + i);
-    if (distance_to_next_dot >= key[j] && s[i+key[j]] != '#') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+key[j]+1, j+1, memo);
-    if (s[i] == '?' || s[i] == '.') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo);
+
+    if (s[i] != '.' && dot_count_s[i] == dot_count_s[i+key[j]-1] && s[i+key[j]] != '#') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+key[j]+1, j+1, memo, dot_count_s);
+    if (s[i] == '?' || s[i] == '.') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo, dot_count_s);
 
     memo[i*key_len + j] = res;
     return res;
@@ -46,6 +45,7 @@ int main(int argc, char **argv)
     size_t total_combos = 0;
     size_t total_combos_part_2 = 0;
     for (int i=0; i<linecount; i++){
+        printf("processing line %d\n", i);
         char *s = lines[i];
         char *space = strchr(s, ' ');
         *space = '\0';
@@ -61,7 +61,13 @@ int main(int argc, char **argv)
         size_t s_len = strlen(s);
         size_t key_len = arrlen(key);
         size_t *memo = calloc(s_len * key_len, sizeof(size_t));
-        total_combos += num_valid_combos_starting_from(s, key, s_len, key_len, 0, 0, memo);
+        int *dot_count_s = calloc(s_len, sizeof(int));
+        for (int k=0; k<s_len; k++){
+            if (s[k] == '.') dot_count_s[k] = 1;
+            if (k>0) dot_count_s[k] += dot_count_s[k-1];
+        }
+        printf("finished preprocessing for part1\n");
+        total_combos += num_valid_combos_starting_from(s, key, s_len, key_len, 0, 0, memo, dot_count_s);
 
 
 
@@ -83,14 +89,22 @@ int main(int argc, char **argv)
         size_t s_len_part_2 = strlen(s_part_2);
         size_t key_len_part_2 = key_len*5;
         size_t *memo_2 = calloc(s_len_part_2 * key_len_part_2, sizeof(size_t));
-        total_combos_part_2 += num_valid_combos_starting_from(s_part_2, key_part_2, s_len_part_2, key_len_part_2, 0, 0, memo_2);
+        int *dot_count_s_2 = calloc(s_len_part_2, sizeof(int));
+        for (int k=0; k<s_len_part_2; k++){
+            if (s_part_2[k] == '.') dot_count_s_2[k] = 1;
+            if (k>0) dot_count_s_2[k] += dot_count_s_2[k-1];
+        }
+        printf("finished preprocessing for part2\n");
+        total_combos_part_2 += num_valid_combos_starting_from(s_part_2, key_part_2, s_len_part_2, key_len_part_2, 0, 0, memo_2, dot_count_s_2);
 
         arrfree(key);
         free(s);
         free(memo);
+        free(dot_count_s);
         free(key_part_2);
         free(s_part_2);
         free(memo_2);
+        free(dot_count_s_2);
     }
 
     printf("Total combos: %zu\n", total_combos); 
