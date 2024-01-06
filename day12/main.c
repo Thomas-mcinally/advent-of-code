@@ -1,19 +1,3 @@
-// .??..??...?##. 1,1,3
-
-// Pseudocode
-// input two indexes, one indicating position in string and one indicating position in key
-// f(i, j) -> Number of valid combinations
-// if i==len(s) && j==len(key): return 1
-// if len(s)-i < key[j]: return 0
-
-// res = 0
-// if (no . between s[i] and s[i+key[j]]) && s[i+key[j]] != #:  res += f(i+key[j]+1, j+1)
-// if s[i] == '?' || s[i] == '.': res += f(i+1, j)
-// return res
-
-
-
-
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +8,7 @@
 
 
 
-size_t num_valid_combos_starting_from(char *s, int *key, size_t s_len, int key_len, int i, int j){
+size_t num_valid_combos_starting_from(const char *s, const int *key, const size_t s_len, const int key_len, int i, int j){
     if (i>=s_len && j==key_len) return 1;
     if (j == key_len){
         if (s[i] != '#') return num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j);
@@ -72,7 +56,10 @@ int main(int argc, char **argv)
 
         total_combos += num_valid_combos_starting_from(s, key, strlen(s), arrlen(key), 0, 0);
         arrfree(key);
+        free(s);
     }
 
     printf("Total combos: %zu\n", total_combos);
+
+    free(lines);
 }
