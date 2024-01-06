@@ -65,32 +65,32 @@ int main(int argc, char **argv)
 
 
 
-        // char *s_part_2 = malloc(s_len*5 + 4);
-        // char *cursor = s_part_2;
-        // strcpy(cursor, s);
-        // cursor += s_len;
-        // for (int k=0; k<4; k++){
-        //     strcpy(cursor, "?");
-        //     cursor++;
-        //     strcpy(cursor, s);
-        //     cursor += s_len;
-        // }
+        char *s_part_2 = malloc(s_len*5 + 5);
+        char *cursor = s_part_2;
+        strcpy(cursor, s);
+        cursor += s_len;
+        for (int k=0; k<4; k++){
+            strcpy(cursor, "?");
+            cursor++;
+            strcpy(cursor, s);
+            cursor += s_len;
+        }
 
-        // int *key_part_2 = calloc(key_len*5, sizeof(int));
-        // for(int k=0; k<key_len*5; k++){
-        //     key_part_2[k] = key[k%key_len];
-        // }
-        // size_t s_len_part_2 = strlen(s_part_2);
-        // size_t key_len_part_2 = key_len*5;
-        // size_t *memo_2 = calloc(s_len_part_2 * key_len_part_2, sizeof(size_t));
-        // total_combos_part_2 += num_valid_combos_starting_from(s_part_2, key_part_2, s_len_part_2, key_len_part_2, 0, 0, memo_2);
+        int *key_part_2 = calloc(key_len*5, sizeof(int));
+        for(int k=0; k<key_len*5; k++){
+            key_part_2[k] = key[k%key_len];
+        }
+        size_t s_len_part_2 = strlen(s_part_2);
+        size_t key_len_part_2 = key_len*5;
+        size_t *memo_2 = calloc(s_len_part_2 * key_len_part_2, sizeof(size_t));
+        total_combos_part_2 += num_valid_combos_starting_from(s_part_2, key_part_2, s_len_part_2, key_len_part_2, 0, 0, memo_2);
 
         arrfree(key);
         free(s);
         free(memo);
-        // free(key_part_2);
-        // free(s_part_2);
-        // free(memo_2);
+        free(key_part_2);
+        free(s_part_2);
+        free(memo_2);
     }
 
     printf("Total combos: %zu\n", total_combos); 
