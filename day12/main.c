@@ -8,19 +8,24 @@
 
 
 
-size_t num_valid_combos_starting_from(const char *s, const int *key, const size_t s_len, const int key_len, int i, int j){
+size_t num_valid_combos_starting_from(const char *s, const int *key, const size_t s_len, const int key_len, int i, int j, size_t *memo){
     if (i>=s_len && j==key_len) return 1;
+    if (i >= s_len ) return 0;
     if (j == key_len){
-        if (s[i] != '#') return num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j);
+        if (s[i] != '#') return num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo);
         else return 0;
     }
-    if (s_len-i < key[j]) return 0;
+    if (memo[i*key_len + j] != 0) {
+        printf("memo hit for i: %d, j: %d\n", i, j);
+        return memo[i*key_len + j];
+    }
 
     size_t res = 0;
     char *next_dot = strchr(s+i, '.');
     int distance_to_next_dot = (next_dot==NULL) ? s_len-i : next_dot - (s + i);
-    if (distance_to_next_dot >= key[j] && s[i+key[j]] != '#') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+key[j]+1, j+1);
-    if (s[i] == '?' || s[i] == '.') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j);
+    if (distance_to_next_dot >= key[j] && s[i+key[j]] != '#') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+key[j]+1, j+1, memo);
+    if (s[i] == '?' || s[i] == '.') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo);
+
     return res;
 }
 
@@ -39,7 +44,6 @@ int main(int argc, char **argv)
 
 
     size_t total_combos = 0;
-
     for (int i=0; i<linecount; i++){
         char *s = lines[i];
         char *space = strchr(s, ' ');
@@ -53,10 +57,12 @@ int main(int argc, char **argv)
             arrput(key, val);
             if (key_string[j] == ',') j++;
         }
+        size_t *memo = calloc(strlen(s) * arrlen(key), sizeof(size_t));
+        total_combos += num_valid_combos_starting_from(s, key, strlen(s), arrlen(key), 0, 0, memo);
 
-        total_combos += num_valid_combos_starting_from(s, key, strlen(s), arrlen(key), 0, 0);
         arrfree(key);
         free(s);
+        free(memo);
     }
 
     printf("Total combos: %zu\n", total_combos);
