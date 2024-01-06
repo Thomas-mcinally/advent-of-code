@@ -8,6 +8,7 @@
         "ctype.h": "c",
         "stdio.h": "c",
         "stb_ds.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "__node_handle": "c"
     }
 }
