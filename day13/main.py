@@ -1,11 +1,11 @@
-def smudges_required_for_valid_palindrome_centered_at(s, l,r):
-    smudges = 0
+def replacements_required_for_valid_palindrome_centered_at(s, l,r):
+    replacements = 0
     while l >= 0 and r < len(s):
         if s[l] != s[r]:
-            smudges += 1
+            replacements += 1
         l-=1
         r+=1
-    return smudges
+    return replacements
 
 def vertical_mirror_score(chunk, score_multiplier, target_smudge_count):
     ROWS = len(chunk)
@@ -14,7 +14,7 @@ def vertical_mirror_score(chunk, score_multiplier, target_smudge_count):
     for c in range(COLS-1):
         smudges_required_for_vertical_mirror = 0
         for r in range(ROWS):
-            smudges_required_for_vertical_mirror += smudges_required_for_valid_palindrome_centered_at(chunk[r], c, c+1)
+            smudges_required_for_vertical_mirror += replacements_required_for_valid_palindrome_centered_at(chunk[r], c, c+1)
 
         if smudges_required_for_vertical_mirror == target_smudge_count:
             return (c+1) * score_multiplier
