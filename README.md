@@ -16,7 +16,7 @@ TODO, to make this project professional:
 TODO - implement optimal solutions:
 - Day9: https://www.reddit.com/r/adventofcode/comments/18eiv3z/2023_day_9_how_to_solve_it_by_only_iterating/
 - Day11: Improve BFS by using queue data structure. Currently when i queue.popleft(), it is an O(N) operation.
-- Day12: The 1D array Caching approach doesnt work. Not even in python :/ Worksif i use a hashmap, at least in python. Could use a hashmap in C as well as backup https://www.reddit.com/r/adventofcode/comments/190umq6/2023_day_12_part2_python_why_doesnt_my_caching/
+- Day12: Solution still doesnt work for partt2 - algo works in python - maybe some silly mistake?
 
 
 Useful scripts:
