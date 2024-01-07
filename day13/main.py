@@ -7,19 +7,18 @@ def smudges_required_for_valid_palindrome_centered_at(s, l,r):
         r+=1
     return smudges
 
-def score_from_chunk(chunk, score_multiplier):
+def vertical_mirror_score(chunk, score_multiplier, target_smudge_count):
     ROWS = len(chunk)
     COLS = len(chunk[0])
 
-    score = 0
     for c in range(COLS-1):
-
+        smudges_required_for_vertical_mirror = 0
         for r in range(ROWS):
-            if smudges_required_for_valid_palindrome_centered_at(chunk[r], c, c+1) != 0:
-                break
-        else:
-            score += (c+1) * score_multiplier
-    return score
+            smudges_required_for_vertical_mirror += smudges_required_for_valid_palindrome_centered_at(chunk[r], c, c+1)
+
+        if smudges_required_for_vertical_mirror == target_smudge_count:
+            return (c+1) * score_multiplier
+    return 0
 
 
 with open("input.txt", "r") as file:
@@ -27,12 +26,16 @@ with open("input.txt", "r") as file:
     chunks = input.split("\n\n")
     chunks = [chunk.split("\n") for chunk in chunks]
 
-total = 0
+part1_total = 0
+part2_total = 0
 for chunk in chunks:
-    total += score_from_chunk(chunk, 1)
+    part1_total += vertical_mirror_score(chunk, 1, 0)
+    part2_total += vertical_mirror_score(chunk, 1, 1)
     
 rotated_chunks = [list(zip(*chunk)) for chunk in chunks]
 for chunk in rotated_chunks:
-    total += score_from_chunk(chunk, 100)
+    part1_total += vertical_mirror_score(chunk, 100, 0)
+    part2_total += vertical_mirror_score(chunk, 100, 1)
 
-print(f"part1 result: {total}")
+print(f"part1 result: {part1_total}")
+print(f"part2 result: {part2_total}")
