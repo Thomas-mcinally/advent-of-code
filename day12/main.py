@@ -36,7 +36,6 @@ for line in input:
     dot_s_count = [1 if char == "." else 0 for char in s]
     for i in range(1,len(dot_s_count)):
         dot_s_count[i] += dot_s_count[i-1]
-
     total += dfs(s, key, 0, 0, dot_s_count, defaultdict(int))
 
 
