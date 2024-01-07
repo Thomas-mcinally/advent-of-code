@@ -2,14 +2,13 @@ from collections import defaultdict
 
 
 def dfs(s: str, key: list[int], i: int, j: int, dot_count_s: list[int], cache: dict) -> int:
-    if i >= len(s) and j==len(key):
-        return 1
-    if i >= len(s):
-        return 0
-    if j >= len(key):
-        if s[i] != '#':
+    if j==len(key):
+        if i >= len(s):
+            return 1
+        if s[i] != "#":
             return dfs(s, key, i+1, j, dot_count_s, cache)
         return 0
+
     if i+key[j] > len(s):
         return 0
     if (i,j) in cache:
@@ -17,7 +16,8 @@ def dfs(s: str, key: list[int], i: int, j: int, dot_count_s: list[int], cache: d
 
 
     if (
-        s[i] != "." 
+        s[i] != "."
+        and i + key[j] <= len(s) 
         and dot_count_s[i] == dot_count_s[i+key[j]-1] 
         and (i+key[j] == len(s) or s[i+key[j]] != "#")
         ):
