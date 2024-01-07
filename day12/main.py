@@ -12,7 +12,6 @@ def dfs(s: str, key: list[int], i: int, j: int, dot_count_s: list[int], cache: d
     if i+key[j] > len(s):
         return 0
     if (i,j) in cache:
-        print(f"memo hit for i: {i}, j: {j}")
         return cache[(i,j)]
 
 
