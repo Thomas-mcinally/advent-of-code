@@ -9,24 +9,27 @@
 
 
 size_t num_valid_combos_starting_from(const char *s, const int *key, const size_t s_len, const size_t key_len, int i, int j, size_t *memo, const int *dot_count_s){
-    if (i>=s_len && j==key_len) return 1;
-    if (i >= s_len ) return 0;
     if (j == key_len){
+        if (i >= s_len) return 1;
         if (s[i] != '#') return num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo, dot_count_s);
-        else return 0;
+        return 0;
     }
-    if (i + key[j] > s_len) return 0;
+    if (i+key[j] > s_len) return 0;
+
     if (memo[i*key_len + j] != 0) {
+        printf("memo hit for i: %d, j: %d\n", i, j);
         return memo[i*key_len + j];
     }
 
-    size_t res = 0;
 
-    if (s[i] != '.' && dot_count_s[i] == dot_count_s[i+key[j]-1] && (i+key[j] == s_len || s[i+key[j]] != '#')) res += num_valid_combos_starting_from(s, key, s_len, key_len, i+key[j]+1, j+1, memo, dot_count_s);
-    if (s[i] != '#') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo, dot_count_s);
+    if (s[i] != '.' 
+        && dot_count_s[i] == dot_count_s[i+key[j]-1] 
+        && (i+key[j] == s_len || s[i+key[j]] != '#')
+        ) 
+        memo[i*key_len + j] += num_valid_combos_starting_from(s, key, s_len, key_len, i+key[j]+1, j+1, memo, dot_count_s);
+    if (s[i] != '#') memo[i*key_len + j] += num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo, dot_count_s);
 
-    memo[i*key_len + j] = res;
-    return res;
+    return memo[i*key_len + j];
 }
 
 int main(int argc, char **argv)
@@ -67,7 +70,6 @@ int main(int argc, char **argv)
             if (s[k] == '.') dot_count_s[k] = 1;
             if (k>0) dot_count_s[k] += dot_count_s[k-1];
         }
-        printf("finished preprocessing for part1\n");
         total_combos += num_valid_combos_starting_from(s, key, s_len, key_len, 0, 0, memo, dot_count_s);
 
 
@@ -95,7 +97,6 @@ int main(int argc, char **argv)
             if (s_part_2[k] == '.') dot_count_s_2[k] = 1;
             if (k>0) dot_count_s_2[k] += dot_count_s_2[k-1];
         }
-        printf("finished preprocessing for part2\n");
         total_combos_part_2 += num_valid_combos_starting_from(s_part_2, key_part_2, s_len_part_2, key_len_part_2, 0, 0, memo_2, dot_count_s_2);
 
         arrfree(key);
