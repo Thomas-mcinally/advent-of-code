@@ -21,8 +21,8 @@ size_t num_valid_combos_starting_from(const char *s, const int *key, const size_
 
     size_t res = 0;
 
-    if (s[i] != '.' && dot_count_s[i] == dot_count_s[i+key[j]-1] && s[i+key[j]] != '#') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+key[j]+1, j+1, memo, dot_count_s);
-    if (s[i] == '?' || s[i] == '.') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo, dot_count_s);
+    if (i+key[j] <= s_len && s[i] != '.' && dot_count_s[i] == dot_count_s[i+key[j]-1] && (i+key[j] == s_len || s[i+key[j]] != '#')) res += num_valid_combos_starting_from(s, key, s_len, key_len, i+key[j]+1, j+1, memo, dot_count_s);
+    if (s[i] != '#') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo, dot_count_s);
 
     memo[i*key_len + j] = res;
     return res;
