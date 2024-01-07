@@ -17,19 +17,20 @@ size_t num_valid_combos_starting_from(const char *s, const int *key, const size_
     }
     if (i+key[j] > s_len) return 0;
 
-    if (memo[i*key_len + j] != 0) {
+    if (memo[i*key_len + j] != -1) {
         return memo[i*key_len + j];
     }
 
-
+    size_t res = 0;
     if (s[i] != '.' 
         && dot_count_s[i] == dot_count_s[i+key[j]-1] 
         && (i+key[j] == s_len || s[i+key[j]] != '#')
         ) 
-        memo[i*key_len + j] += num_valid_combos_starting_from(s, key, s_len, key_len, i+key[j]+1, j+1, memo, dot_count_s);
-    if (s[i] != '#') memo[i*key_len + j] += num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo, dot_count_s);
+        res += num_valid_combos_starting_from(s, key, s_len, key_len, i+key[j]+1, j+1, memo, dot_count_s);
+    if (s[i] != '#') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo, dot_count_s);
 
-    return memo[i*key_len + j];
+    memo[i*key_len + j] = res;
+    return res;
 }
 
 int main(int argc, char **argv)
@@ -69,6 +70,7 @@ int main(int argc, char **argv)
             if (s[k] == '.') dot_count_s[k] = 1;
             if (k>0) dot_count_s[k] += dot_count_s[k-1];
         }
+        for (int memo_i=0; memo_i<s_len * key_len; memo_i++) memo[memo_i] = -1;
         total_combos += num_valid_combos_starting_from(s, key, s_len, key_len, 0, 0, memo, dot_count_s);
 
 
@@ -91,6 +93,7 @@ int main(int argc, char **argv)
         size_t s_len_part_2 = strlen(s_part_2);
         size_t key_len_part_2 = arrlen(key_part_2);
         size_t *memo_2 = calloc(s_len_part_2 * key_len_part_2, sizeof(size_t));
+        for (int memo_i=0; memo_i<s_len_part_2 * key_len_part_2; memo_i++) memo_2[memo_i] = -1;
         int *dot_count_s_2 = calloc(s_len_part_2, sizeof(int));
         for (int k=0; k<s_len_part_2; k++){
             if (s_part_2[k] == '.') dot_count_s_2[k] = 1;
