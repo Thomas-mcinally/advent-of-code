@@ -17,7 +17,6 @@ def dfs(s: str, key: list[int], i: int, j: int, dot_count_s: list[int], cache: d
 
     if (
         s[i] != "."
-        and i + key[j] <= len(s) 
         and dot_count_s[i] == dot_count_s[i+key[j]-1] 
         and (i+key[j] == len(s) or s[i+key[j]] != "#")
         ):
