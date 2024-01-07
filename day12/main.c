@@ -8,20 +8,21 @@
 
 
 
-size_t num_valid_combos_starting_from(const char *s, const int *key, const size_t s_len, const int key_len, int i, int j, size_t *memo, const int *dot_count_s){
+size_t num_valid_combos_starting_from(const char *s, const int *key, const size_t s_len, const size_t key_len, int i, int j, size_t *memo, const int *dot_count_s){
     if (i>=s_len && j==key_len) return 1;
     if (i >= s_len ) return 0;
     if (j == key_len){
         if (s[i] != '#') return num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo, dot_count_s);
         else return 0;
     }
+    if (i + key[j] > s_len) return 0;
     if (memo[i*key_len + j] != 0) {
         return memo[i*key_len + j];
     }
 
     size_t res = 0;
 
-    if (i+key[j] <= s_len && s[i] != '.' && dot_count_s[i] == dot_count_s[i+key[j]-1] && (i+key[j] == s_len || s[i+key[j]] != '#')) res += num_valid_combos_starting_from(s, key, s_len, key_len, i+key[j]+1, j+1, memo, dot_count_s);
+    if (s[i] != '.' && dot_count_s[i] == dot_count_s[i+key[j]-1] && (i+key[j] == s_len || s[i+key[j]] != '#')) res += num_valid_combos_starting_from(s, key, s_len, key_len, i+key[j]+1, j+1, memo, dot_count_s);
     if (s[i] != '#') res += num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo, dot_count_s);
 
     memo[i*key_len + j] = res;
