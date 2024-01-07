@@ -17,7 +17,6 @@ size_t num_valid_combos_starting_from(const char *s, const int *key, const size_
     if (i+key[j] > s_len) return 0;
 
     if (memo[i*key_len + j] != 0) {
-        printf("memo hit for i: %d, j: %d\n", i, j);
         return memo[i*key_len + j];
     }
 
@@ -49,7 +48,6 @@ int main(int argc, char **argv)
     size_t total_combos = 0;
     size_t total_combos_part_2 = 0;
     for (int i=0; i<linecount; i++){
-        printf("processing line %d\n", i);
         char *s = lines[i];
         char *space = strchr(s, ' ');
         *space = '\0';
@@ -85,12 +83,12 @@ int main(int argc, char **argv)
             cursor += s_len;
         }
 
-        int *key_part_2 = calloc(key_len*5, sizeof(int));
+        int *key_part_2 = NULL;
         for(int k=0; k<key_len*5; k++){
-            key_part_2[k] = key[k%key_len];
+            arrput(key_part_2, key[k%key_len]);
         }
         size_t s_len_part_2 = strlen(s_part_2);
-        size_t key_len_part_2 = key_len*5;
+        size_t key_len_part_2 = arrlen(key_part_2);
         size_t *memo_2 = calloc(s_len_part_2 * key_len_part_2, sizeof(size_t));
         int *dot_count_s_2 = calloc(s_len_part_2, sizeof(int));
         for (int k=0; k<s_len_part_2; k++){
@@ -103,7 +101,7 @@ int main(int argc, char **argv)
         free(s);
         free(memo);
         free(dot_count_s);
-        free(key_part_2);
+        arrfree(key_part_2);
         free(s_part_2);
         free(memo_2);
         free(dot_count_s_2);
