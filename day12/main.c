@@ -9,6 +9,7 @@
 
 
 size_t num_valid_combos_starting_from(const char *s, const int *key, const size_t s_len, const size_t key_len, int i, int j, size_t *memo, const int *dot_count_s){
+    // Still doesnt complete quickly for part2 - cant understand why - exact same algo works fine in python
     if (j == key_len){
         if (i >= s_len) return 1;
         if (s[i] != '#') return num_valid_combos_starting_from(s, key, s_len, key_len, i+1, j, memo, dot_count_s);
