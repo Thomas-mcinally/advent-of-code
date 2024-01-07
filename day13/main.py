@@ -1,4 +1,4 @@
-def replacements_required_for_valid_palindrome_centered_at(s, l,r):
+def replacements_required_for_valid_palindrome_centered_at(s, l:int, r:int) -> int:
     replacements = 0
     while l >= 0 and r < len(s):
         if s[l] != s[r]:
@@ -7,7 +7,7 @@ def replacements_required_for_valid_palindrome_centered_at(s, l,r):
         r+=1
     return replacements
 
-def vertical_mirror_score(chunk, score_multiplier, target_smudge_count):
+def vertical_mirror_score(chunk, score_multiplier:int, target_smudge_count:int) -> int:
     ROWS = len(chunk)
     COLS = len(chunk[0])
 
