@@ -91,10 +91,11 @@ int main(int argc, char **argv)
     tilt_north(grid, ROWS, COLS);
     printf("part1 sol: %zu\n", calculate_north_beam_load(grid, ROWS, COLS));
 
-    // TODO: Dynamically determine cycle length instead of hardcoding
+    // north_beam_load values after each transformation form a linked list with a cycle
     // Observed cycle length of 18 (from experimenting with data)
     // Therefore, after cycle 1 000 000 000 should have same num as after cycle 1 000 000 000 - 18
     // And also 1 000 000 000 - 18*55555500 = 1000
+    // TODO: Dynamically determine cycle length instead of hardcoding
     for (int i=1; i<1001; i++){ 
         tilt_north(grid, ROWS, COLS);
         tilt_west(grid, ROWS, COLS);
