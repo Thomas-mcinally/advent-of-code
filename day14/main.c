@@ -3,8 +3,6 @@
 #include <stdlib.h>
 
 #include "aoc_lib.h"
-#define STB_DS_IMPLEMENTATION
-#include "stb_ds.h"
 
 void tilt_north(char **grid, int ROWS, int COLS)
 {
@@ -104,4 +102,7 @@ int main(int argc, char **argv)
     }
 
     printf("part2 sol: %zu\n", calculate_north_beam_load(grid, ROWS, COLS));
+
+    for (int r=0; r<ROWS; r++) free(grid[r]);
+    free(grid);
 }   
