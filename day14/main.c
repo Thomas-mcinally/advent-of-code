@@ -105,4 +105,5 @@ int main(int argc, char **argv)
 
     for (int r=0; r<ROWS; r++) free(grid[r]);
     free(grid);
+    
 }   
