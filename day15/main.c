@@ -17,20 +17,33 @@ typedef struct{
     LinkedListNode *buckets[HASHMAP_SIZE];
 } HashMap;
 
-HashMap create_empty_hashmap()
+HashMap *create_empty_hashmap()
 {
-    HashMap result = {
-        .buckets = malloc(sizeof(LinkedListNode*) * HASHMAP_SIZE)
-    };
+    HashMap *result = malloc(sizeof(HashMap));
     for (size_t i=0; i < HASHMAP_SIZE; i++)
     {
-        result.buckets[i] = malloc(sizeof(LinkedListNode));
-        result.buckets[i]->key = NULL;
-        result.buckets[i]->value = 0;
-        result.buckets[i]->next = NULL;
-        result.buckets[i]->prev = NULL;
+        result->buckets[i] = malloc(sizeof(LinkedListNode));
+        result->buckets[i]->key = NULL;
+        result->buckets[i]->value = 0;
+        result->buckets[i]->next = NULL;
+        result->buckets[i]->prev = NULL;
     }
     return result;
+}
+
+void free_hashmap(HashMap *map)
+{
+    for (size_t i=0; i < HASHMAP_SIZE; i++)
+    {
+        LinkedListNode *head = map->buckets[i];
+        while (head->next != NULL){
+            LinkedListNode *temp = head->next;
+            free(head);
+            head = temp;
+        }
+        free(head);
+    }
+    free(map);
 }
 
 int generate_hash(char *label)
@@ -129,14 +142,14 @@ size_t part2(char *filepath){
 
     size_t content_i = 0;
     char *label_start = file_contents;
-    HashMap map = create_empty_hashmap(); 
+    HashMap *map = create_empty_hashmap(); 
     while (file_contents[content_i] != '\0')
     {
         if (file_contents[content_i] == '=') {
             file_contents[content_i] = '\0';
             int focal_length = file_contents[content_i + 1] - '0';
 
-            hashmap_set(&map, label_start, focal_length);
+            hashmap_set(map, label_start, focal_length);
 
             label_start = file_contents + content_i + 3;
             content_i++;
@@ -144,7 +157,7 @@ size_t part2(char *filepath){
         else if (file_contents[content_i] == '-') {
             file_contents[content_i] = '\0';
 
-            hashmap_del(&map, label_start);
+            hashmap_del(map, label_start);
             label_start = file_contents + content_i + 2;
         }
         content_i++;
@@ -154,7 +167,7 @@ size_t part2(char *filepath){
     size_t total_2 = 0;
     for (size_t box_i=0; box_i < HASHMAP_SIZE; box_i++)
     {
-        LinkedListNode *head = map.buckets[box_i];
+        LinkedListNode *head = map->buckets[box_i];
         int list_i = 0;
         while (head->next != NULL){
             head = head->next;
@@ -163,6 +176,7 @@ size_t part2(char *filepath){
             total_2 += (box_i+1) * list_i * (head->value);
         }
     }
+    free_hashmap(map);
     return total_2;
 }
 
