@@ -14,7 +14,6 @@ typedef struct LinkedListNode {
     struct LinkedListNode *prev;
 } LinkedListNode;
 
-
 typedef struct{
     LinkedListNode *buckets[HASHMAP_SIZE];
 } HashMap;
@@ -49,7 +48,7 @@ int generate_hash(char *label)
     return hash;
 }
 
-void set(HashMap *map, char *label, int val)
+void hashmap_set(HashMap *map, char *label, int val)
 {
     int hash = generate_hash(label);
     LinkedListNode *head = map->buckets[hash];
@@ -72,7 +71,7 @@ void set(HashMap *map, char *label, int val)
     head->next = new_node;
 }
 
-int get(HashMap *map, char *label)
+int hashmap_get(HashMap *map, char *label)
 {
     int hash = generate_hash(label);
     LinkedListNode *head = map->buckets[hash];
@@ -88,7 +87,7 @@ int get(HashMap *map, char *label)
     exit(1);
 }
 
-void del(HashMap *map, char *label)
+void hashmap_del(HashMap *map, char *label)
 {
     int hash = generate_hash(label);
     LinkedListNode *head = map->buckets[hash];
@@ -133,7 +132,6 @@ size_t part1(char *filepath){
 }
 
 size_t part2(char *filepath){
-
     char *file_contents = read_entire_file(filepath);
     HashMap map = create_empty_hashmap();
     char *label_start = file_contents; 
@@ -153,7 +151,7 @@ size_t part2(char *filepath){
             file_contents[string_i] = '\0';
             int focal_length = file_contents[string_i + 1] - '0';
 
-            set(&map, label_start, focal_length);
+            hashmap_set(&map, label_start, focal_length);
 
             label_start = file_contents + string_i + 3;
             string_i++;
@@ -161,7 +159,7 @@ size_t part2(char *filepath){
         else if (file_contents[string_i] == '-') {
             file_contents[string_i] = '\0';
 
-            del(&map, label_start);
+            hashmap_del(&map, label_start);
             label_start = file_contents + string_i + 2;
         }
         string_i++;
