@@ -46,7 +46,7 @@ void free_hashmap(HashMap *map)
     free(map);
 }
 
-int generate_hash(char *label)
+int generate_string_hash(char *label)
 {
     int hash = 0;
     while (*label != '\0')
@@ -61,7 +61,7 @@ int generate_hash(char *label)
 
 void hashmap_put(HashMap *map, char *label, int val)
 {
-    int hash = generate_hash(label);
+    int hash = generate_string_hash(label);
     LinkedListNode *head = map->buckets[hash];
     while (head->next != NULL){
         head = head->next;
@@ -84,7 +84,7 @@ void hashmap_put(HashMap *map, char *label, int val)
 
 int hashmap_get(HashMap *map, char *label)
 {
-    int hash = generate_hash(label);
+    int hash = generate_string_hash(label);
     LinkedListNode *head = map->buckets[hash];
     while (head->next != NULL){
         head = head->next;
@@ -100,7 +100,7 @@ int hashmap_get(HashMap *map, char *label)
 
 void hashmap_del(HashMap *map, char *label)
 {
-    int hash = generate_hash(label);
+    int hash = generate_string_hash(label);
     LinkedListNode *head = map->buckets[hash];
     while (head->next != NULL){
         head = head->next;
@@ -126,13 +126,13 @@ size_t part1(char *filepath){
     {
         if (file_contents[content_i] == ',') {
             file_contents[content_i] = '\0';
-            total_value += generate_hash(label_start);
+            total_value += generate_string_hash(label_start);
             label_start = file_contents + content_i + 1;
         }
 
         content_i++;
     }
-    total_value += generate_hash(label_start);
+    total_value += generate_string_hash(label_start);
 
     free(file_contents);
     return total_value;
