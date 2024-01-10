@@ -134,6 +134,7 @@ size_t part1(char *filepath){
     }
     total_value += generate_hash(label_start);
 
+    free(file_contents);
     return total_value;
 }
 
@@ -177,6 +178,7 @@ size_t part2(char *filepath){
         }
     }
     free_hashmap(map);
+    free(file_contents);
     return total_2;
 }
 
