@@ -6,7 +6,6 @@
 
 #define HASHMAP_SIZE 256
 
-
 typedef struct LinkedListNode {
     char *key;
     int value;
@@ -25,12 +24,11 @@ HashMap create_empty_hashmap()
     };
     for (size_t i=0; i < HASHMAP_SIZE; i++)
     {
-        LinkedListNode *head_node = malloc(sizeof(LinkedListNode));
-        head_node->key = NULL;
-        head_node->value = 0;
-        head_node->next = NULL;
-        head_node->prev = NULL;
-        result.buckets[i] = head_node;
+        result.buckets[i] = malloc(sizeof(LinkedListNode));
+        result.buckets[i]->key = NULL;
+        result.buckets[i]->value = 0;
+        result.buckets[i]->next = NULL;
+        result.buckets[i]->prev = NULL;
     }
     return result;
 }
@@ -161,7 +159,7 @@ size_t part2(char *filepath){
         while (head->next != NULL){
             head = head->next;
             list_i++;
-            
+
             total_2 += (box_i+1) * list_i * (head->value);
         }
     }
