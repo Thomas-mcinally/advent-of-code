@@ -105,23 +105,13 @@ void del(HashMap *map, char *label)
     // Key doesnt exist in hashmap, so do nothing
 }
 
-
-
-int main(int argc, char **argv)
-{
-    if (argc != 2)
-    {
-        fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
-        exit(1);
-    }
-
-    char *file_path = argv[1];
-    char *file_contents = read_entire_file(file_path);
+size_t part1(char *filepath){
+    char *file_contents = read_entire_file(filepath);
 
 
     size_t i = 0;
-    size_t current_value = 0;
     size_t total_value = 0;
+    char *label_start = file_contents; 
     while (file_contents[i] != '\0')
     {
         if (file_contents[i] == '\n')
@@ -130,23 +120,21 @@ int main(int argc, char **argv)
             exit(1);
         }
         else if (file_contents[i] == ',') {
-            total_value += current_value;
-            current_value = 0;
-        }
-        else {
-            current_value += file_contents[i];
-            current_value *= 17;
-            current_value %= 256;
-
+            file_contents[i] = '\0';
+            total_value += generate_hash(label_start);
+            label_start = file_contents + i + 1;
         }
 
         i += 1;
     }
-    total_value += current_value;
+    total_value += generate_hash(label_start);
 
-    printf("part1 sol: %zu\n", total_value);
+    return total_value;
+}
 
+size_t part2(char *filepath){
 
+    char *file_contents = read_entire_file(filepath);
     HashMap map = create_empty_hashmap();
     char *label_start = file_contents; 
     size_t string_i = 0;
@@ -191,5 +179,21 @@ int main(int argc, char **argv)
             item_count++;
         }
     }
-    printf("part2 sol: %zu\n", total_2);
+    return total_2;
+}
+
+int main(int argc, char **argv)
+{
+    if (argc != 2)
+    {
+        fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
+        exit(1);
+    }
+
+    char *file_path = argv[1];
+    
+
+    printf("part1 sol: %zu\n", part1(file_path));
+
+    printf("part2 sol: %zu\n", part2(file_path));
 }
