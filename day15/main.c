@@ -108,23 +108,18 @@ size_t part1(char *filepath){
     char *file_contents = read_entire_file(filepath);
 
 
-    size_t i = 0;
+    size_t content_i = 0;
     size_t total_value = 0;
     char *label_start = file_contents; 
-    while (file_contents[i] != '\0')
+    while (file_contents[content_i] != '\0')
     {
-        if (file_contents[i] == '\n')
-        {
-            printf("found unexpected newline at index: %zu\n", i);
-            exit(1);
-        }
-        else if (file_contents[i] == ',') {
-            file_contents[i] = '\0';
+        if (file_contents[content_i] == ',') {
+            file_contents[content_i] = '\0';
             total_value += generate_hash(label_start);
-            label_start = file_contents + i + 1;
+            label_start = file_contents + content_i + 1;
         }
 
-        i += 1;
+        content_i++;
     }
     total_value += generate_hash(label_start);
 
@@ -135,34 +130,25 @@ size_t part2(char *filepath){
     char *file_contents = read_entire_file(filepath);
     HashMap map = create_empty_hashmap();
     char *label_start = file_contents; 
-    size_t string_i = 0;
-    while (file_contents[string_i] != '\0')
+    size_t content_i = 0;
+    while (file_contents[content_i] != '\0')
     {
-        if (file_contents[string_i] == '\n')
-        {
-            printf("found unexpected newline at index: %zu\n", string_i);
-            exit(1);
-        }
-        if (file_contents[string_i] == ','){
-            string_i++;
-            continue;
-        }
-        if (file_contents[string_i] == '=') {
-            file_contents[string_i] = '\0';
-            int focal_length = file_contents[string_i + 1] - '0';
+        if (file_contents[content_i] == '=') {
+            file_contents[content_i] = '\0';
+            int focal_length = file_contents[content_i + 1] - '0';
 
             hashmap_set(&map, label_start, focal_length);
 
-            label_start = file_contents + string_i + 3;
-            string_i++;
+            label_start = file_contents + content_i + 3;
+            content_i++;
         }
-        else if (file_contents[string_i] == '-') {
-            file_contents[string_i] = '\0';
+        else if (file_contents[content_i] == '-') {
+            file_contents[content_i] = '\0';
 
             hashmap_del(&map, label_start);
-            label_start = file_contents + string_i + 2;
+            label_start = file_contents + content_i + 2;
         }
-        string_i++;
+        content_i++;
     }
 
 
