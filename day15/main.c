@@ -19,6 +19,7 @@ typedef struct{
 
 HashMap *create_empty_hashmap()
 {
+    // Must be freed by caller, can use free_hashmap
     HashMap *result = malloc(sizeof(HashMap));
     for (size_t i=0; i < HASHMAP_SIZE; i++)
     {
@@ -165,7 +166,7 @@ size_t part2(char *filepath){
     }
 
 
-    size_t total_2 = 0;
+    size_t total = 0;
     for (size_t box_i=0; box_i < HASHMAP_SIZE; box_i++)
     {
         LinkedListNode *head = map->buckets[box_i];
@@ -174,12 +175,12 @@ size_t part2(char *filepath){
             head = head->next;
             list_i++;
 
-            total_2 += (box_i+1) * list_i * (head->value);
+            total += (box_i+1) * list_i * (head->value);
         }
     }
     free_hashmap(map);
     free(file_contents);
-    return total_2;
+    return total;
 }
 
 int main(int argc, char **argv)
