@@ -128,9 +128,10 @@ size_t part1(char *filepath){
 
 size_t part2(char *filepath){
     char *file_contents = read_entire_file(filepath);
-    HashMap map = create_empty_hashmap();
-    char *label_start = file_contents; 
+
     size_t content_i = 0;
+    char *label_start = file_contents;
+    HashMap map = create_empty_hashmap(); 
     while (file_contents[content_i] != '\0')
     {
         if (file_contents[content_i] == '=') {
@@ -156,11 +157,12 @@ size_t part2(char *filepath){
     for (size_t box_i=0; box_i < HASHMAP_SIZE; box_i++)
     {
         LinkedListNode *head = map.buckets[box_i];
-        int item_count = 1;
+        int list_i = 0;
         while (head->next != NULL){
             head = head->next;
-            total_2 += (box_i+1) * item_count * (head->value);
-            item_count++;
+            list_i++;
+            
+            total_2 += (box_i+1) * list_i * (head->value);
         }
     }
     return total_2;
