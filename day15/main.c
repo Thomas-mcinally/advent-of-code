@@ -59,7 +59,7 @@ int generate_hash(char *label)
     return hash;
 }
 
-void hashmap_set(HashMap *map, char *label, int val)
+void hashmap_put(HashMap *map, char *label, int val)
 {
     int hash = generate_hash(label);
     LinkedListNode *head = map->buckets[hash];
@@ -150,7 +150,7 @@ size_t part2(char *filepath){
             file_contents[content_i] = '\0';
             int focal_length = file_contents[content_i + 1] - '0';
 
-            hashmap_set(map, label_start, focal_length);
+            hashmap_put(map, label_start, focal_length);
 
             label_start = file_contents + content_i + 3;
             content_i++;
