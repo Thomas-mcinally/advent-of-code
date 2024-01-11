@@ -103,3 +103,7 @@ long long int extract_number_from_string(const char *str)
   }
   return result;
 }
+
+int max(int a, int b){
+    return a >= b ? a : b;
+}

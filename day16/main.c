@@ -4,9 +4,6 @@
 
 #include "aoc_lib.h"
 
-int max(int a, int b){
-    return a >= b ? a : b;
-}
 void dfs(char **grid, int ROWS, int COLS, int **visited, int cur_r, int cur_c, int prev_r, int prev_c)
 {
     if (cur_r < 0 || cur_r >= ROWS || cur_c < 0 || cur_c >= COLS ) 

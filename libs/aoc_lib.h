@@ -16,4 +16,6 @@ long long int extract_number_from_string_starting_from(const char *str, int *ind
 
 long long int extract_number_from_string(const char *str);
 
+int max(int a, int b);
+
 #endif // AOC_LIB_H
