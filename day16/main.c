@@ -29,11 +29,33 @@ void dfs(char **grid, int ROWS, int COLS, int **visited, int cur_r, int cur_c, i
     visited[cur_r*COLS + cur_c][2] = is_travelling_right;
     visited[cur_r*COLS + cur_c][3] = is_travelling_left;
 
+    
     if (grid[cur_r][cur_c] == '.'){
-        if (is_travelling_down) dfs(grid, ROWS, COLS, visited, cur_r+1, cur_c, cur_r, cur_c);
-        else if (is_travelling_up) dfs(grid, ROWS, COLS, visited, cur_r-1, cur_c, cur_r, cur_c);
-        else if (is_travelling_right) dfs(grid, ROWS, COLS, visited, cur_r, cur_c+1, cur_r, cur_c);
-        else if (is_travelling_left) dfs(grid, ROWS, COLS, visited, cur_r, cur_c-1, cur_r, cur_c);
+        int next_r, next_c;
+        if (is_travelling_down) next_r = cur_r+1, next_c = cur_c;
+        else if (is_travelling_up) next_r = cur_r-1, next_c = cur_c;
+        else if (is_travelling_right) next_r = cur_r, next_c = cur_c+1;
+        else if (is_travelling_left) next_r = cur_r, next_c = cur_c-1;
+        dfs(grid, ROWS, COLS, visited, next_r, next_c, cur_r, cur_c);
+        return;
+    }
+    if (grid[cur_r][cur_c] == '/'){
+        int next_r, next_c;
+        if (is_travelling_down) next_r = cur_r, next_c = cur_c-1;
+        else if (is_travelling_up) next_r = cur_r, next_c = cur_c+1;
+        else if (is_travelling_right) next_r = cur_r-1, next_c = cur_c;
+        else if (is_travelling_left) next_r = cur_r+1, next_c = cur_c;
+        dfs(grid, ROWS, COLS, visited, next_r, next_c, cur_r, cur_c);
+        return;
+    }
+
+    if (grid[cur_r][cur_c] == '\\'){
+        int next_r, next_c;
+        if (is_travelling_down) next_r = cur_r, next_c = cur_c+1;
+        else if (is_travelling_up) next_r = cur_r, next_c = cur_c-1;
+        else if (is_travelling_right) next_r = cur_r+1, next_c = cur_c;
+        else if (is_travelling_left) next_r = cur_r-1, next_c = cur_c;
+        dfs(grid, ROWS, COLS, visited, next_r, next_c, cur_r, cur_c);
         return;
     }
 
@@ -55,23 +77,6 @@ void dfs(char **grid, int ROWS, int COLS, int **visited, int cur_r, int cur_c, i
         }
         else if (is_travelling_left) dfs(grid, ROWS, COLS, visited, cur_r, cur_c-1, cur_r, cur_c);
         else if (is_travelling_right) dfs(grid, ROWS, COLS, visited, cur_r, cur_c+1, cur_r, cur_c);
-        return;
-    }
-
-    if (grid[cur_r][cur_c] == '/'){
-        if (is_travelling_down) dfs(grid, ROWS, COLS, visited, cur_r, cur_c-1, cur_r, cur_c);
-        else if (is_travelling_up) dfs(grid, ROWS, COLS, visited, cur_r, cur_c+1, cur_r, cur_c);
-        else if (is_travelling_right) dfs(grid, ROWS, COLS, visited, cur_r-1, cur_c, cur_r, cur_c);
-        else if (is_travelling_left) dfs(grid, ROWS, COLS, visited, cur_r+1, cur_c, cur_r, cur_c);
-        return;
-    }
-
-    if (grid[cur_r][cur_c] == '\\'){
-
-        if (is_travelling_down) dfs(grid, ROWS, COLS, visited, cur_r, cur_c+1, cur_r, cur_c);
-        else if (is_travelling_up) dfs(grid, ROWS, COLS, visited, cur_r, cur_c-1, cur_r, cur_c);
-        else if (is_travelling_right) dfs(grid, ROWS, COLS, visited, cur_r+1, cur_c, cur_r, cur_c);
-        else if (is_travelling_left) dfs(grid, ROWS, COLS, visited, cur_r-1, cur_c, cur_r, cur_c);
         return;
     }
     
