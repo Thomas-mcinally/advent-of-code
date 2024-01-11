@@ -14,10 +14,12 @@ void dfs(char **grid, int ROWS, int COLS, int **visited, int cur_r, int cur_c, i
     int is_travelling_right = (cur_c == prev_c + 1);
     int is_travelling_left = (cur_c == prev_c - 1);
 
-    if (visited[cur_r*COLS + cur_c] != NULL && is_travelling_down && visited[cur_r*COLS + cur_c][0]) return;
-    if (visited[cur_r*COLS + cur_c] != NULL && is_travelling_up && visited[cur_r*COLS + cur_c][1]) return;
-    if (visited[cur_r*COLS + cur_c] != NULL && is_travelling_right && visited[cur_r*COLS + cur_c][2]) return;
-    if (visited[cur_r*COLS + cur_c] != NULL && is_travelling_left && visited[cur_r*COLS + cur_c][3]) return;
+    if (visited[cur_r*COLS + cur_c] != NULL){
+        if (is_travelling_down && visited[cur_r*COLS + cur_c][0]) return;
+        if (is_travelling_up && visited[cur_r*COLS + cur_c][1]) return;
+        if (is_travelling_right && visited[cur_r*COLS + cur_c][2]) return;
+        if (is_travelling_left && visited[cur_r*COLS + cur_c][3]) return;
+    }
 
     if (visited[cur_r*COLS + cur_c] == NULL){
         visited[cur_r*COLS + cur_c] = calloc(4, sizeof(int));
