@@ -79,7 +79,7 @@ void dfs(char **grid, int ROWS, int COLS, int **visited, int cur_r, int cur_c, i
 
 int find_energized_tiles_given_starting_pos(char **grid, int ROWS, int COLS, int start_r, int start_c, int prev_r, int prev_c)
 {
-    int **visited = malloc(ROWS * COLS * sizeof(int *));
+    int **visited = calloc(ROWS * COLS, sizeof(int *));
     dfs(grid, ROWS, COLS, visited, start_r, start_c, prev_r, prev_c); 
 
     int count = 0;
@@ -88,6 +88,11 @@ int find_energized_tiles_given_starting_pos(char **grid, int ROWS, int COLS, int
             if(visited[r*COLS + c] != NULL) count += 1;
         }
     }
+
+    for (int i=0; i<ROWS*COLS; i++){
+        if(visited[i] != NULL) free(visited[i]);
+    }
+    free(visited);
     return count;
 }
 
@@ -107,4 +112,22 @@ int main(int argc, char **argv)
 
     printf("part1 sol: %d\n", find_energized_tiles_given_starting_pos(grid, ROWS, COLS, 0, 0, 0, -1));
 
+    int max_count = 0;
+    for (int r=0; r<ROWS; r++){
+        int count_right = find_energized_tiles_given_starting_pos(grid, ROWS, COLS, r, 0, r, -1);
+        if (count_right > max_count) max_count = count_right;
+        int count_left = find_energized_tiles_given_starting_pos(grid, ROWS, COLS, r, COLS-1, r, COLS);
+        if (count_left > max_count) max_count = count_left;
+    }
+    for (int c=0; c<COLS; c++){
+        int count_down = find_energized_tiles_given_starting_pos(grid, ROWS, COLS, 0, c, -1, c);
+        if (count_down > max_count) max_count = count_down;
+        int count_up = find_energized_tiles_given_starting_pos(grid, ROWS, COLS, ROWS-1, c, ROWS, c);
+        if (count_up > max_count) max_count = count_up;
+    }
+
+    printf("part2 sol: %d\n", max_count);
+
+    for (int r=0; r<ROWS; r++) free(grid[r]);
+    free(grid);
 }
