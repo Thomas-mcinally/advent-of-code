@@ -4,7 +4,9 @@
 
 #include "aoc_lib.h"
 
-
+int max(int a, int b){
+    return a >= b ? a : b;
+}
 void dfs(char **grid, int ROWS, int COLS, int **visited, int cur_r, int cur_c, int prev_r, int prev_c)
 {
     if (cur_r < 0 || cur_r >= ROWS || cur_c < 0 || cur_c >= COLS ) 
@@ -109,16 +111,12 @@ int main(int argc, char **argv)
 
     int max_count = 0;
     for (int r=0; r<ROWS; r++){
-        int count_right = find_energized_tiles_given_starting_pos(grid, ROWS, COLS, r, 0, r, -1);
-        if (count_right > max_count) max_count = count_right;
-        int count_left = find_energized_tiles_given_starting_pos(grid, ROWS, COLS, r, COLS-1, r, COLS);
-        if (count_left > max_count) max_count = count_left;
+        max_count = max(max_count, find_energized_tiles_given_starting_pos(grid, ROWS, COLS, r, 0, r, -1));
+        max_count = max(max_count, find_energized_tiles_given_starting_pos(grid, ROWS, COLS, r, COLS-1, r, COLS));
     }
     for (int c=0; c<COLS; c++){
-        int count_down = find_energized_tiles_given_starting_pos(grid, ROWS, COLS, 0, c, -1, c);
-        if (count_down > max_count) max_count = count_down;
-        int count_up = find_energized_tiles_given_starting_pos(grid, ROWS, COLS, ROWS-1, c, ROWS, c);
-        if (count_up > max_count) max_count = count_up;
+        max_count = max(max_count, find_energized_tiles_given_starting_pos(grid, ROWS, COLS, 0, c, -1, c));
+        max_count = max(max_count, find_energized_tiles_given_starting_pos(grid, ROWS, COLS, ROWS-1, c, ROWS, c));
     }
 
     printf("part2 sol: %d\n", max_count);
