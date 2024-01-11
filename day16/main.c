@@ -77,6 +77,19 @@ void dfs(char **grid, int ROWS, int COLS, int **visited, int cur_r, int cur_c, i
 
 }
 
+int find_energized_tiles_given_starting_pos(char **grid, int ROWS, int COLS, int start_r, int start_c, int prev_r, int prev_c)
+{
+    int **visited = malloc(ROWS * COLS * sizeof(int *));
+    dfs(grid, ROWS, COLS, visited, start_r, start_c, prev_r, prev_c); 
+
+    int count = 0;
+    for (int r=0; r<ROWS; r++){
+        for (int c=0; c<COLS; c++){
+            if(visited[r*COLS + c] != NULL) count += 1;
+        }
+    }
+    return count;
+}
 
 int main(int argc, char **argv)
 {
@@ -91,15 +104,7 @@ int main(int argc, char **argv)
     int ROWS = read_file_to_lines(&grid, file_path);
     int COLS = strlen(grid[0]);
 
-    int **visited = malloc(ROWS * COLS * sizeof(int *));
-    dfs(grid, ROWS, COLS, visited, 0, 0, 0, -1); // start top left travelling right
 
-    int count = 0;
-    for (int r=0; r<ROWS; r++){
-        for (int c=0; c<COLS; c++){
-            if(visited[r*COLS + c] != NULL) count += 1;
-        }
-    }
-    printf("part1 sol: %d\n", count);
+    printf("part1 sol: %d\n", find_energized_tiles_given_starting_pos(grid, ROWS, COLS, 0, 0, 0, -1));
 
 }
