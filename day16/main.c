@@ -59,11 +59,7 @@ int find_energized_tiles_given_starting_pos(char **grid, int ROWS, int COLS, int
     dfs(grid, ROWS, COLS, visited, start_r, start_c, start_direction);
 
     int count = 0;
-    for (int i = 0; i < ROWS * COLS; i++)
-    {
-        if (visited[i])
-            count++;
-    }
+    for (int i = 0; i < ROWS * COLS; i++) if (visited[i]) count++;
     free(visited);
     return count;
 }
