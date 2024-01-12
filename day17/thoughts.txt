@@ -1,0 +1,16 @@
+Find best path from top left to bottom right
+
+Can continue straight, turn left or turn right, but can't reverse
+
+Can only continue straight twice in a row (can only move 3 times in same direction before need to turn)
+
+Because you already start in the top-left block, you don't incur that block's heat loss unless you leave that block and then return to it.
+
+
+Initial idea:
+- Basically find min path in a weighted directed graph
+    - Weight to move to a node is the "heat score" of that node
+
+- Solve with dijkstras algo
+- State variables r,c,straight_count. straight_count is a num from 1 to 3 and influences what next choice can be.
+- Keep visited set, never process same (r,c,straight_count) more than once
