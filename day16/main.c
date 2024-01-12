@@ -9,41 +9,41 @@ const int UP = 1 << 1;
 const int RIGHT = 1 << 2;
 const int LEFT = 1 << 3;
 
-void dfs(char **grid, int ROWS, int COLS, int *visited, int cur_r, int cur_c, int direction)
+void dfs(char **grid, int ROWS, int COLS, int *visited, int cur_r, int cur_c, int inbound_dir)
 {
-    if (cur_r < 0 || cur_r >= ROWS || cur_c < 0 || cur_c >= COLS || visited[cur_r*COLS + cur_c]&direction)
+    if (cur_r < 0 || cur_r >= ROWS || cur_c < 0 || cur_c >= COLS || visited[cur_r*COLS + cur_c]&inbound_dir)
         return;
 
-    visited[cur_r*COLS + cur_c] |= direction;
+    visited[cur_r*COLS + cur_c] |= inbound_dir;
 
     int outgoing_dir = 0;
     switch (grid[cur_r][cur_c]) {
         case '.':
-            outgoing_dir = direction;
+            outgoing_dir = inbound_dir;
             break;
         case '/':
-            if      (direction == RIGHT) outgoing_dir = UP;
-            else if (direction == LEFT)  outgoing_dir = DOWN;
-            else if (direction == DOWN)  outgoing_dir = LEFT;
-            else if (direction == UP)    outgoing_dir = RIGHT;
+            if      (inbound_dir == RIGHT) outgoing_dir = UP;
+            else if (inbound_dir == LEFT)  outgoing_dir = DOWN;
+            else if (inbound_dir == DOWN)  outgoing_dir = LEFT;
+            else if (inbound_dir == UP)    outgoing_dir = RIGHT;
             break;
         case '\\':
-            if      (direction == RIGHT) outgoing_dir = DOWN;
-            else if (direction == LEFT)  outgoing_dir = UP;
-            else if (direction == DOWN)  outgoing_dir = RIGHT;
-            else if (direction == UP)    outgoing_dir = LEFT;
+            if      (inbound_dir == RIGHT) outgoing_dir = DOWN;
+            else if (inbound_dir == LEFT)  outgoing_dir = UP;
+            else if (inbound_dir == DOWN)  outgoing_dir = RIGHT;
+            else if (inbound_dir == UP)    outgoing_dir = LEFT;
             break;
         case '-':
-            if      (direction == RIGHT) outgoing_dir = RIGHT;
-            else if (direction == LEFT)  outgoing_dir = LEFT;
-            else if (direction == DOWN)  outgoing_dir = LEFT | RIGHT;
-            else if (direction == UP)    outgoing_dir = LEFT | RIGHT;
+            if      (inbound_dir == RIGHT) outgoing_dir = RIGHT;
+            else if (inbound_dir == LEFT)  outgoing_dir = LEFT;
+            else if (inbound_dir == DOWN)  outgoing_dir = LEFT | RIGHT;
+            else if (inbound_dir == UP)    outgoing_dir = LEFT | RIGHT;
             break;
         case '|':
-            if      (direction == RIGHT) outgoing_dir = UP | DOWN;
-            else if (direction == LEFT)  outgoing_dir = UP | DOWN;
-            else if (direction == DOWN)  outgoing_dir = DOWN;
-            else if (direction == UP)    outgoing_dir = UP;
+            if      (inbound_dir == RIGHT) outgoing_dir = UP | DOWN;
+            else if (inbound_dir == LEFT)  outgoing_dir = UP | DOWN;
+            else if (inbound_dir == DOWN)  outgoing_dir = DOWN;
+            else if (inbound_dir == UP)    outgoing_dir = UP;
             break;
     }
 
