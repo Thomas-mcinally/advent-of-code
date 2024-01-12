@@ -16,100 +16,41 @@ void dfs(char **grid, int ROWS, int COLS, int *visited, int cur_r, int cur_c, in
 
     visited[cur_r*COLS + cur_c] |= direction;
 
-    if (grid[cur_r][cur_c] == '.')
-    {
-        int next_r, next_c;
-        if (direction == DOWN)
-            next_r = cur_r + 1, next_c = cur_c;
-        else if (direction == UP)
-            next_r = cur_r - 1, next_c = cur_c;
-        else if (direction == RIGHT)
-            next_r = cur_r, next_c = cur_c + 1;
-        else if (direction == LEFT)
-            next_r = cur_r, next_c = cur_c - 1;
-        dfs(grid, ROWS, COLS, visited, next_r, next_c, direction);
-        return;
-    }
-    if (grid[cur_r][cur_c] == '/')
-    {
-        int next_r, next_c;
-        int next_direction;
-        if (direction == DOWN){
-            next_r = cur_r;
-            next_c = cur_c - 1;
-            next_direction = LEFT;
-        }
-        else if (direction == UP){
-            next_r = cur_r;
-            next_c = cur_c + 1;
-            next_direction = RIGHT;
-        }
-        else if (direction == RIGHT){
-            next_r = cur_r - 1;
-            next_c = cur_c;
-            next_direction = UP;
-        }
-        else if (direction == LEFT){
-            next_r = cur_r + 1;
-            next_c = cur_c;
-            next_direction = DOWN;
-        }
-        dfs(grid, ROWS, COLS, visited, next_r, next_c, next_direction);
-        return;
+    int outgoing_dir = 0;
+    switch (grid[cur_r][cur_c]) {
+        case '.':
+            outgoing_dir = direction;
+            break;
+        case '/':
+            if      (direction == RIGHT) outgoing_dir = UP;
+            else if (direction == LEFT)  outgoing_dir = DOWN;
+            else if (direction == DOWN)  outgoing_dir = LEFT;
+            else if (direction == UP)    outgoing_dir = RIGHT;
+            break;
+        case '\\':
+            if      (direction == RIGHT) outgoing_dir = DOWN;
+            else if (direction == LEFT)  outgoing_dir = UP;
+            else if (direction == DOWN)  outgoing_dir = RIGHT;
+            else if (direction == UP)    outgoing_dir = LEFT;
+            break;
+        case '-':
+            if      (direction == RIGHT) outgoing_dir = RIGHT;
+            else if (direction == LEFT)  outgoing_dir = LEFT;
+            else if (direction == DOWN)  outgoing_dir = LEFT | RIGHT;
+            else if (direction == UP)    outgoing_dir = LEFT | RIGHT;
+            break;
+        case '|':
+            if      (direction == RIGHT) outgoing_dir = UP | DOWN;
+            else if (direction == LEFT)  outgoing_dir = UP | DOWN;
+            else if (direction == DOWN)  outgoing_dir = DOWN;
+            else if (direction == UP)    outgoing_dir = UP;
+            break;
     }
 
-    if (grid[cur_r][cur_c] == '\\')
-    {
-        int next_r, next_c;
-        int next_direction;
-        if (direction == DOWN){
-            next_r = cur_r, next_c = cur_c + 1;
-            next_direction = RIGHT;
-        }
-        else if (direction == UP){
-            next_r = cur_r, next_c = cur_c - 1;
-            next_direction = LEFT;
-        }
-        else if (direction == RIGHT){
-            next_r = cur_r + 1, next_c = cur_c;
-            next_direction = DOWN;
-        }
-        else if (direction == LEFT){
-            next_r = cur_r - 1, next_c = cur_c;
-            next_direction = UP;
-        }
-        dfs(grid, ROWS, COLS, visited, next_r, next_c, next_direction);
-        return;
-    }
-
-    if (grid[cur_r][cur_c] == '|')
-    {
-        if (direction==LEFT || direction==RIGHT)
-        {
-            dfs(grid, ROWS, COLS, visited, cur_r + 1, cur_c, DOWN);
-            dfs(grid, ROWS, COLS, visited, cur_r - 1, cur_c, UP);
-        }
-        else if (direction==UP)
-            dfs(grid, ROWS, COLS, visited, cur_r - 1, cur_c, UP);
-        else if (direction==DOWN)
-            dfs(grid, ROWS, COLS, visited, cur_r + 1, cur_c, DOWN);
-
-        return;
-    }
-
-    if (grid[cur_r][cur_c] == '-')
-    {
-        if (direction==UP || direction==DOWN)
-        {
-            dfs(grid, ROWS, COLS, visited, cur_r, cur_c + 1, RIGHT);
-            dfs(grid, ROWS, COLS, visited, cur_r, cur_c - 1, LEFT);
-        }
-        else if (direction==LEFT)
-            dfs(grid, ROWS, COLS, visited, cur_r, cur_c - 1, LEFT);
-        else if (direction==RIGHT)
-            dfs(grid, ROWS, COLS, visited, cur_r, cur_c + 1, RIGHT);
-        return;
-    }
+    if (outgoing_dir & RIGHT) dfs(grid, ROWS, COLS, visited, cur_r, cur_c+1, RIGHT);
+    if (outgoing_dir & LEFT) dfs(grid, ROWS, COLS, visited, cur_r, cur_c-1, LEFT);
+    if (outgoing_dir & DOWN) dfs(grid, ROWS, COLS, visited, cur_r+1, cur_c, DOWN);
+    if (outgoing_dir & UP) dfs(grid, ROWS, COLS, visited, cur_r-1, cur_c, UP);
 }
 
 int find_energized_tiles_given_starting_pos(char **grid, int ROWS, int COLS, int start_r, int start_c, int start_direction)
