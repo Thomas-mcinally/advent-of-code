@@ -93,7 +93,6 @@ int main(int argc, char **argv)
 
     printf("part2 sol: %d\n", max_count);
 
-    for (int r = 0; r < ROWS; r++)
-        free(grid[r]);
+    for (int r = 0; r < ROWS; r++) free(grid[r]);
     free(grid);
 }
