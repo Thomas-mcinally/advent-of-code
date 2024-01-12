@@ -12,5 +12,8 @@ Initial idea:
     - Weight to move to a node is the "heat score" of that node
 
 - Solve with dijkstras algo
-- State variables r,c,straight_count. straight_count is a num from 1 to 3 and influences what next choice can be.
-- Keep visited set, never process same (r,c,straight_count) more than once
+- State variables r,c,dir, dir_count,
+    - dir is one of 4 values indicating direction currently travelling in
+    - dir_count is a num from 1 to 3 
+    - Both dir and dir_count influence what next step can be
+- Keep visited set, never process same (r,c,dir,dir_count) more than once
