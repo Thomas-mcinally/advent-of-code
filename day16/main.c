@@ -101,7 +101,3 @@ int main(int argc, char **argv)
         free(grid[r]);
     free(grid);
 }
-
-// Two potential major improvements
-// 1. Simplify DFS - overly complex logic to determine next move
-// 2. Simplify Visited check inside DFS
