@@ -28,12 +28,12 @@ int main(int argc, char **argv)
     Point *points = malloc((linecount + 1) * sizeof(Point));
     Point start = {0, 0};
     points[0] = start;
-    int total_distance = 0;
+    int edge_count = 0;
     for (int i = 0; i < linecount; i++)
     {
         char dir = lines[i][0];
         int val = extract_number_from_string(lines[i] + 2);
-        total_distance += val;
+        edge_count += val;
         points[i+1] = points[i];
 
         switch(dir){
@@ -50,18 +50,12 @@ int main(int argc, char **argv)
                 points[i+1].r += val;
                 break;
         }
-        printf("coordinates of new point: (%d, %d)\n", points[i+1].r, points[i+1].c);
     }
 
 
-    int total_area = 0;
-    for (int i=0; i < linecount; i++) total_area += det(points[i], points[i+1]);
-    total_area /= 2;
-
-    total_area += total_distance/2;
-    total_area += 1;
+    int shoestring_area = 0;
+    for (int i=0; i < linecount; i++) shoestring_area += det(points[i], points[i+1]);
 
 
-    printf("part1 solution: %d\n", total_area); //expect 62
+    printf("part1 solution: %d\n", shoestring_area/2 + edge_count/2 + 1);
 }
-
