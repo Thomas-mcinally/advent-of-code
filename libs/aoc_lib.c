@@ -91,6 +91,16 @@ long long int extract_number_from_string_starting_from(const char *str, int *ind
   return result;
 }
 
+int max(int a, int b){
+    return a >= b ? a : b;
+}
+
+int is_hexadecimal(char c) {
+    if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) return 1;
+    else return 0;
+}
+
+
 long long int extract_number_from_string(const char *str)
 {
   size_t index = 0;
@@ -104,6 +114,18 @@ long long int extract_number_from_string(const char *str)
   return result;
 }
 
-int max(int a, int b){
-    return a >= b ? a : b;
+size_t extract_hex_val_from_string(char *hex, int max_len){
+    size_t result = 0;
+    size_t i = 0;
+    
+    while (is_hexadecimal(hex[i])){
+      result *= 16;
+      if (isdigit(hex[i])) result += hex[i] - '0';
+      else result += hex[i] - 'a' + 10;
+
+      i++;
+      if (i == max_len) break;
+    }
+
+    return result;
 }

@@ -14,15 +14,7 @@ size_t det(Point p1, Point p2){
     return p1.c * p2.r - p1.r * p2.c;
 }
 
-size_t hex_val(char *hex){
-    size_t val = 0;
-    for (int i=0; i<5; i++){
-        val *= 16;
-        if (isdigit(hex[i])) val += hex[i] - '0';
-        else val += hex[i] - 'a' + 10;
-    }
-    return val;
-}
+
 int main(int argc, char **argv)
 {
     if (argc != 2)
@@ -75,7 +67,7 @@ int main(int argc, char **argv)
     size_t edge_count2 = 0;
     for (int i=0; i<linecount; i++){
         char *hex_start = strchr(lines[i], '#');
-        size_t val = hex_val(hex_start + 1);
+        size_t val = extract_hex_val_from_string(hex_start + 1, 5);
         char dir2 = *(hex_start + 6);
         edge_count2 += val;
         points2[i+1] = points2[i];
