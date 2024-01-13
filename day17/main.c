@@ -52,7 +52,6 @@ size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
 
         q[q_size++] = new_node(0,1,grid[0][1] - '0',0,1);
         q[q_size++] = new_node(1,0,grid[1][0] - '0',3,1);
-        int count = 0;
         while (q_size > 0) {
                 qsort(q, q_size, sizeof(Node*), compare_node_weights); // Not optimal, sort at every iteration, use heap instead?       
                 Node* node = q[--q_size]; // access min element
@@ -60,12 +59,11 @@ size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
                 if (node->r < 0 || node->r >= ROWS || node->c < 0 || node->c >= COLS || visited[node->r][node->c][node->dir][node->dir_count-1]) {
                         continue;
                 }
-                visited[node->r][node->c][node->dir][node->dir_count-1] = 1;
-                count++;
-
                 if (node->r == ROWS-1 && node->c == COLS-1 && node->dir_count >=min_steps) {
                         return node->w;
                 }
+                visited[node->r][node->c][node->dir][node->dir_count-1] = 1;
+
 
                 int next_dirs[4] = {1, 1, 1, 1}; //  0: right, 1: left, 2: up, 3: down
                 if (node->dir_count == max_steps) {
