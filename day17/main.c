@@ -50,8 +50,8 @@ size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
         Node **q = malloc(ROWS*COLS*4*max_steps*sizeof(Node*));
         int q_size = 0;
 
-        q[q_size++] = new_node(0,1,grid[0][1] - '0',0,1);
-        q[q_size++] = new_node(1,0,grid[1][0] - '0',3,1);
+        q[q_size++] = new_node(0,1,0,0,1);
+        q[q_size++] = new_node(1,0,0,3,1);
         while (q_size > 0) {
                 qsort(q, q_size, sizeof(Node*), compare_node_weights); // Not optimal, sort at every iteration, use heap instead?       
                 Node* node = q[--q_size]; // access min element
@@ -59,8 +59,9 @@ size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
                 if (node->r < 0 || node->r >= ROWS || node->c < 0 || node->c >= COLS || visited[node->r][node->c][node->dir][node->dir_count-1]) {
                         continue;
                 }
+                int cur_w = node->w + (grid[node->r][node->c] - '0');
                 if (node->r == ROWS-1 && node->c == COLS-1 && node->dir_count >=min_steps) {
-                        return node->w;
+                        return cur_w;
                 }
                 visited[node->r][node->c][node->dir][node->dir_count-1] = 1;
 
@@ -78,30 +79,25 @@ size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
                 if (node->dir == 3) next_dirs[2] = 0;
 
                 int next_dir_count;
-                int next_w;
-                if (next_dirs[0] && node->c + 1 < COLS){
+                if (next_dirs[0]){
                         if (0 == node->dir) next_dir_count = node->dir_count + 1;
                         else next_dir_count = 1;
-                        int next_w = node->w + (grid[node->r][node->c + 1] - '0');
-                        q[q_size++] = new_node(node->r, node->c+1, next_w, 0, next_dir_count);
+                        q[q_size++] = new_node(node->r, node->c+1, cur_w, 0, next_dir_count);
                 }
-                if (next_dirs[1] && node->c - 1 >= 0){
+                if (next_dirs[1]){
                         if (1 == node->dir) next_dir_count = node->dir_count + 1;
                         else next_dir_count = 1;
-                        next_w = node->w + (grid[node->r][node->c - 1] - '0');
-                        q[q_size++] = new_node(node->r, node->c-1, next_w, 1, next_dir_count);
+                        q[q_size++] = new_node(node->r, node->c-1, cur_w, 1, next_dir_count);
                 }
-                if (next_dirs[2] && node->r - 1 >= 0){
+                if (next_dirs[2]){
                         if (2 == node->dir) next_dir_count = node->dir_count + 1;
                         else next_dir_count = 1;
-                        next_w = node->w + (grid[node->r - 1][node->c] - '0');
-                        q[q_size++] = new_node(node->r-1, node->c, next_w, 2, next_dir_count);
+                        q[q_size++] = new_node(node->r-1, node->c, cur_w, 2, next_dir_count);
                 }
-                if (next_dirs[3] && node->r + 1 < ROWS){
+                if (next_dirs[3]){
                         if (3 == node->dir) next_dir_count = node->dir_count + 1;
                         else next_dir_count = 1;
-                        next_w = node->w + (grid[node->r + 1][node->c] - '0');
-                        q[q_size++] = new_node(node->r+1, node->c, next_w, 3, next_dir_count);
+                        q[q_size++] = new_node(node->r+1, node->c, cur_w, 3, next_dir_count);
                 }
         }
 
