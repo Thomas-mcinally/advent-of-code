@@ -65,7 +65,7 @@ size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
                 }
                 visited[node->r][node->c][node->dir][node->dir_count-1] = 1;
 
-
+                int next_coords[4][2] = {{node->r, node->c+1}, {node->r, node->c-1}, {node->r-1, node->c}, {node->r+1, node->c}};
                 int next_dirs[4] = {1, 1, 1, 1}; //  0: right, 1: left, 2: up, 3: down
                 if (node->dir_count == max_steps) {
                         next_dirs[node->dir] = 0;
@@ -78,26 +78,15 @@ size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
                 if (node->dir == 2) next_dirs[3] = 0;
                 if (node->dir == 3) next_dirs[2] = 0;
 
+
+                
                 int next_dir_count;
-                if (next_dirs[0]){
-                        if (0 == node->dir) next_dir_count = node->dir_count + 1;
+                for (int i=0; i<4; i++){
+                        if (!next_dirs[i]) continue;
+                        if (i == node->dir) next_dir_count = node->dir_count + 1;
                         else next_dir_count = 1;
-                        q[q_size++] = new_node(node->r, node->c+1, cur_w, 0, next_dir_count);
-                }
-                if (next_dirs[1]){
-                        if (1 == node->dir) next_dir_count = node->dir_count + 1;
-                        else next_dir_count = 1;
-                        q[q_size++] = new_node(node->r, node->c-1, cur_w, 1, next_dir_count);
-                }
-                if (next_dirs[2]){
-                        if (2 == node->dir) next_dir_count = node->dir_count + 1;
-                        else next_dir_count = 1;
-                        q[q_size++] = new_node(node->r-1, node->c, cur_w, 2, next_dir_count);
-                }
-                if (next_dirs[3]){
-                        if (3 == node->dir) next_dir_count = node->dir_count + 1;
-                        else next_dir_count = 1;
-                        q[q_size++] = new_node(node->r+1, node->c, cur_w, 3, next_dir_count);
+                        
+                        q[q_size++] = new_node(next_coords[i][0], next_coords[i][1], cur_w, i, next_dir_count);
                 }
         }
 
