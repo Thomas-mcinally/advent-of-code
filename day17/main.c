@@ -31,23 +31,23 @@ int compare_node_weights(const void* a, const void* b) {
     }
 }
 
-int ****create_visited_array(int ROWS, int COLS) {
+int ****create_visited_array(int ROWS, int COLS, int max_steps) {
         int ****visited = malloc(ROWS * sizeof(int***));
         for(int i = 0; i < ROWS; i++) {
                 visited[i] = malloc(COLS * sizeof(int**));
                 for(int j = 0; j < COLS; j++) {
                         visited[i][j] = malloc(4 * sizeof(int*));
                         for(int k = 0; k < 4; k++) {
-                                visited[i][j][k] = calloc(10, sizeof(int)); 
+                                visited[i][j][k] = calloc(max_steps, sizeof(int)); 
                         }
                 }
         }
         return visited;
 }
 
-size_t min_path(char **grid, int ROWS, int COLS){
-        int ****visited = create_visited_array(ROWS, COLS);
-        Node **q = malloc(ROWS*COLS*4*10*sizeof(Node*));
+size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
+        int ****visited = create_visited_array(ROWS, COLS, max_steps);
+        Node **q = malloc(ROWS*COLS*4*max_steps*sizeof(Node*));
         int q_size = 0;
 
         q[q_size++] = new_node(0,1,grid[0][1] - '0',0,1);
@@ -62,16 +62,16 @@ size_t min_path(char **grid, int ROWS, int COLS){
                 }
                 visited[node->r][node->c][node->dir][node->dir_count-1] = 1;
                 count++;
-                if (count % 100000 == 0) printf("unique nodes: %d\n", count);
-                if (node->r == ROWS-1 && node->c == COLS-1 && node->dir_count >=4) {
+
+                if (node->r == ROWS-1 && node->c == COLS-1 && node->dir_count >=min_steps) {
                         return node->w;
                 }
 
                 int next_dirs[4] = {1, 1, 1, 1}; //  0: right, 1: left, 2: up, 3: down
-                if (node->dir_count == 10) {
+                if (node->dir_count == max_steps) {
                         next_dirs[node->dir] = 0;
                 }
-                if (node->dir_count < 4){
+                if (node->dir_count < min_steps){
                         for (int i = 0; i < 4; i++) if (i != node->dir) next_dirs[i] = 0;
                 }
                 if (node->dir == 0) next_dirs[1] = 0;
@@ -124,11 +124,9 @@ int main(int argc, char **argv)
     int ROWS = read_file_to_lines(&grid, file_path);
     int COLS = strlen(grid[0]);
 
-    size_t result = min_path(grid, ROWS, COLS);
-    printf("part1 result: %zu\n", result);
+
+    printf("part1 result: %zu\n", min_path(grid, ROWS, COLS, 3, 1));
+    printf("part2 result: %zu\n", min_path(grid, ROWS, COLS, 10, 4));
 
 }
 
-
-
-// Lesson: Can do pre-increment as well as post-increment
