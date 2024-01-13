@@ -92,3 +92,6 @@ int main(int argc, char **argv)
     for (int i = 0; i < linecount; i++) free(lines[i]);
     free(lines);
 }
+
+
+// Clue: Shoestring formula to find area of a polygon.

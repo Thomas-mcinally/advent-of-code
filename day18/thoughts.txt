@@ -1,7 +1,0 @@
-Input describes a polygon with no holes
-
-Can use shoelace formula to find total area of polygon
-
-Extract the coordinates of all corners, using input
-
-Calculate area from coordinates using shoelace formula
