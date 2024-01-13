@@ -45,6 +45,16 @@ int ****create_visited_array(int ROWS, int COLS, int max_steps) {
         return visited;
 }
 
+int get_opposite_dir(int dir){
+        switch (dir) {
+                case 0: return 1;
+                case 1: return 0;
+                case 2: return 3;
+                case 3: return 2;
+        }
+        return -1;
+}
+
 size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
         int ****visited = create_visited_array(ROWS, COLS, max_steps);
         Node **q = malloc(ROWS*COLS*4*max_steps*sizeof(Node*));
@@ -65,24 +75,15 @@ size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
                 }
                 visited[node->r][node->c][node->dir][node->dir_count-1] = 1;
 
-                int next_coords[4][2] = {{node->r, node->c+1}, {node->r, node->c-1}, {node->r-1, node->c}, {node->r+1, node->c}};
-                int next_dirs[4] = {1, 1, 1, 1}; //  0: right, 1: left, 2: up, 3: down
-                if (node->dir_count == max_steps) {
-                        next_dirs[node->dir] = 0;
-                }
-                if (node->dir_count < min_steps){
-                        for (int i = 0; i < 4; i++) if (i != node->dir) next_dirs[i] = 0;
-                }
-                if (node->dir == 0) next_dirs[1] = 0;
-                if (node->dir == 1) next_dirs[0] = 0;
-                if (node->dir == 2) next_dirs[3] = 0;
-                if (node->dir == 3) next_dirs[2] = 0;
-
-
+                int next_coords[4][2] = {{node->r, node->c+1}, {node->r, node->c-1}, {node->r-1, node->c}, {node->r+1, node->c}}; //  0: right, 1: left, 2: up, 3: down
+                int is_dir_allowed[4] = {1, 1, 1, 1}; 
+                if (node->dir_count == max_steps) is_dir_allowed[node->dir] = 0;
+                if (node->dir_count < min_steps) for (int i = 0; i < 4; i++) if (i != node->dir) is_dir_allowed[i] = 0;
+                is_dir_allowed[get_opposite_dir(node->dir)] = 0;
                 
                 int next_dir_count;
                 for (int i=0; i<4; i++){
-                        if (!next_dirs[i]) continue;
+                        if (!is_dir_allowed[i]) continue;
                         if (i == node->dir) next_dir_count = node->dir_count + 1;
                         else next_dir_count = 1;
                         
