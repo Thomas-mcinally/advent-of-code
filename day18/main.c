@@ -62,34 +62,32 @@ int main(int argc, char **argv)
     printf("part1 solution: %d\n", shoestring_area/2 + edge_count/2 + 1);
 
 
-    Point *points2 = malloc((linecount + 1) * sizeof(Point));
-    points2[0] = start;
     size_t edge_count2 = 0;
     for (int i=0; i<linecount; i++){
         char *hex_start = strchr(lines[i], '#');
         size_t val = extract_hex_val_from_string(hex_start + 1, 5);
         char dir2 = *(hex_start + 6);
         edge_count2 += val;
-        points2[i+1] = points2[i];
+        points[i+1] = points[i];
         
         switch(dir2){
             case '0':
-                points2[i+1].c += val;
+                points[i+1].c += val;
                 break;
             case '2':
-                points2[i+1].c -= val;
+                points[i+1].c -= val;
                 break;
             case '3':
-                points2[i+1].r -= val;
+                points[i+1].r -= val;
                 break;
             case '1':
-                points2[i+1].r += val;
+                points[i+1].r += val;
                 break;
         }
     }
 
     size_t shoestring_area2 = 0;
-    for (int i=0; i < linecount; i++) shoestring_area2 += det(points2[i], points2[i+1]);
+    for (int i=0; i < linecount; i++) shoestring_area2 += det(points[i], points[i+1]);
 
     printf("part2 solution: %zu\n", shoestring_area2/2 + edge_count2/2 + 1);
 }
