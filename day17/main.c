@@ -38,7 +38,7 @@ int ****create_visited_array(int ROWS, int COLS) {
                 for(int j = 0; j < COLS; j++) {
                         visited[i][j] = malloc(4 * sizeof(int*));
                         for(int k = 0; k < 4; k++) {
-                                visited[i][j][k] = calloc(3, sizeof(int)); 
+                                visited[i][j][k] = calloc(10, sizeof(int)); 
                         }
                 }
         }
@@ -47,11 +47,12 @@ int ****create_visited_array(int ROWS, int COLS) {
 
 size_t min_path(char **grid, int ROWS, int COLS){
         int ****visited = create_visited_array(ROWS, COLS);
-        Node **q = malloc(ROWS*COLS*4*3*sizeof(Node*));
+        Node **q = malloc(ROWS*COLS*4*10*sizeof(Node*));
         int q_size = 0;
 
-        q[q_size++] = new_node(0,0,0,0,1);
-        q[q_size++] = new_node(0,0,0,3,1);
+        q[q_size++] = new_node(0,1,grid[0][1] - '0',0,1);
+        q[q_size++] = new_node(1,0,grid[1][0] - '0',3,1);
+        int count = 0;
         while (q_size > 0) {
                 qsort(q, q_size, sizeof(Node*), compare_node_weights); // Not optimal, sort at every iteration, use heap instead?       
                 Node* node = q[--q_size]; // access min element
@@ -60,13 +61,18 @@ size_t min_path(char **grid, int ROWS, int COLS){
                         continue;
                 }
                 visited[node->r][node->c][node->dir][node->dir_count-1] = 1;
-                if (node->r == ROWS-1 && node->c == COLS-1) {
+                count++;
+                if (count % 100000 == 0) printf("unique nodes: %d\n", count);
+                if (node->r == ROWS-1 && node->c == COLS-1 && node->dir_count >=4) {
                         return node->w;
                 }
 
                 int next_dirs[4] = {1, 1, 1, 1}; //  0: right, 1: left, 2: up, 3: down
-                if (node->dir_count == 3) {
+                if (node->dir_count == 10) {
                         next_dirs[node->dir] = 0;
+                }
+                if (node->dir_count < 4){
+                        for (int i = 0; i < 4; i++) if (i != node->dir) next_dirs[i] = 0;
                 }
                 if (node->dir == 0) next_dirs[1] = 0;
                 if (node->dir == 1) next_dirs[0] = 0;
