@@ -46,6 +46,19 @@ int ****create_visited_array(int ROWS, int COLS, int max_steps) {
         return visited;
 }
 
+void free_visited_array(int ****visited, int ROWS, int COLS, int max_steps) {
+        for(int i = 0; i < ROWS; i++) {
+                for(int j = 0; j < COLS; j++) {
+                        for(int k = 0; k < 4; k++) {
+                                free(visited[i][j][k]);
+                        }
+                        free(visited[i][j]);
+                }
+                free(visited[i]);
+        }
+        free(visited);
+}
+
 int get_opposite_dir(int dir){
         switch (dir) {
                 case 0: return 1;
@@ -57,9 +70,11 @@ int get_opposite_dir(int dir){
 }
 
 size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
+        int sol = 0;
         int ****visited = create_visited_array(ROWS, COLS, max_steps);
         Node **q = malloc(ROWS*COLS*4*max_steps*sizeof(Node*));
         int q_size = 0;
+        
 
         q[q_size++] = new_node(0,1,0,0,1);
         q[q_size++] = new_node(1,0,0,3,1);
@@ -72,7 +87,8 @@ size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
                 }
                 int cur_w = node->w + (grid[node->r][node->c] - '0');
                 if (node->r == ROWS-1 && node->c == COLS-1 && node->dir_count >=min_steps) {
-                        return cur_w;
+                        sol = cur_w;
+                        break;
                 }
                 visited[node->r][node->c][node->dir][node->dir_count-1] = 1;
 
@@ -90,10 +106,13 @@ size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
                         
                         q[q_size++] = new_node(next_coords[i][0], next_coords[i][1], cur_w, i, next_dir_count);
                 }
+                free(node);
         }
 
-        printf("NO SOLUTION FOUND\n");
-        return 0;
+        free_visited_array(visited, ROWS, COLS, max_steps);
+        for (int i = 0; i < q_size; i++) free(q[i]);
+        free(q);
+        return sol;
 }
 
 int main(int argc, char **argv)
@@ -113,5 +132,7 @@ int main(int argc, char **argv)
     printf("part1 result: %zu\n", min_path(grid, ROWS, COLS, 3, 1));
     printf("part2 result: %zu\n", min_path(grid, ROWS, COLS, 10, 4));
 
+    for(int i = 0; i<ROWS; i++) free(grid[i]);
+    free(grid);
 }
 
