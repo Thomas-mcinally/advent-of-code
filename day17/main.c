@@ -4,6 +4,7 @@
 
 #include "aoc_lib.h"
 
+#define NUM_DIRECTIONS 4
 
 typedef struct {
     int r, c, w, dir, dir_count;
@@ -75,14 +76,14 @@ size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
                 }
                 visited[node->r][node->c][node->dir][node->dir_count-1] = 1;
 
-                int next_coords[4][2] = {{node->r, node->c+1}, {node->r, node->c-1}, {node->r-1, node->c}, {node->r+1, node->c}}; //  0: right, 1: left, 2: up, 3: down
-                int is_dir_allowed[4] = {1, 1, 1, 1}; 
+                int next_coords[NUM_DIRECTIONS][2] = {{node->r, node->c+1}, {node->r, node->c-1}, {node->r-1, node->c}, {node->r+1, node->c}}; //  0: right, 1: left, 2: up, 3: down
+                int is_dir_allowed[NUM_DIRECTIONS] = {1, 1, 1, 1}; 
                 if (node->dir_count == max_steps) is_dir_allowed[node->dir] = 0;
-                if (node->dir_count < min_steps) for (int i = 0; i < 4; i++) if (i != node->dir) is_dir_allowed[i] = 0;
+                if (node->dir_count < min_steps) for (int i = 0; i < NUM_DIRECTIONS; i++) if (i != node->dir) is_dir_allowed[i] = 0;
                 is_dir_allowed[get_opposite_dir(node->dir)] = 0;
                 
                 int next_dir_count;
-                for (int i=0; i<4; i++){
+                for (int i=0; i<NUM_DIRECTIONS; i++){
                         if (!is_dir_allowed[i]) continue;
                         if (i == node->dir) next_dir_count = node->dir_count + 1;
                         else next_dir_count = 1;
