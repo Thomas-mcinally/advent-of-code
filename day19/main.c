@@ -21,20 +21,20 @@ size_t dfs(WorkflowsMapItem *workflows, char *cur, int x, int m, int a, int s){
     if (*cur == 'A') return x + m + a + s;
 
     char *rules = shget(workflows, cur);
-    while (1){
+    char *dest = malloc(4*sizeof(char));
+    int dest_found = 0;
+
+    while (!dest_found){
         char *rule_end = strchr(rules, ',');
         if (rule_end == NULL) {
-            return dfs(workflows, rules, x, m, a, s);
+            dest_found = 1;
+            strcpy(dest, rules);
         }
         char c = rules[0];
         char cond = rules[1];
         int val = extract_number_from_string(rules+2);
-        char *dest_start = strchr(rules, ':') + 1;
+        char *label_start = strchr(rules, ':') + 1;
         rules = rule_end + 1;
-
-        char *dest = malloc(rule_end - dest_start + 1);
-        strncpy(dest, dest_start, rule_end - dest_start);
-        dest[rule_end - dest_start] = '\0';
 
         if ((c == 'x' && cond == '<' && x < val)
         || (c == 'x' && cond == '>' && x > val)
@@ -44,10 +44,14 @@ size_t dfs(WorkflowsMapItem *workflows, char *cur, int x, int m, int a, int s){
         || (c == 'a' && cond == '>' && a > val)
         || (c == 's' && cond == '<' && s < val)
         || (c == 's' && cond == '>' && s > val)){
-            return dfs(workflows, dest, x, m, a, s);
+            dest_found = 1;
+            strncpy(dest, label_start, rule_end - label_start);
+            dest[rule_end - label_start] = '\0';
         }
     }
-    return 0;
+    size_t result = dfs(workflows, dest, x, m, a, s);
+    free(dest);
+    return result;
 }
 
 size_t part1(WorkflowsMapItem *workflows, int **items, int item_count){
