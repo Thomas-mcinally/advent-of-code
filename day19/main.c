@@ -17,13 +17,11 @@ typedef struct
 } WorkflowsMapItem;
 
 size_t part2(WorkflowsMapItem *workflows, char *cur, int x_start, int x_end, int m_start, int m_end, int a_start, int a_end, int s_start, int s_end){
-    if (x_end < x_start || m_end < m_start || a_end < a_start || s_end < s_start) return 0;
+    if (x_end < x_start || m_end < m_start || a_end < a_start || s_end < s_start || *cur == 'R') return 0;
     if (*cur == 'A') {
         size_t result = ((size_t)(x_end-x_start+1)) * ((size_t)(m_end-m_start+1)) * ((size_t)(a_end-a_start+1)) * ((size_t)(s_end-s_start+1));
-        printf("acceptance base case: x_start: %i, x_end: %i, m_start: %i, m_end: %i, a_start: %i, a_end: %i, s_start: %i, s_end: %i, new combos: %zu \n", x_start, x_end, m_start, m_end, a_start, a_end, s_start, s_end, result);
         return result;
         }
-    else if (*cur == 'R') return 0;
     else{
         size_t total = 0;
         char *rules = shget(workflows, cur);
