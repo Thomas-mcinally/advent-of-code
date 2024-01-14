@@ -16,6 +16,40 @@ typedef struct
     char *value;
 } WorkflowsMapItem;
 
+size_t dfs(WorkflowsMapItem *workflows, char *cur, int x, int m, int a, int s){
+    if (*cur == 'R') return 0;
+    if (*cur == 'A') return x + m + a + s;
+
+    char *rules = shget(workflows, cur);
+    while (1){
+        char *rule_end = strchr(rules, ',');
+        if (rule_end == NULL) {
+            return dfs(workflows, rules, x, m, a, s);
+        }
+        char c = rules[0];
+        char cond = rules[1];
+        int val = extract_number_from_string(rules+2);
+        char *dest_start = strchr(rules, ':') + 1;
+        rules = rule_end + 1;
+
+        char *dest = malloc(rule_end - dest_start + 1);
+        strncpy(dest, dest_start, rule_end - dest_start);
+        dest[rule_end - dest_start] = '\0';
+
+        if ((c == 'x' && cond == '<' && x < val)
+        || (c == 'x' && cond == '>' && x > val)
+        || (c == 'm' && cond == '<' && m < val)
+        || (c == 'm' && cond == '>' && m > val)
+        || (c == 'a' && cond == '<' && a < val)
+        || (c == 'a' && cond == '>' && a > val)
+        || (c == 's' && cond == '<' && s < val)
+        || (c == 's' && cond == '>' && s > val)){
+            return dfs(workflows, dest, x, m, a, s);
+        }
+    }
+    return 0;
+}
+
 size_t part1(WorkflowsMapItem *workflows, int **items, int item_count){
     size_t total = 0;
     for (int i=0; i<item_count; i++){
@@ -23,36 +57,7 @@ size_t part1(WorkflowsMapItem *workflows, int **items, int item_count){
         int cur_m = items[i][1];
         int cur_a = items[i][2];
         int cur_s = items[i][3];
-        char cur[4]= {'i', 'n', '\0', '\0'};
-        while (cur[0] != 'R' && cur[0] != 'A'){
-            char *rules = shget(workflows, &cur);
-            while (1){
-                char *rule_end = strchr(rules, ',');
-                if (rule_end == NULL) {
-                    strcpy(cur, rules); 
-                    break;
-                }
-                char c = rules[0];
-                char cond = rules[1];
-                int val = extract_number_from_string(rules+2);
-                char *dest_start = strchr(rules, ':') + 1;
-                rules = rule_end + 1;
-
-                if ((c == 'x' && cond == '<' && cur_x < val)
-                || (c == 'x' && cond == '>' && cur_x > val)
-                || (c == 'm' && cond == '<' && cur_m < val)
-                || (c == 'm' && cond == '>' && cur_m > val)
-                || (c == 'a' && cond == '<' && cur_a < val)
-                || (c == 'a' && cond == '>' && cur_a > val)
-                || (c == 's' && cond == '<' && cur_s < val)
-                || (c == 's' && cond == '>' && cur_s > val)){
-                    strncpy(cur, dest_start, rule_end - dest_start);
-                    cur[rule_end - dest_start] = '\0';
-                    break;
-                }
-            }
-        }
-        if (cur[0] == 'A') total += cur_x + cur_m + cur_a + cur_s;
+        total += dfs(workflows, "in", cur_x, cur_m, cur_a, cur_s);
     }
     return total;
 }
