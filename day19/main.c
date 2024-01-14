@@ -16,6 +16,47 @@ typedef struct
     char *value;
 } WorkflowsMapItem;
 
+WorkflowsMapItem *populate_workflows_hashmap(char *s, WorkflowsMapItem *workflows){
+    char **workflow_lines = NULL;
+    int workflow_count = split_string_by_delimiter_string(s, "\n", &workflow_lines);
+
+    for (int i = 0; i < workflow_count; i++)
+    {
+        char *end_of_key = strchr(workflow_lines[i], '{');
+        *end_of_key = '\0';
+        char *key = malloc(end_of_key - workflow_lines[i] + 1);
+        strcpy(key, workflow_lines[i]);
+
+        char *end_of_value = strchr(end_of_key+1, '}');
+        *end_of_value = '\0';
+        char *value = malloc(end_of_value - end_of_key);
+        strcpy(value, end_of_key + 1);
+
+        shput(workflows, key, value);
+    }
+    for (int i = 0; i < workflow_count; i++) free(workflow_lines[i]);
+    free(workflow_lines);
+    return workflows;
+}
+
+void populate_items_array(char *s, int **items, int item_count){
+    char **item_lines = NULL;
+    split_string_by_delimiter_string(s, "\n", &item_lines);
+
+    for (int i=0; i<item_count; i++){
+        int j = 3;
+        items[i][0] = extract_number_from_string_starting_from(item_lines[i], &j);
+        j+=3;
+        items[i][1] = extract_number_from_string_starting_from(item_lines[i], &j);
+        j+=3;
+        items[i][2] = extract_number_from_string_starting_from(item_lines[i], &j);
+        j+=3;
+        items[i][3] = extract_number_from_string_starting_from(item_lines[i], &j);
+    }
+    for (int i = 0; i < item_count; i++) free(item_lines[i]);
+    free(item_lines);
+}
+
 size_t dfs(WorkflowsMapItem *workflows, char *cur, int x, int m, int a, int s){
     if (*cur == 'R') return 0;
     if (*cur == 'A') return x + m + a + s;
@@ -128,46 +169,6 @@ size_t part2(WorkflowsMapItem *workflows, char *cur, int x_start, int x_end, int
     }
 }
 
-WorkflowsMapItem *populate_workflows_hashmap(char *s, WorkflowsMapItem *workflows){
-    char **workflow_lines = NULL;
-    int workflow_count = split_string_by_delimiter_string(s, "\n", &workflow_lines);
-
-    for (int i = 0; i < workflow_count; i++)
-    {
-        char *end_of_key = strchr(workflow_lines[i], '{');
-        *end_of_key = '\0';
-        char *key = malloc(end_of_key - workflow_lines[i] + 1);
-        strcpy(key, workflow_lines[i]);
-
-        char *end_of_value = strchr(end_of_key+1, '}');
-        *end_of_value = '\0';
-        char *value = malloc(end_of_value - end_of_key);
-        strcpy(value, end_of_key + 1);
-
-        shput(workflows, key, value);
-    }
-    for (int i = 0; i < workflow_count; i++) free(workflow_lines[i]);
-    free(workflow_lines);
-    return workflows;
-}
-
-void populate_items_array(char *s, int **items, int item_count){
-    char **item_lines = NULL;
-    split_string_by_delimiter_string(s, "\n", &item_lines);
-
-    for (int i=0; i<item_count; i++){
-        int j = 3;
-        items[i][0] = extract_number_from_string_starting_from(item_lines[i], &j);
-        j+=3;
-        items[i][1] = extract_number_from_string_starting_from(item_lines[i], &j);
-        j+=3;
-        items[i][2] = extract_number_from_string_starting_from(item_lines[i], &j);
-        j+=3;
-        items[i][3] = extract_number_from_string_starting_from(item_lines[i], &j);
-    }
-    for (int i = 0; i < item_count; i++) free(item_lines[i]);
-    free(item_lines);
-}
 
 int main(int argc, char **argv)
 {
