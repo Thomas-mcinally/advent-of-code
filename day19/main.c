@@ -19,8 +19,8 @@ typedef struct
 size_t part2(WorkflowsMapItem *workflows, char *cur, int x_start, int x_end, int m_start, int m_end, int a_start, int a_end, int s_start, int s_end){
     if (x_end < x_start || m_end < m_start || a_end < a_start || s_end < s_start || *cur == 'R') return 0;
     if (*cur == 'A') {
-        size_t result = ((size_t)(x_end-x_start+1)) * ((size_t)(m_end-m_start+1)) * ((size_t)(a_end-a_start+1)) * ((size_t)(s_end-s_start+1));
-        return result;
+        size_t combos = ((size_t)(x_end-x_start+1)) * ((size_t)(m_end-m_start+1)) * ((size_t)(a_end-a_start+1)) * ((size_t)(s_end-s_start+1));
+        return combos;
         }
     else{
         size_t total = 0;
@@ -161,8 +161,18 @@ int main(int argc, char **argv)
     }
     printf("Part 1: %i\n", total);
 
-    char start[3] = {'i', 'n', '\0'};
-    printf("Part 2: %zu\n", part2(workflows, start, 1, 4000, 1, 4000, 1, 4000, 1, 4000));
+    printf("Part 2: %zu\n", part2(workflows, "in", 1, 4000, 1, 4000, 1, 4000, 1, 4000));
+
+    for (int i = 0; i < section_count; i++) free(sections[i]);
+    free(sections);
+    for (int i = 0; i < workflow_count; i++) free(workflow_lines[i]);
+    free(workflow_lines);
+    for (int i = 0; i < item_count; i++) free(item_lines[i]);
+    free(item_lines);
+    for (int i = 0; i < item_count; i++) free(items[i]);
+    free(items);
+    shfree(workflows);
+    free(file_contents);
     return 0;
 }
 
