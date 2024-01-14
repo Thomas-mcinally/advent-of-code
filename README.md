@@ -12,6 +12,7 @@ TODO, to make this project professional:
 - Improved folder structure and refactor code to be professional
 - Get feedback from experienced C developer
 - Redo in C++ to see main differences?
+- Install a good debugger - to help with segmentation faults.
 
 TODO - implement optimal solutions:
 - Day9: https://www.reddit.com/r/adventofcode/comments/18eiv3z/2023_day_9_how_to_solve_it_by_only_iterating/

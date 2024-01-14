@@ -56,6 +56,7 @@ size_t part1(WorkflowsMapItem *workflows, int **items, int item_count){
     }
     return total;
 }
+
 size_t part2(WorkflowsMapItem *workflows, char *cur, int x_start, int x_end, int m_start, int m_end, int a_start, int a_end, int s_start, int s_end){
     if (x_end < x_start || m_end < m_start || a_end < a_start || s_end < s_start || *cur == 'R') return 0;
     if (*cur == 'A') {
@@ -118,6 +119,29 @@ size_t part2(WorkflowsMapItem *workflows, char *cur, int x_start, int x_end, int
     }
 }
 
+WorkflowsMapItem *populate_workflows_hashmap(char *s, WorkflowsMapItem *workflows){
+    char **workflow_lines = NULL;
+    int workflow_count = split_string_by_delimiter_string(s, "\n", &workflow_lines);
+
+    for (int i = 0; i < workflow_count; i++)
+    {
+        char *end_of_key = strchr(workflow_lines[i], '{');
+        *end_of_key = '\0';
+        char *key = malloc(end_of_key - workflow_lines[i] + 1);
+        strcpy(key, workflow_lines[i]);
+
+        char *end_of_value = strchr(end_of_key+1, '}');
+        *end_of_value = '\0';
+        char *value = malloc(end_of_value - end_of_key);
+        strcpy(value, end_of_key + 1);
+
+        shput(workflows, key, value);
+    }
+    for (int i = 0; i < workflow_count; i++) free(workflow_lines[i]);
+    free(workflow_lines);
+    return workflows;
+}
+
 int main(int argc, char **argv)
 {
     if (argc != 2)
@@ -132,22 +156,12 @@ int main(int argc, char **argv)
     char **sections = NULL;
     const int section_count = split_string_by_delimiter_string(file_contents, "\n\n", &sections);
 
-    char **workflow_lines = NULL;
-    int workflow_count = split_string_by_delimiter_string(sections[0], "\n", &workflow_lines);
-
     WorkflowsMapItem *workflows = NULL;
-    for (int i = 0; i < workflow_count; i++)
-    {
-        char *cursor = strchr(workflow_lines[i], '}');
-        *cursor = '\0';
-        cursor = strchr(workflow_lines[i], '{');
-        *cursor = '\0';
-
-        shput(workflows, workflow_lines[i], cursor + 1);
-    }
+    workflows = populate_workflows_hashmap(sections[0], workflows);
 
     char **item_lines = NULL;
     int item_count = split_string_by_delimiter_string(sections[1], "\n", &item_lines);
+
     int **items = malloc(item_count * sizeof(int *));
     for(int i = 0; i < item_count; i++) items[i] = malloc(4 * sizeof(int));
     for (int i=0; i<item_count; i++){
@@ -161,14 +175,11 @@ int main(int argc, char **argv)
         items[i][3] = extract_number_from_string_starting_from(item_lines[i], &j);
     }
 
-
     printf("Part 1: %zu\n", part1(workflows, items, item_count));
     printf("Part 2: %zu\n", part2(workflows, "in", 1, 4000, 1, 4000, 1, 4000, 1, 4000));
 
     for (int i = 0; i < section_count; i++) free(sections[i]);
     free(sections);
-    for (int i = 0; i < workflow_count; i++) free(workflow_lines[i]);
-    free(workflow_lines);
     for (int i = 0; i < item_count; i++) free(item_lines[i]);
     free(item_lines);
     for (int i = 0; i < item_count; i++) free(items[i]);

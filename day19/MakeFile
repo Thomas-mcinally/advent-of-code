@@ -1,0 +1,10 @@
+CC = gcc
+CFLAGS = -I../libs
+
+all: main
+
+main: main.c ../libs/aoc_lib.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+clean:
+	rm -f main
