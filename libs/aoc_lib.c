@@ -129,3 +129,14 @@ size_t extract_hex_val_from_string(char *hex, int max_len){
 
     return result;
 }
+
+int count_lines_in_string(const char *str) {
+    int count = 1;
+    while (*str) {
+        if (*str == '\n') {
+            count++;
+        }
+        str++;
+    }
+    return count;
+}

@@ -142,28 +142,10 @@ WorkflowsMapItem *populate_workflows_hashmap(char *s, WorkflowsMapItem *workflow
     return workflows;
 }
 
-int main(int argc, char **argv)
-{
-    if (argc != 2)
-    {
-        fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
-        exit(1);
-    }
-
-    // process inputs into a useful format
-    char *file_path = argv[1];
-    char *file_contents = read_entire_file(file_path);
-    char **sections = NULL;
-    const int section_count = split_string_by_delimiter_string(file_contents, "\n\n", &sections);
-
-    WorkflowsMapItem *workflows = NULL;
-    workflows = populate_workflows_hashmap(sections[0], workflows);
-
+void populate_items_array(char *s, int **items, int item_count){
     char **item_lines = NULL;
-    int item_count = split_string_by_delimiter_string(sections[1], "\n", &item_lines);
+    split_string_by_delimiter_string(s, "\n", &item_lines);
 
-    int **items = malloc(item_count * sizeof(int *));
-    for(int i = 0; i < item_count; i++) items[i] = malloc(4 * sizeof(int));
     for (int i=0; i<item_count; i++){
         int j = 3;
         items[i][0] = extract_number_from_string_starting_from(item_lines[i], &j);
@@ -174,18 +156,40 @@ int main(int argc, char **argv)
         j+=3;
         items[i][3] = extract_number_from_string_starting_from(item_lines[i], &j);
     }
+    for (int i = 0; i < item_count; i++) free(item_lines[i]);
+    free(item_lines);
+}
+
+int main(int argc, char **argv)
+{
+    if (argc != 2)
+    {
+        fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
+        exit(1);
+    }
+
+    char *file_path = argv[1];
+    char *file_contents = read_entire_file(file_path);
+    char **sections = NULL;
+    const int section_count = split_string_by_delimiter_string(file_contents, "\n\n", &sections);
+
+    WorkflowsMapItem *workflows = NULL;
+    workflows = populate_workflows_hashmap(sections[0], workflows);
+
+    int item_count = count_lines_in_string(sections[1]);
+    int **items = malloc(item_count * sizeof(int *));
+    for(int i = 0; i < item_count; i++) items[i] = malloc(4 * sizeof(int));
+    populate_items_array(sections[1], items, item_count);
 
     printf("Part 1: %zu\n", part1(workflows, items, item_count));
     printf("Part 2: %zu\n", part2(workflows, "in", 1, 4000, 1, 4000, 1, 4000, 1, 4000));
 
     for (int i = 0; i < section_count; i++) free(sections[i]);
     free(sections);
-    for (int i = 0; i < item_count; i++) free(item_lines[i]);
-    free(item_lines);
+    free(file_contents);
     for (int i = 0; i < item_count; i++) free(items[i]);
     free(items);
     shfree(workflows);
-    free(file_contents);
     return 0;
 }
 

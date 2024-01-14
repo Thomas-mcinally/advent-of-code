@@ -18,6 +18,8 @@ long long int extract_number_from_string(const char *str);
 
 size_t extract_hex_val_from_string(char *hex, int max_len);
 
+int count_lines_in_string(const char *str);
+
 int max(int a, int b);
 
 #endif // AOC_LIB_H
