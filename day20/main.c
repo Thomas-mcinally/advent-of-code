@@ -72,10 +72,34 @@ int are_state_dicts_identical(Node_To_State *state1, Node_To_State *state2)
     return 1;
 }
 
+Node_To_Neighbours *create_adjacency_list(char **lines, int linecount)
+{
+    Node_To_Neighbours *adj = NULL;
+    for (int i = 0; i < linecount; i++)
+    {
+        char **neighbours = malloc(10 * sizeof(char*));
+        char *key = lines[i];
+        char *end_of_key = strchr(lines[i], ' ');
+        *end_of_key = '\0';
 
+        char *neighbour = strtok(end_of_key + 4, ", ");
+        int j = 0;
+        while (neighbour != NULL)
+        {
+            neighbours[j++] = neighbour;
+            neighbour = strtok(NULL, ", ");
+        }
+        neighbours[j] = NULL;
+        shput(adj, key, neighbours);
+    }
+    return adj;
+}
 
-
-
+void free_adjacency_list(Node_To_Neighbours *adj)
+{
+    for (int i = 0; i < shlen(adj); i++) free(adj[i].value);
+    shfree(adj);
+}
 
 int main(int argc, char **argv)
 {
@@ -89,29 +113,17 @@ int main(int argc, char **argv)
     char **lines = NULL;
     int linecount = read_file_to_lines(&lines, file_path);
 
-    char *instructions = lines[0];
-    int instruction_length = strlen(instructions);
+    Node_To_Neighbours *adj = create_adjacency_list(lines, linecount);
+    Node_To_State *start_state = create_new_state_dict(adj);
 
-    Node_To_Neighbours *adj = NULL;
-    for (int i = 0; i < linecount; i++)
-    {
-        char **neighbours = malloc(10 * sizeof(char*));
-        char *key = lines[i];
-        char *end_of_key = strchr(lines[i], ' ');
-        *end_of_key = '\0';
+    //print out adjacency list
 
-        //split end_of_key -> by the delimiter ", " and populate neighbour array with result strings
-        char *neighbour = strtok(end_of_key + 4, ", ");
-        int j = 0;
-        while (neighbour != NULL)
-        {
-            neighbours[j++] = neighbour;
-            neighbour = strtok(NULL, ", ");
-        }
-        neighbours[j] = NULL;
-        shput(adj, key, neighbours);
-    }
+    // ###### BFS LOGIC
 
-    Node_To_State *state = create_new_state_dict(adj);
 
+    // ###### END BFS LOGIC
+    free_adjacency_list(adj);
+    for (int i = 0; i < linecount; i++) free(lines[i]);
+    free(lines);
+    free_state_dict(start_state);
 }
