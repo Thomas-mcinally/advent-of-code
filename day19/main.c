@@ -57,7 +57,7 @@ void populate_items_array(char *s, int **items, int item_count){
     free(item_lines);
 }
 
-size_t dfs(WorkflowsMapItem *workflows, char *cur, int x, int m, int a, int s){
+size_t dfs_part1(WorkflowsMapItem *workflows, char *cur, int x, int m, int a, int s){
     if (*cur == 'R') return 0;
     if (*cur == 'A') return x + m + a + s;
 
@@ -90,7 +90,7 @@ size_t dfs(WorkflowsMapItem *workflows, char *cur, int x, int m, int a, int s){
             dest[rule_end - label_start] = '\0';
         }
     }
-    size_t result = dfs(workflows, dest, x, m, a, s);
+    size_t result = dfs_part1(workflows, dest, x, m, a, s);
     free(dest);
     return result;
 }
@@ -102,7 +102,7 @@ size_t part1(WorkflowsMapItem *workflows, int **items, int item_count){
         int cur_m = items[i][1];
         int cur_a = items[i][2];
         int cur_s = items[i][3];
-        total += dfs(workflows, "in", cur_x, cur_m, cur_a, cur_s);
+        total += dfs_part1(workflows, "in", cur_x, cur_m, cur_a, cur_s);
     }
     return total;
 }
