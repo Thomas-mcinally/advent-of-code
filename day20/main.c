@@ -168,27 +168,18 @@ int main(int argc, char **argv)
     char *file_path = argv[1];
     char **lines = NULL;
     int linecount = read_file_to_lines(&lines, file_path);
+    Node_To_Neighbours *node_to_adj = create_adjacency_list(lines, linecount);
+    Node_To_State *node_to_state = create_new_state_dict(lines, linecount);
 
     size_t low_pulse_count = 0;
     size_t high_pulse_count = 0;
-    size_t button_press_count = 0;
-    Node_To_Neighbours *node_to_adj = create_adjacency_list(lines, linecount);
-    Node_To_State *node_to_state = create_new_state_dict(lines, linecount);
-    while (button_press_count < 1000){
-        button_press_count += 1;
-
-        if (button_press_count % 10000 == 0) printf("button_press_count: %zu\n", button_press_count);
-
-        Pulse **queue = NULL;
+    Pulse **queue = NULL;
+    for (int _ = 0; _ < 1000; _++){
         Pulse *start_pulse = create_new_pulse("button", "broadcaster", 'L');
         arrput(queue, start_pulse);
 
         while (arrlen(queue) > 0){ 
             Pulse *current = queue[0];
-            if (current->type == 'L' && strcmp(current->destination, "rx") == 0) {
-                printf("part2 solution: %zu\n", button_press_count);
-                return 0;
-            }
             arrdel(queue, 0); // TODO: make more efficient with queue Data structure or with level-order traversal
 
             if (current->type == 'L') low_pulse_count += 1;
@@ -196,7 +187,6 @@ int main(int argc, char **argv)
             modify_state(node_to_state, current->destination, current->type, current->origin);
 
             queue = add_new_pulses_to_queue(node_to_adj, node_to_state, current->destination, current->type, queue);
-
             free(current);
         }
     }
@@ -204,7 +194,7 @@ int main(int argc, char **argv)
     printf("part1 result: %zu\n", low_pulse_count * high_pulse_count);
 
 
-    // ###### END BFS LOGIC
+    arrfree(queue);
     free_adjacency_list(node_to_adj);
     free_state_dict(node_to_state);
     for (int i = 0; i < linecount; i++) free(lines[i]);
