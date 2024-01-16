@@ -8,7 +8,7 @@
 %jv -> sp
 %dj -> bd, zc
 %kt -> lt
--broadcaster -> gz, xg, cd, sg
+broadcaster -> gz, xg, cd, sg
 &dn -> rx
 %br -> nf, bd
 %cd -> cc, nl

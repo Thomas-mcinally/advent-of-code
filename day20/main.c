@@ -44,8 +44,9 @@ Node_To_State *create_new_state_dict(char **lines, int linecount)
     Node_To_State *state = NULL;
     for (int i = 0; i < linecount; i++)
     {
-        Module_State *value = malloc(sizeof(Module_State));
         char *key = lines[i];
+        if (key[0] != '&' && key[0] != '%') continue;
+        Module_State *value = malloc(sizeof(Module_State));
         value->type = key[0];
         value->on = 0;
         value->last_sent_pulse_type = 'L';
@@ -57,6 +58,12 @@ Node_To_State *create_new_state_dict(char **lines, int linecount)
     button_state->on = 0;
     button_state->last_sent_pulse_type = 'L';
     shput(state, "button", button_state);
+
+    Module_State *broadcaster_state = malloc(sizeof(Module_State));
+    broadcaster_state->type = '-';
+    broadcaster_state->on = 0;
+    broadcaster_state->last_sent_pulse_type = 'L';
+    shput(state, "broadcaster", broadcaster_state);
 
 
     return state;
@@ -89,7 +96,8 @@ Node_To_Neighbours *create_adjacency_list(char **lines, int linecount)
             neighbour = strtok(NULL, ", ");
         }
         neighbours[j] = NULL;
-        shput(adj, key+1, neighbours);
+        if (key[0] == '&' || key[0] == '%') shput(adj, key+1, neighbours);
+        else shput(adj, key, neighbours); //broadcaster
     }
     return adj;
 }
@@ -102,14 +110,14 @@ void free_adjacency_list(Node_To_Neighbours *adj)
 
 void modify_state(Node_To_State *state, char *pulse_dest, char pulse_type, char *pulse_origin)
 {
-    if (shgeti(state, pulse_dest) < 0) return; // dest node has no neighbours. E.g. "output", "button"
+    if (shgeti(state, pulse_dest) == -1) return; // dest node has no neighbours. E.g. "output", "button"
     Module_State *dest_state = shget(state, pulse_dest);
     if ((dest_state->type == '%') && (pulse_type == 'L')){
         dest_state->on = !dest_state->on;
         return;
     }
 
-    if (shgeti(state, pulse_origin) < 0) return; //origin has no state. 
+    if (shgeti(state, pulse_origin) == -1) return; //origin has no state. 
     Module_State *origin_state = shget(state, pulse_origin);
     if (origin_state->type == '&' || origin_state->type == '%') {
         origin_state->last_sent_pulse_type = pulse_type;
@@ -118,7 +126,7 @@ void modify_state(Node_To_State *state, char *pulse_dest, char pulse_type, char 
 
 Pulse **add_new_pulses_to_queue(Node_To_Neighbours *adj, Node_To_State *state, char *pulse_dest, char pulse_type, Pulse **queue)
 {
-    if (shgeti(adj, pulse_dest) < 0) return queue; // dest node has no neighbours. E.g. "output"
+    if (shgeti(adj, pulse_dest) == -1) return queue; // dest node has no neighbours. E.g. "output"
     Module_State *dest_state = shget(state, pulse_dest);
 
     int pulse_type_to_send;
@@ -203,5 +211,4 @@ int main(int argc, char **argv)
 
 
 //TODO
-//Simplify part1 - Dealing with Button, broadcaster and output modules
 //Solve part2
