@@ -5,17 +5,6 @@
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 
-// high -> flipflop, terminates
-
-// construct graph from inputs: Adjacency list + current state of each node
-// Make a note of start state of each node
-// Do a level-based BFS, keeping track of which pulse count, and what state will be after this level
-// End of level: If new_state == start_state, end.
-// End of level else: update current state of each node and continue to next level
-
-
-// Adjacency list. Max 10 neighbours. Indicate end of neighbours with nullpointer
-
 typedef struct {
     char *origin;
     char *destination;
@@ -34,7 +23,6 @@ typedef struct {
     char last_sent_pulse_type; // L or H
 } Module_State;
 
-// State of each node. Max 10 neighbours.
 typedef struct {
     char *key;
     Module_State *value;
@@ -67,7 +55,7 @@ Node_To_State *create_new_state_dict(char **lines, int linecount)
     button_state->on = 0;
     button_state->last_sent_pulse_type = 'L';
     shput(state, "button", button_state);
-    
+
     return state;
 }
 
@@ -122,13 +110,15 @@ void free_adjacency_list(Node_To_Neighbours *adj)
 
 void modify_state(Node_To_State *state, char *pulse_dest, char pulse_type, char *pulse_origin)
 {
+    if (shgeti(state, pulse_dest) < 0) return; // dest node has no neighbours. E.g. "output", "button"
     Module_State *dest_state = shget(state, pulse_dest);
-    Module_State *origin_state = shget(state, pulse_origin);
     if ((dest_state->type == '%') && (pulse_type == 'L')){
         dest_state->on = !dest_state->on;
         return;
     }
 
+    if (shgeti(state, pulse_origin) < 0) return; //origin has no state. 
+    Module_State *origin_state = shget(state, pulse_origin);
     if (origin_state->type == '&' || origin_state->type == '%') {
         origin_state->last_sent_pulse_type = pulse_type;
     }
@@ -136,6 +126,7 @@ void modify_state(Node_To_State *state, char *pulse_dest, char pulse_type, char 
 
 Pulse **add_new_pulses_to_queue(Node_To_Neighbours *adj, Node_To_State *state, char *pulse_dest, char pulse_type, Pulse **queue)
 {
+    if (shgeti(adj, pulse_dest) < 0) return queue; // dest node has no neighbours. E.g. "output"
     Module_State *dest_state = shget(state, pulse_dest);
 
     int pulse_type_to_send;
@@ -239,3 +230,9 @@ int main(int argc, char **argv)
     free_state_dict(start_state);
 }
 
+
+//TODO
+//Simplify part1 - Didnt need loop detection?
+//Simplify part1 - Dealing with Button, broadcaster and output modules
+//Solve part2
+//Memory allocation
