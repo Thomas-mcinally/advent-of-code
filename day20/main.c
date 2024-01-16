@@ -1,7 +1,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
+
 #include "aoc_lib.h"
+
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 
@@ -56,6 +58,7 @@ Node_To_State *create_new_state_dict(char **lines, int linecount)
     button_state->last_sent_pulse_type = 'L';
     shput(state, "button", button_state);
 
+
     return state;
 }
 
@@ -66,17 +69,6 @@ void free_state_dict(Node_To_State *state)
         free(state[i].value);
     }
     shfree(state);
-}
-
-int are_state_dicts_identical(Node_To_State *state1, Node_To_State *state2)
-{
-    for (int i = 0; i < shlen(state1); i++)
-    {
-        if (state1[i].value->type != state2[i].value->type) return 0;
-        if (state1[i].value->on != state2[i].value->on) return 0;
-        if (state1[i].value->last_sent_pulse_type != state2[i].value->last_sent_pulse_type) return 0;
-    }
-    return 1;
 }
 
 Node_To_Neighbours *create_adjacency_list(char **lines, int linecount)
@@ -177,19 +169,15 @@ int main(int argc, char **argv)
     char **lines = NULL;
     int linecount = read_file_to_lines(&lines, file_path);
 
-    Node_To_Neighbours *adj = create_adjacency_list(lines, linecount);
-    Node_To_State *start_state = create_new_state_dict(lines, linecount);
-
-
-
-    // ###### BFS LOGIC
     size_t low_pulse_count = 0;
     size_t high_pulse_count = 0;
     size_t button_press_count = 0;
-    Node_To_State *current_state = create_new_state_dict(lines, linecount);
-        
+    Node_To_Neighbours *node_to_adj = create_adjacency_list(lines, linecount);
+    Node_To_State *node_to_state = create_new_state_dict(lines, linecount);
     while (button_press_count < 1000){
         button_press_count += 1;
+
+        if (button_press_count % 10000 == 0) printf("button_press_count: %zu\n", button_press_count);
 
         Pulse **queue = NULL;
         Pulse *start_pulse = create_new_pulse("button", "broadcaster", 'L');
@@ -197,42 +185,33 @@ int main(int argc, char **argv)
 
         while (arrlen(queue) > 0){ 
             Pulse *current = queue[0];
+            if (current->type == 'L' && strcmp(current->destination, "rx") == 0) {
+                printf("part2 solution: %zu\n", button_press_count);
+                return 0;
+            }
             arrdel(queue, 0); // TODO: make more efficient with queue Data structure or with level-order traversal
-            printf("processing pulse with destination: %s\n", current->destination);
+
             if (current->type == 'L') low_pulse_count += 1;
             else high_pulse_count += 1;
-            modify_state(current_state, current->destination, current->type, current->origin);
+            modify_state(node_to_state, current->destination, current->type, current->origin);
 
-            printf("len_queue_before: %zu\n", arrlen(queue));
-            queue = add_new_pulses_to_queue(adj, current_state, current->destination, current->type, queue);
-            printf("len_queue_after: %zu\n", arrlen(queue));
+            queue = add_new_pulses_to_queue(node_to_adj, node_to_state, current->destination, current->type, queue);
 
             free(current);
         }
-        if (are_state_dicts_identical(start_state, current_state)) break;
-    }
-    printf("pressed button %zu times before found loop\n", button_press_count);
-    printf("low_pulse_count: %zu\n", low_pulse_count);
-    printf("high_pulse_count: %zu\n", high_pulse_count);
-    if (1000 % button_press_count != 0){
-        printf("Error, button_press_count does not divide 1000\n");
-        exit(1);
     }
 
-    size_t result = (1000 / button_press_count) * (1000 / button_press_count) * low_pulse_count * high_pulse_count;
-    printf("part1 result: %zu\n", result);
+    printf("part1 result: %zu\n", low_pulse_count * high_pulse_count);
 
 
     // ###### END BFS LOGIC
-    free_adjacency_list(adj);
+    free_adjacency_list(node_to_adj);
+    free_state_dict(node_to_state);
     for (int i = 0; i < linecount; i++) free(lines[i]);
     free(lines);
-    free_state_dict(start_state);
 }
 
 
 //TODO
-//Simplify part1 - Didnt need loop detection?
 //Simplify part1 - Dealing with Button, broadcaster and output modules
 //Solve part2
-//Memory allocation
