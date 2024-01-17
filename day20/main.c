@@ -210,5 +210,4 @@ int main(int argc, char **argv)
 }
 
 
-//TODO
-//Solve part2
+//Part2 solved graphically. See part2.txt

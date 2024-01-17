@@ -1,0 +1,32 @@
+Once plot graph it becomes evident it consists of 4 big cycles which are connected to the output "RX"
+Hard part is understanding how one of these 4 big cycles is able to produce a "LOW" signal to RX
+
+- How does cycle send out low?
+    - Can consider 12 flipflop nodes in cycle as bits of a 12bit integer
+    - Due to the rules of the flipflop nodes, the cycle basically acts as a binary counter.
+    - Every time we press button we increment the counter by 1 
+    - When the counter reaches a certain number (the max number of the counter) it sends out a low signal
+    - E.g. top-right cycle in diagram (https://www.reddit.com/r/adventofcode/comments/18mypla/comment/ke7avwd/) has max 111110010101
+
+- When cycle reaches its max number, it sends out a low signal and perfectly resets
+    - Consider the example cycle in top-right of diagram https://www.reddit.com/r/adventofcode/comments/18mypla/comment/ke7avwd/
+    - When it press the button for the 3989th time (max  - bit repr is 111110010101), it is evident from the graph that the cycle will reset completely to 0
+
+- Need to find the button press number which causes all 4 NAND gates to emit a low signal at the same time
+
+Method:
+- Find out max number for each of the 4 cycles.
+    - This number is the interval each of the cycles send out a low-pulse from the NAND gate
+    - To find max number: The first bit (2^0 position) is always 1. For all other bits, they are 1 if it has edge TO NAND gate, and 0 if there is an edge FROM NAND gate
+- Find the LCM between these 4 max numbers
+    - I just used wolfram alpha for this
+
+
+---------------------------------------------------------
+
+My cycles:
+- 111101001101   = 3917
+- 111101001111   = 3919
+- 111110111011   = 4027
+- 111110100011   = 4003
+LCM(3917, 3919, 4027, 4003) = 247454898168563 
