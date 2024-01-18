@@ -10,14 +10,19 @@ typedef struct
 {
     int r;
     int c;
-    int steps_taken;
 }Point;
+
+typedef struct
+{
+    Point key;
+    size_t value; // stepcount of first visit
+} Point_To_Stepcount_Map;
 
 Point find_starting_position(char **grid, int ROWS, int COLS){
     for(int r = 0; r < ROWS; r++){
         for(int c = 0; c < COLS; c++){
             if(grid[r][c] == 'S'){
-                Point p = {r, c, 0};
+                Point p = {r, c};
                 return p;
             }
         }
@@ -41,30 +46,38 @@ int main(int argc, char **argv)
 
     Point starting_position = find_starting_position(grid, ROWS, COLS);
 
-    int *seen = calloc(ROWS*COLS, sizeof(int));
-    Point *queue = NULL;
-    arrput(queue, starting_position);
+    Point_To_Stepcount_Map *seen = NULL;
+    Point *queue = malloc(sizeof(Point));
+    queue[0] = starting_position;
+    size_t queue_len = 1;
+    size_t steps_taken = 0;
     while (1){
-        Point cur = queue[0];
-        if (cur.steps_taken == 65) break;
-        arrdel(queue, 0); //TODO - make this efficient.
+        if (steps_taken == 65) break;
+        Point *next_queue = malloc(4*queue_len*sizeof(Point));
+        size_t next_queue_len = 0;
+        for (size_t i=0;i<queue_len;i++){
+            Point cur = queue[i];
+            if (cur.r < 0 || cur.r >= ROWS || cur.c < 0 || cur.c >= COLS || grid[cur.r][cur.c] == '#' || hmgeti(seen, cur)>=0) continue;
+            hmput(seen, cur, steps_taken);
 
-        if (cur.r < 0 || cur.r >= ROWS || cur.c < 0 || cur.c >= COLS || grid[cur.r][cur.c] == '#' || seen[cur.r*COLS + cur.c]) continue;
-        seen[cur.r*COLS + cur.c] = cur.steps_taken;
-
-        Point p1 = {cur.r+1, cur.c, cur.steps_taken+1};
-        Point p2 = {cur.r-1, cur.c, cur.steps_taken+1};
-        Point p3 = {cur.r, cur.c+1, cur.steps_taken+1};
-        Point p4 = {cur.r, cur.c-1, cur.steps_taken+1};
-        arrput(queue, p1);
-        arrput(queue, p2);
-        arrput(queue, p3);
-        arrput(queue, p4);
+            Point p1 = {cur.r+1, cur.c};
+            Point p2 = {cur.r-1, cur.c};
+            Point p3 = {cur.r, cur.c+1};
+            Point p4 = {cur.r, cur.c-1};
+            next_queue[next_queue_len++] = p1;
+            next_queue[next_queue_len++] = p2;
+            next_queue[next_queue_len++] = p3;
+            next_queue[next_queue_len++] = p4;
+        }
+        free(queue);
+        queue = next_queue;
+        queue_len = next_queue_len;
+        steps_taken++;
     }
 
     int count = 0;
-    for (int i=0; i<ROWS*COLS; i++){
-        if (seen[i] && (seen[i]%2 == 0)) count++;
+    for (int i=0; i<hmlen(seen); i++){
+        if ((seen[i].value % 2) == 0) count++;
     }
 
     printf("Part 1: %d\n", count);
