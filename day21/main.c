@@ -6,10 +6,12 @@
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 
+#define STEP_LIMIT 64
+
 typedef struct
 {
-    int r;
-    int c;
+    long long int r;
+    long long int c;
 }Point;
 
 typedef struct
@@ -52,7 +54,7 @@ int main(int argc, char **argv)
     size_t queue_len = 1;
     size_t steps_taken = 0;
     while (1){
-        if (steps_taken == 65) break;
+        if (steps_taken == STEP_LIMIT+1) break;
         Point *next_queue = malloc(4*queue_len*sizeof(Point));
         size_t next_queue_len = 0;
         for (size_t i=0;i<queue_len;i++){
