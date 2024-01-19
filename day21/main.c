@@ -6,7 +6,7 @@
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 
-#define STEP_LIMIT 10
+#define STEP_LIMIT 1000
 #define GRAPH_WIDTH 11
 
 typedef struct
@@ -22,22 +22,19 @@ typedef struct
 } Point_To_Stepcount_Map;
 
 size_t count_twin_positions_even_nr_of_shifts(size_t remaining_steps){
-    //assumes ROWS = COLS = GRAPH_WIDTH
-    //assumes GRAPH_WIDTH is an odd nr
+    // given a position in the original grid, reachable with remaining steps
+    // how many twin positions can you reach if shift directly up/down before moving from centre?
     size_t max_shifts = remaining_steps / GRAPH_WIDTH;
     size_t twin_positions = 0;
 
-    for (int i=2; i<=max_shifts; i+=2) twin_positions += (i+1)*2;
+    for (int i=2; i<=max_shifts; i+=2) twin_positions += i*4;
     return twin_positions;
 }
 size_t count_twin_positions_odd_nr_of_shifts(size_t remaining_steps){
-    //assumes ROWS = COLS = GRAPH_WIDTH
-    //assumes GRAPH_WIDTH is an odd nr
-    //assumes positioned on an invalid position originally, with remaining steps
     size_t max_shifts = remaining_steps / GRAPH_WIDTH;
     size_t twin_positions = 0;
 
-    for (int i=1; i<=max_shifts; i+=2) twin_positions += (i+1)*2;
+    for (int i=1; i<=max_shifts; i+=2) twin_positions += i*4;
     return twin_positions;
 }
 Point find_starting_position(char **grid, int ROWS, int COLS){
@@ -121,51 +118,10 @@ int main(int argc, char **argv)
     }
 
     printf("part2 result: %zu\n", part2_count);
+    //doesnt work yet
+    //my soltuion doesnt account for tiles whose shortest path is over the edge from the starting position
 
     return 0;
 }
 
-// Part2: 
-// There is a straight horisontal channel through input that goes through start position
-// Therefore, If can reach (r,c) in n steps, can reach (r,c+COLS) in n+COLS steps
 
-// Also, there is a straight vertical channel through input that goes through start position
-// Therefore, If can reach (r,c) in n steps, can reach (r+ROWS,c) in n+ROWS steps
-
-// so, for every valid pos (r,c) we can calculate the number of valid "twin" positions. 
-// -- Can reach (r+ROWS,c) in n+ROWS steps. Since n is a valid nr of steps, n+ROWS is an invalid number of steps, since ROWS is odd.
-
-
-// ROWS = COLS = x
-// (r,c) is valid
-// (r+x,c) is invalid
-// (r+2*x,c) is valid
-// (r+3*x,c) is invalid
-
-// (r+x, c+x) is valid
-// (r+x, c+2*x) is invalid
-// (r+2*x, c+x) is invalid
-// (r+2*x, c+2*x) is valid
-
-// We have a grid of size (2*26501366)^2
-// Figure out how many valid positions there are in the original grid. and calculate the number of valid "twin positions" reachable using the remaining steps
-
-
-// given a pos (r,c) reachable in s steps
-// remaining_steps = STEP_LIMIT - s
-// (a+b) * x <= remaining_steps
-// (a+b) % 2 = 0
-// a and b are integers
-// How permutations (a,b) satisfy the above equation?
-
-
-
-// y * x <= remaining_steps
-// how many even y exist?
-// Maybe there is a nice formula to find permutations (a,b) from valid y value?
-
-
-
-// 18446744073709551615 (max llui - for reference)
-// 153901049660277 too low
-// 306697130449377 too low also
