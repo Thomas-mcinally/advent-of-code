@@ -118,9 +118,18 @@ int main(int argc, char **argv)
     }
 
     printf("part2 result: %zu\n", part2_count);
-    //doesnt work yet
-    //my soltuion doesnt account for tiles whose shortest path is over the edge from the starting position
+    //doesnt work yet - solution is too low
+    //my soltuion doesnt account for tiles in the very outer edges of the reachable area
+    //In these positions, dont have enough steps if shift and then backtrack. Have enough if dont shift
 
+
+    //see inspo
+    // https://www.reddit.com/r/adventofcode/comments/18nol3m/2023_day_21_a_geometric_solutionexplanation_for/
+    // https://raw.githubusercontent.com/Manitary/advent-of-code/c44838423066b3c8d446f0d94f2a19d675f2b6dc/2023/python/day21.png
+
+
+    // My solution is currently too low
+    // maybe i can figure out a way to predict how off i am, based on the input stepcount ?
     return 0;
 }
 
