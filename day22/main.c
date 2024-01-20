@@ -19,7 +19,19 @@ typedef struct {
     int x_end;
     int y_end;
     int z_end;
+    int support_count;
 } Brick;
+
+typedef struct {
+    Brick key;
+    Brick **value;
+} Brick_To_Bricks_Map;
+
+typedef struct {
+    Brick key;
+    int value;
+} Brick_To_Support_Count_Map;
+
 
 bool x_coordinates_overlap(Brick *brick1, Brick *brick2){
     if (brick1->x_start > brick2->x_start) return x_coordinates_overlap(brick2, brick1);
@@ -66,6 +78,7 @@ int main(int argc, char **argv) {
         bricks[i].x_end = max(x1-'0', x2-'0');
         bricks[i].y_end = max(y1-'0', y2-'0');
         bricks[i].z_end = max(z1-'0', z2-'0');
+        bricks[i].support_count = 0;
 
         highest_x = max(highest_x, bricks[i].x_end);
         highest_y = max(highest_y, bricks[i].y_end);
@@ -80,7 +93,8 @@ int main(int argc, char **argv) {
     int **grid = malloc(sizeof(int *)*(highest_x + 1));
     for(int i=0; i<highest_x+1; i++) grid[i] = calloc(highest_y+1, sizeof(int));
 
-    Brick ***z_start_buckets = calloc(highest_z+1, sizeof(Brick **));
+    Brick ***z_start_buckets = NULL;
+    arrsetlen(z_start_buckets, highest_z+1);
     for(int i=0; i<highest_z+1; i++) z_start_buckets[i] = NULL;
     for (int i=0; i<linecount; i++){
         Brick *brick = &bricks[i];
@@ -102,36 +116,64 @@ int main(int argc, char **argv) {
         arrput(z_start_buckets[brick->z_start], brick);
     }
 
+    Brick_To_Bricks_Map *brick_to_supported_bricks_map = NULL;
+    Brick_To_Support_Count_Map *brick_to_support_count_map = NULL;
+    //build brick_to_supported_bricks_map and brick_to_support_count_map
+
+    for(int cur_z=0; cur_z<arrlen(z_start_buckets); cur_z++){
+        for (int i=0; i<arrlen(z_start_buckets[cur_z]); i++){
+            Brick *bottom_brick = z_start_buckets[cur_z][i];
+            for (int j=0; j<arrlen(z_start_buckets[bottom_brick->z_end+1]); j++){
+                Brick *top_brick = z_start_buckets[bottom_brick->z_end+1][j];
+                if (x_coordinates_overlap(bottom_brick, top_brick) || y_coordinates_overlap(bottom_brick, top_brick)){
+                    //update brick_to_support_count
+                    if (hmgeti(brick_to_support_count_map, *top_brick) == -1){
+                        hmput(brick_to_support_count_map, *top_brick, 1);
+                    }
+                    else{
+                        int support_count = hmget(brick_to_support_count_map, *top_brick);
+                        hmput(brick_to_support_count_map, *top_brick, support_count+1);
+                    }
+                    //update brick_to_supported_bricks_map
+                    if (hmgeti(brick_to_supported_bricks_map, *bottom_brick) == -1){
+                        Brick **supported_bricks = NULL;
+                        arrput(supported_bricks, top_brick);
+                        hmput(brick_to_supported_bricks_map, *bottom_brick, supported_bricks);
+                    }
+                    else{
+                        Brick **supported_bricks = hmget(brick_to_supported_bricks_map, *bottom_brick);
+                        arrput(supported_bricks, top_brick);
+                        hmput(brick_to_supported_bricks_map, *bottom_brick, supported_bricks);
+                    }
+                }
+            }
+        }
+    }
+
+    size_t safe_to_disintegrate_count = 0;
+    for (int i=0; i<linecount; i++){
+        Brick *brick = &bricks[i];
+        if (hmgeti(brick_to_supported_bricks_map, *brick) == -1){
+            safe_to_disintegrate_count++;
+            continue;
+        };
+        int safe_to_disintegrate = 1;
+        Brick **supported_bricks = hmget(brick_to_supported_bricks_map, *brick);
+        for (int j=0; j<arrlen(supported_bricks); j++){
+            Brick *supported_brick = supported_bricks[j];
+            int support_count = hmget(brick_to_support_count_map, *supported_brick);
+            if (support_count == 1){
+                safe_to_disintegrate = 0;
+                break;
+            }
+        }
+        if(safe_to_disintegrate) safe_to_disintegrate_count++;
+        
+    }
+    printf("part1 solution: %zu\n", safe_to_disintegrate_count);
 
     return 0;
 }
-
-
-// Pseudocode
-
-//build brick_to_supported_bricks_map and brick_to_support_count_map
-//cur_z = 0
-// while cur_z in z_to_bricks_map:
-//     for bottom_brick in z_to_bricks_map[cur_z]:
-//         for top_brick in z_to_bricks_map[bottom_brick.end_z + 1]:
-//             if (x_coordinates_overlap(bottom_brick, top_brick) || y_coordinates_overlap(bottom_brick, top_brick)) {
-//                  brick_to_supported_bricks_map[bottom_brick].append(top_brick);
-//                  brick_to_support_count_map[top_brick] += 1;
-//                }
-//     cur_z += 1;
-
-
-
-// int safe_to_disintegrate_count = 0;
-// for brick in bricks:
-//     if (arrlen(brick_to_supported_bricks_map) == 0) {safe_to_disintegrate_count += 1;continue;}
-//     bool safe_to_disintegrate = true;
-//     for supported_brick in brick_to_supported_bricks_map[brick]:
-//         if (brick_to_support_count_map[supported_brick] == 1) {safe_to_disintegrate = false; break;}
-//     if (safe_to_disintegrate) {safe_to_disintegrate_count += 1;}
-
-// return safe_to_disintegrate_count;
-
 
 
 //expect 5
