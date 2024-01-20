@@ -6,6 +6,10 @@
 
 #include "aoc_lib.h"
 
+#define STB_DS_IMPLEMENTATION
+#include "stb_ds.h"
+
+
 
 
 typedef struct {
@@ -47,6 +51,7 @@ int main(int argc, char **argv) {
     Brick *bricks = malloc(sizeof(Brick)*linecount);
     int highest_x = 0;
     int highest_y = 0;
+    int highest_z = 0;
     for(int i=0; i<linecount; i++){
         char *line = lines[i];
         char *separator = strchr(line, '~');
@@ -64,15 +69,38 @@ int main(int argc, char **argv) {
 
         highest_x = max(highest_x, bricks[i].x_end);
         highest_y = max(highest_y, bricks[i].y_end);
+        highest_z = max(highest_z, bricks[i].z_end);
     }
 
-    int **grid = malloc(sizeof(int *)*highest_x);
-    for(int i=0; i<highest_x; i++) grid[i] = calloc(highest_y, sizeof(int));
 
     //use qsort to sort bricks based on z_start
     qsort(bricks, linecount, sizeof(Brick), compare);
 
+    // find and update z_coordinates for each brick to reflect end position
+    int **grid = malloc(sizeof(int *)*(highest_x + 1));
+    for(int i=0; i<highest_x+1; i++) grid[i] = calloc(highest_y+1, sizeof(int));
 
+    Brick ***z_start_buckets = calloc(highest_z+1, sizeof(Brick **));
+    for(int i=0; i<highest_z+1; i++) z_start_buckets[i] = NULL;
+    for (int i=0; i<linecount; i++){
+        Brick *brick = &bricks[i];
+        int brick_z_width = brick->z_end - brick->z_start + 1;
+        int resting_z = 0;
+        for (int x = brick->x_start; x < brick->x_end+1; x++){
+            for (int y = brick->y_start; y < brick->y_end+1; y++){
+                resting_z = max(resting_z, grid[x][y]);
+            }
+        }
+        for (int x = brick->x_start; x < brick->x_end+1; x++){
+            for (int y = brick->y_start; y < brick->y_end+1; y++){
+                grid[x][y] = resting_z + brick_z_width;
+            }
+        }
+
+        brick->z_start = resting_z + 1;
+        brick->z_end = brick->z_start + brick_z_width - 1;
+        arrput(z_start_buckets[brick->z_start], brick);
+    }
 
 
     return 0;
@@ -80,29 +108,6 @@ int main(int argc, char **argv) {
 
 
 // Pseudocode
-
-
-// bricks.order(z_start)
-
-//determine end coordinates for each brick
-// for brick in bricks:
-//     brick_z_width = brick.z_end - brick.z_start
-
-//     resting_z = 0
-//     for x in range(brick.x_start, brick.x_end):
-//          for y in range(brick.y_start, brick.y_end):
-//              resting_z = max(resting_z, grid[x][y])
-
-//     for x in range(brick.x_start, brick.x_end):
-//          for y in range(brick.y_start, brick.y_end):
-//              grid[x][y] = resting_z + brick_z_width
-//
-//     brick.z_start = resting_z + 1
-//     brick.z_end = resting_z + brick_z_width
-
-//     z_start_to_bricks_map[brick.z_start].append(brick)
-
-
 
 //build brick_to_supported_bricks_map and brick_to_support_count_map
 //cur_z = 0
@@ -126,3 +131,7 @@ int main(int argc, char **argv) {
 //     if (safe_to_disintegrate) {safe_to_disintegrate_count += 1;}
 
 // return safe_to_disintegrate_count;
+
+
+
+//expect 5
