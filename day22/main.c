@@ -33,14 +33,14 @@ typedef struct {
 } Brick_To_Support_Count_Map;
 
 
-bool x_coordinates_overlap(Brick *brick1, Brick *brick2){
+int x_coordinates_overlap(Brick *brick1, Brick *brick2){
     if (brick1->x_start > brick2->x_start) return x_coordinates_overlap(brick2, brick1);
-    return brick1->x_end > brick2->x_start;
+    return brick1->x_end >= brick2->x_start;
 }
 
-bool y_coordinates_overlap(Brick *brick1, Brick *brick2){
+int y_coordinates_overlap(Brick *brick1, Brick *brick2){
     if (brick1->y_start > brick2->y_start) return y_coordinates_overlap(brick2, brick1);
-    return brick1->y_end > brick2->y_start;
+    return brick1->y_end >= brick2->y_start;
 }
 
 int compare(const void *a, const void *b) {
@@ -177,3 +177,8 @@ int main(int argc, char **argv) {
 
 
 //expect 5
+
+
+//seems to be way too few entries in brick_to_supported_bricks_map
+
+// 1496 too high
