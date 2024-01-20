@@ -22,4 +22,6 @@ int count_lines_in_string(const char *str);
 
 int max(int a, int b);
 
+int min(int a, int b);
+
 #endif // AOC_LIB_H

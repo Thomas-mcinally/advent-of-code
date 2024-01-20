@@ -95,6 +95,10 @@ int max(int a, int b){
     return a >= b ? a : b;
 }
 
+int min(int a, int b){
+    return a <= b ? a : b;
+}
+
 int is_hexadecimal(char c) {
     if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) return 1;
     else return 0;
