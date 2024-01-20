@@ -27,6 +27,12 @@ bool y_coordinates_overlap(Brick *brick1, Brick *brick2){
     return brick1->y_end > brick2->y_start;
 }
 
+int compare(const void *a, const void *b) {
+    const Brick *brickA = (const Brick *)a;
+    const Brick *brickB = (const Brick *)b;
+
+    return (brickA->z_start - brickB->z_start);
+}
 
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -39,7 +45,8 @@ int main(int argc, char **argv) {
     int linecount = read_file_to_lines(&lines, file_path);
 
     Brick *bricks = malloc(sizeof(Brick)*linecount);
-
+    int highest_x = 0;
+    int highest_y = 0;
     for(int i=0; i<linecount; i++){
         char *line = lines[i];
         char *separator = strchr(line, '~');
@@ -54,22 +61,26 @@ int main(int argc, char **argv) {
         bricks[i].x_end = max(x1-'0', x2-'0');
         bricks[i].y_end = max(y1-'0', y2-'0');
         bricks[i].z_end = max(z1-'0', z2-'0');
+
+        highest_x = max(highest_x, bricks[i].x_end);
+        highest_y = max(highest_y, bricks[i].y_end);
     }
 
+    int **grid = malloc(sizeof(int *)*highest_x);
+    for(int i=0; i<highest_x; i++) grid[i] = calloc(highest_y, sizeof(int));
 
+    //use qsort to sort bricks based on z_start
+    qsort(bricks, linecount, sizeof(Brick), compare);
+
+
+
+
+    return 0;
 }
 
 
 // Pseudocode
 
-
-//build out grid
-// x_max, y_max = 0, 0, 0
-// for brick in bricks:
-//     x_max = max(x_max, brick.x_end)
-//     y_max = max(y_max, brick.y_end)
-
-// int grid[x_max][y_max] = {0};
 
 // bricks.order(z_start)
 
