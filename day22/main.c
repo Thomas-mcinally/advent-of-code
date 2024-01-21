@@ -169,5 +169,41 @@ int main(int argc, char **argv) {
     }
     printf("part1 solution: %zu\n", safe_to_disintegrate_count);
 
+
+    size_t part2_count = 0;
+    for (int i=0; i<linecount; i++){
+        Brick_To_Support_Count_Map *brick_to_support_count_map_copy = NULL;
+        for (int j=0; j<hmlen(brick_to_support_count_map); j++){
+            Brick brick = brick_to_support_count_map[j].key;
+            int support_count = brick_to_support_count_map[j].value;
+            hmput(brick_to_support_count_map_copy, brick, support_count);
+        }
+
+        Brick *brick_to_disintegrate = &bricks[i];
+
+        //bfs to find all bricks that will fall
+        Brick **queue = NULL;
+        arrput(queue, brick_to_disintegrate);
+        while (arrlen(queue)>0){
+            Brick *cur = queue[0];
+            arrdel(queue, 0);
+
+            Brick **supported_bricks = hmget(brick_to_supported_bricks_map, *cur);
+            for (int j=0; j<arrlen(supported_bricks); j++){
+                Brick *supported_brick = supported_bricks[j];
+                int support_count = hmget(brick_to_support_count_map_copy, *supported_brick);
+                if (support_count == 1){
+                    arrput(queue, supported_brick);
+                    part2_count++;
+                }
+                else {
+                    hmput(brick_to_support_count_map_copy, *supported_brick, support_count-1);
+                }
+            }
+        }  
+    }
+
+    printf("part2 solution: %zu\n", part2_count);
+
     return 0;
 }
