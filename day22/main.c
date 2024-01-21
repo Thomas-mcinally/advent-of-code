@@ -114,6 +114,7 @@ int main(int argc, char **argv) {
 
     Brick_To_Bricks_Map *brick_to_supported_bricks_map = NULL;
     Brick_To_Support_Count_Map *brick_to_support_count_map = NULL;
+    hmdefault(brick_to_support_count_map,0);
     //build brick_to_supported_bricks_map and brick_to_support_count_map
 
     for(int cur_z=0; cur_z<arrlen(z_start_buckets); cur_z++){
@@ -122,14 +123,9 @@ int main(int argc, char **argv) {
             for (int j=0; j<arrlen(z_start_buckets[bottom_brick->z_end+1]); j++){
                 Brick *top_brick = z_start_buckets[bottom_brick->z_end+1][j];
                 if (x_coordinates_overlap(bottom_brick, top_brick) && y_coordinates_overlap(bottom_brick, top_brick)){
-                    //update brick_to_support_count
-                    if (hmgeti(brick_to_support_count_map, *top_brick) == -1){
-                        hmput(brick_to_support_count_map, *top_brick, 1);
-                    }
-                    else{
-                        int support_count = hmget(brick_to_support_count_map, *top_brick);
-                        hmput(brick_to_support_count_map, *top_brick, support_count+1);
-                    }
+                    int cur_support_count = hmget(brick_to_support_count_map, *top_brick);
+                    hmput(brick_to_support_count_map, *top_brick, cur_support_count+1);
+                    
                     //update brick_to_supported_bricks_map
                     if (hmgeti(brick_to_supported_bricks_map, *bottom_brick) == -1){
                         Brick **supported_bricks = NULL;
