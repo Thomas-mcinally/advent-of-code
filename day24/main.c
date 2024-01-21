@@ -29,7 +29,7 @@ int are_paths_paralell(Hailstone *a, Hailstone *b){
 }
 
 Intersection get_hailstone_path_intersection_point(Hailstone *a, Hailstone *b){
-    // Linear paths -> there will only be a single intersection point (x,y). Can calculate this from start positions and velocities
+    // Non-paralell linear paths -> there will be one (and only one) intersection point (x,y). Can calculate this from start positions and velocities
 
     // x = x1 + t1*vx1 (1)
     // y = y1 + t1*vy1 (2)
@@ -121,3 +121,32 @@ int main(int argc, char **argv) {
     }
     printf("Part 1: %zu\n", part1_count);
 }
+
+
+//part2
+//Given that there exists a px, py, pz, vx, vy, vz such that it intersects with all other hailstones
+
+// Consider 3 random hailstones
+// Rock position at t = (px + t*vx, py + t*vy, pz + t*vz)
+// Hailstone 1 position at t1: (px1 + t1*vx1, py1 + t*vy1, pz1 + t*vz1)
+// Hailstone 2 position at t2: (px2 + t2*vx2, py2 + t*vy2, pz2 + t*vz2)
+// HailStone 3 position at t3: (px3 + t3*vx3, py3 + t*vy3, pz3 + t*vz3)
+
+
+// px + t1*vx = px1 + t1*vx1
+// px + t2*vx = px2 + t2*vx2
+// px + t3*vx = px3 + t3*vx3
+
+// py + t1*vy = py1 + t1*vy1
+// py + t2*vy = py2 + t2*vy2
+// py + t3*vy = py3 + t3*vy3
+
+// pz + t1*vz = pz1 + t1*vz1
+// pz + t2*vz = pz2 + t2*vz2
+// pz + t3*vz = pz3 + t3*vz3
+
+// Impossible to Solve for px, py, pz, while not using (px, py, pz, vx, vy, vz, t1, t2, t3)?
+
+
+// Look up Z3 solver, a lot of people seem to have used this to solve this problem
+// https://www.reddit.com/r/adventofcode/comments/18qjozo/2023_day_24_weird_thing_about_part_2/
