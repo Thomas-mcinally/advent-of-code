@@ -5,14 +5,13 @@
 
 #include "aoc_lib.h"
 
-//parse all hailstones
 typedef struct {
     double px;
     double py;
     double pz;
-    long long int vx;
-    long long int vy;
-    long long int vz;
+    int vx;
+    int vy;
+    int vz;
 } Hailstone;
 
 typedef struct {
@@ -23,9 +22,10 @@ typedef struct {
 } Intersection;
 
 
-int are_hailstones_intersecting(Hailstone *a, Hailstone *b){
-    // Paths never intersect if they are paralell. They are paralell if vx1/vx2 = vy1/vy2
-    return !(a->vx/b->vx == a->vy/b->vy);
+int are_paths_paralell(Hailstone *a, Hailstone *b){
+    double ratio1 = (double)a->vx/(double)b->vx;
+    double ratio2 = (double)a->vy/(double)b->vy;
+    return (ratio1 == ratio2); 
 }
 
 Intersection get_hailstone_path_intersection_point(Hailstone *a, Hailstone *b){
@@ -52,10 +52,10 @@ Intersection get_hailstone_path_intersection_point(Hailstone *a, Hailstone *b){
     // t2 = (vx1*y1 - vx1*y2 + x2*vy1 - x1*vy1) / (vx1*vy2 - vx2*vy1) (8)
 
     // Use (8) to get val for t2
+    // use (5) to get val for t1
     // use (3) to get val for x
     // use (4) to get val for y
 
-    // double intersection_t2 = (a->py - b->py + a->vy*(b->px - a->px)/a->vx) / (b->vy - b->vx*a->vy/a->vx);
     double intersection_t2 = (a->vx*a->py - a->vx*b->py + b->px*a->vy - a->px*a->vy) / (a->vx*b->vy - b->vx*a->vy);
     double intersection_t1 = (b->px - a->px + intersection_t2*b->vx) / a->vx;
     double intersection_x = b->px + intersection_t2*b->vx;
@@ -82,9 +82,9 @@ int main(int argc, char **argv) {
         char *separator = strchr(line, '@');
         *separator = '\0';
         double px, py, pz;
-        long long int vx, vy, vz;
+        int vx, vy, vz;
         sscanf(line, "%lf,%lf,%lf", &px, &py, &pz);
-        sscanf(separator+1, "%lli,%lli,%lli", &vx, &vy, &vz);
+        sscanf(separator+1, "%d,%d,%d", &vx, &vy, &vz);
 
         Hailstone *hailstone = malloc(sizeof(Hailstone));
         hailstone->px = px;
@@ -101,24 +101,22 @@ int main(int argc, char **argv) {
         for (int i2=i1+1; i2<linecount; i2++){
             Hailstone *hailstone1 = hailstones[i1];
             Hailstone *hailstone2 = hailstones[i2];
-            if (are_hailstones_intersecting(hailstone1, hailstone2)){
-                Intersection intersection = get_hailstone_path_intersection_point(hailstone1, hailstone2);
+            if (are_paths_paralell(hailstone1, hailstone2))continue;
 
-                if (
-                    intersection.px >= 7 
-                    && intersection.py >= 7 
-                    && intersection.px <= 27 
-                    && intersection.py <= 27
-                    && intersection.t1 >= 0
-                    && intersection.t2 >= 0
-                ){
-                    part1_count++;
-                    printf("Valid\n");
-                }
-                else{
-                    printf("Not valid\n");
-                }
+            Intersection intersection = get_hailstone_path_intersection_point(hailstone1, hailstone2);
+
+            if (
+                intersection.px >= 200000000000000 
+                && intersection.py >= 200000000000000 
+                && intersection.px <= 400000000000000 
+                && intersection.py <= 400000000000000
+                && intersection.t1 >= 0
+                && intersection.t2 >= 0
+            ){
+                part1_count++;
             }
+
+
         }
     }
     printf("Part 1: %zu\n", part1_count);
