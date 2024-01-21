@@ -42,7 +42,7 @@ int y_coordinates_overlap(Brick *brick1, Brick *brick2){
     return brick1->y_end >= brick2->y_start;
 }
 
-int compare(const void *a, const void *b) {
+int compare_brick_z_start(const void *a, const void *b) {
     const Brick *brickA = (const Brick *)a;
     const Brick *brickB = (const Brick *)b;
 
@@ -83,8 +83,7 @@ int main(int argc, char **argv) {
         highest_z = max(highest_z, bricks[i].z_end);
     }
 
-    //use qsort to sort bricks based on z_start
-    qsort(bricks, linecount, sizeof(Brick), compare);
+    qsort(bricks, linecount, sizeof(Brick), compare_brick_z_start);
 
     // find and update z_coordinates for each brick to reflect end position
     int **grid = malloc(sizeof(int *)*(highest_x + 1));
