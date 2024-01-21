@@ -22,4 +22,4 @@ TODO - implement optimal solutions:
 
 
 Useful scripts:
-- gcc main.c ../libs/aoc_lib.c -I ../libs
+- gcc main.c ../libs/aoc_lib.c -I ../libs && ./a.out input.txt 

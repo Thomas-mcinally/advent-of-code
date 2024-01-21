@@ -19,7 +19,6 @@ typedef struct {
     int x_end;
     int y_end;
     int z_end;
-    int support_count;
 } Brick;
 
 typedef struct {
@@ -68,23 +67,21 @@ int main(int argc, char **argv) {
         char *line = lines[i];
         char *separator = strchr(line, '~');
         *separator = '\0';
-        char x1, y1, z1, x2, y2, z2;
-        sscanf(line, "%c,%c,%c", &x1, &y1, &z1);
-        sscanf(separator+1, "%c,%c,%c", &x2, &y2, &z2);
+        int x1, y1, z1, x2, y2, z2;
+        sscanf(line, "%d,%d,%d", &x1, &y1, &z1);
+        sscanf(separator+1, "%d,%d,%d", &x2, &y2, &z2);
 
-        bricks[i].x_start = min(x1-'0', x2-'0');
-        bricks[i].y_start = min(y1-'0', y2-'0');
-        bricks[i].z_start = min(z1-'0', z2-'0');
-        bricks[i].x_end = max(x1-'0', x2-'0');
-        bricks[i].y_end = max(y1-'0', y2-'0');
-        bricks[i].z_end = max(z1-'0', z2-'0');
-        bricks[i].support_count = 0;
+        bricks[i].x_start = min(x1, x2);
+        bricks[i].y_start = min(y1, y2);
+        bricks[i].z_start = min(z1, z2);
+        bricks[i].x_end = max(x1, x2);
+        bricks[i].y_end = max(y1, y2);
+        bricks[i].z_end = max(z1, z2);
 
         highest_x = max(highest_x, bricks[i].x_end);
         highest_y = max(highest_y, bricks[i].y_end);
         highest_z = max(highest_z, bricks[i].z_end);
     }
-
 
     //use qsort to sort bricks based on z_start
     qsort(bricks, linecount, sizeof(Brick), compare);
@@ -99,20 +96,20 @@ int main(int argc, char **argv) {
     for (int i=0; i<linecount; i++){
         Brick *brick = &bricks[i];
         int brick_z_width = brick->z_end - brick->z_start + 1;
-        int resting_z = 0;
-        for (int x = brick->x_start; x < brick->x_end+1; x++){
-            for (int y = brick->y_start; y < brick->y_end+1; y++){
-                resting_z = max(resting_z, grid[x][y]);
+        int ground_level = 0;
+        for (int x=brick->x_start; x<brick->x_end+1; x++){
+            for (int y=brick->y_start; y<brick->y_end+1; y++){
+                ground_level = max(ground_level, grid[x][y]);
             }
         }
         for (int x = brick->x_start; x < brick->x_end+1; x++){
             for (int y = brick->y_start; y < brick->y_end+1; y++){
-                grid[x][y] = resting_z + brick_z_width;
+                grid[x][y] = ground_level + brick_z_width;
             }
         }
 
-        brick->z_start = resting_z + 1;
-        brick->z_end = brick->z_start + brick_z_width - 1;
+        brick->z_start = ground_level + 1;
+        brick->z_end = ground_level + brick_z_width;
         arrput(z_start_buckets[brick->z_start], brick);
     }
 
@@ -125,7 +122,7 @@ int main(int argc, char **argv) {
             Brick *bottom_brick = z_start_buckets[cur_z][i];
             for (int j=0; j<arrlen(z_start_buckets[bottom_brick->z_end+1]); j++){
                 Brick *top_brick = z_start_buckets[bottom_brick->z_end+1][j];
-                if (x_coordinates_overlap(bottom_brick, top_brick) || y_coordinates_overlap(bottom_brick, top_brick)){
+                if (x_coordinates_overlap(bottom_brick, top_brick) && y_coordinates_overlap(bottom_brick, top_brick)){
                     //update brick_to_support_count
                     if (hmgeti(brick_to_support_count_map, *top_brick) == -1){
                         hmput(brick_to_support_count_map, *top_brick, 1);
@@ -174,11 +171,3 @@ int main(int argc, char **argv) {
 
     return 0;
 }
-
-
-//expect 5
-
-
-//seems to be way too few entries in brick_to_supported_bricks_map
-
-// 1496 too high
