@@ -162,9 +162,7 @@ int main(int argc, char **argv) {
     for (int i=0; i<linecount; i++){
         Brick_To_Support_Count_Map *brick_to_support_count_map_copy = NULL;
         for (int j=0; j<hmlen(brick_to_support_count_map); j++){
-            Brick brick = brick_to_support_count_map[j].key;
-            int support_count = brick_to_support_count_map[j].value;
-            hmput(brick_to_support_count_map_copy, brick, support_count);
+            hmput(brick_to_support_count_map_copy, brick_to_support_count_map[j].key, brick_to_support_count_map[j].value);
         }
 
         Brick *brick_to_disintegrate = &bricks[i];
