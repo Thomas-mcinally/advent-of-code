@@ -22,5 +22,10 @@ TODO - implement optimal solutions:
 - Day 21: Improve BFS by using queue data structure
 
 
-Useful scripts:
-- gcc main.c ../libs/aoc_lib.c -I ../libs && ./a.out input.txt 
+Build and run:
+`gcc main.c ../libs/aoc_lib.c -I ../libs && ./a.out input.txt`
+
+Build and run debugger:
+`gcc main.c ../libs/aoc_lib.c -I ../libs -g && lldb a.out input.txt`
+
+ 
