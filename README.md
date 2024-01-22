@@ -11,7 +11,7 @@
 
 - Day9: https://www.reddit.com/r/adventofcode/comments/18eiv3z/2023_day_9_how_to_solve_it_by_only_iterating/
 - Day11: Improve BFS by using queue data structure. Currently when i queue.popleft(), it is an O(N) operation.
---  Could also possibly improve by using a level-order traversal?
+    - Could also possibly improve by using a level-order traversal?
 - Day17: Make more optimal dijkstras by using a heap (instead of just arra that is sorted every iteration)
 - Day 21: Improve BFS by using queue data structure
 
