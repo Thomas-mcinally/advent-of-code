@@ -17,9 +17,9 @@
 
 ## Scripts
 Build and run:
-`gcc main.c ../libs/aoc_lib.c -I ../libs && ./a.out input.txt`
+- `gcc main.c ../libs/aoc_lib.c -I ../libs && ./a.out input.txt`
 
 Build and run debugger:
-`gcc main.c ../libs/aoc_lib.c -I ../libs -g && lldb a.out input.txt`
+- `gcc main.c ../libs/aoc_lib.c -I ../libs -g && lldb a.out input.txt`
 
  
