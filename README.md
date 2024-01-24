@@ -2,10 +2,9 @@
 - My first time writing code in C!
 
 ## Todo
+- Refactor days - At least the ones highlighted below
 - Add tests
 - Add github action that builds and tests code
-- Improved folder structure and refactor code to be professional
-    - Add makefiles so that build instructions are all in code ?
 - Get feedback from experienced C developer
 - Redo in C++ to see main differences?
 
