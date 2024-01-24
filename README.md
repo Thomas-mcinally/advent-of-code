@@ -23,4 +23,5 @@ Build and run:
 Build and run debugger:
 - `gcc main.c ../libs/aoc_lib.c -I ../libs -g && lldb a.out input.txt`
 
- 
+Remove binaries:
+- `find . -name "*.out" -type f -delete`
