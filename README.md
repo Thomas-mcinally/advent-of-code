@@ -3,8 +3,9 @@
 
 ## Todo
 - Add tests
-- Add github actions that build and test code
+- Add github action that builds and tests code
 - Improved folder structure and refactor code to be professional
+    - Add makefiles so that build instructions are all in code ?
 - Get feedback from experienced C developer
 - Redo in C++ to see main differences?
 
@@ -13,6 +14,7 @@
     - Could also possibly improve by using a level-order traversal?
 - Day17: Make more optimal dijkstras by using a heap (instead of just arra that is sorted every iteration)
 - Day 21: Improve BFS by using queue data structure
+- Day 24 part2: Refactor to only use C - perhaps use the geometric solution instead of Z3 solver.
 
 ## Scripts
 Build and run:
