@@ -4,8 +4,7 @@
 #include <ctype.h>
 
 #include "aoc_lib.h"
-//part1: Some games are impossible if only 12 red cubes, 13 green cubes, and 14 blue cubes. Return sum of ids of possible games
-//part2: for each game, find min nr of cubes needed for each colour, and multiply them to get the power of the game. Return sum of power of all games
+
 int main(int argc, char **argv) {
     if (argc != 2) {
         fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
@@ -16,8 +15,8 @@ int main(int argc, char **argv) {
     char **lines = NULL;
     int lineCount = read_file_to_lines(&lines, file_path);
 
-    int result = 0;
-    int power = 0;
+    int part1_solution = 0;
+    int part2_solution = 0;
 
     for (int i = 0; i < lineCount-1; i++)
     {
@@ -52,17 +51,14 @@ int main(int argc, char **argv) {
         }
     if (game_max_red_count <= 12 && game_max_green_count <= 13 && game_max_blue_count <= 14)
     {
-        result += game_id;
+        part1_solution += game_id;
     }
-    power += game_max_red_count * game_max_green_count * game_max_blue_count;
+    part2_solution += game_max_red_count * game_max_green_count * game_max_blue_count;
     free(lines[i]);
     }
     free(lines);
     
-    printf("%i\n", result);
-    printf("%i\n", power);
+    printf("part1 solution: %i\n", part1_solution);
+    printf("part2 solution: %i\n", part2_solution);
     return 0;
 }
-
-// task1 ans: 2278
-// task2 ans: 67953
