@@ -6,7 +6,7 @@
 #include <errno.h>
 #include "aoc_lib.h"
 
-#define SENTINEL_VALUE 9223372036854775807 // max long long int value
+#define SENTINEL_VALUE 0x7FFFFFFFFFFFFFFF // max long long int value
 
 void get_list_of_intervals_from_raw_input(char **lines, long long int list_of_intervals[100][3], int line_count)
 {
@@ -98,7 +98,6 @@ int main(int argc, char **argv) {
     if (step < lowest_location)
     {
       lowest_location = step;
-      printf("new lowest location: %lli, from seed: %lli\n", lowest_location, seeds[i]);
     }
   }
   printf("Part1 result: %lli\n", lowest_location);
