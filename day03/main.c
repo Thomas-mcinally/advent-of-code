@@ -11,14 +11,14 @@
 
 typedef struct
 {
-    int x;
-    int y;
+    int r;
+    int c;
 } Point;
 
 typedef struct
 {
-    long long int neighbourProduct;
-    int neighbourCount;
+    size_t neighbourProduct;
+    size_t neighbourCount;
 } Star;
 
 typedef struct
@@ -42,21 +42,16 @@ bool is_symbol(char c)
 
 bool at_least_one_neighbour_is_symbol(char **lines, int i, int j, int max_i, int max_j)
 {
-    if (j > 0 && is_symbol(lines[i][j - 1]))
-        return true;
-    if (j < max_j && is_symbol(lines[i][j + 1]))
-        return true;
-    if (i > 0 && is_symbol(lines[i - 1][j]))
-        return true;
-    if (i < max_i && is_symbol(lines[i + 1][j]))
-        return true;
-    if (i > 0 && j > 0 && is_symbol(lines[i - 1][j - 1]))
-        return true;
-    if (i > 0 && j < max_j && is_symbol(lines[i - 1][j + 1]))
-        return true;
-    if (i < max_i && j > 0 && is_symbol(lines[i + 1][j - 1]))
-        return true;
-    if (i < max_i && j < max_j && is_symbol(lines[i + 1][j + 1]))
+    if (
+        (j > 0 && is_symbol(lines[i][j - 1]))
+        || (j < max_j && is_symbol(lines[i][j + 1]))
+        || (i > 0 && is_symbol(lines[i - 1][j]))
+        || (i < max_i && is_symbol(lines[i + 1][j]))
+        || (i > 0 && j > 0 && is_symbol(lines[i - 1][j - 1]))
+        || (i > 0 && j < max_j && is_symbol(lines[i - 1][j + 1]))
+        || (i < max_i && j > 0 && is_symbol(lines[i + 1][j - 1]))
+        || (i < max_i && j < max_j && is_symbol(lines[i + 1][j + 1]))
+    )
         return true;
     return false;
 }
@@ -76,8 +71,8 @@ Point_To_Star_Map *update_star_info(Point_To_Star_Map *point_to_star, Point_Set 
 
 Point_Set *update_star_neighbour_set(Point_To_Star_Map *point_to_star, Point_Set *star_neighbour_set, Point position)
 {
-    int r = position.x;
-    int c = position.y;
+    int r = position.r;
+    int c = position.c;
     Point neighbours[] = {
         {r - 1, c}, {r + 1, c}, {r, c - 1}, {r, c + 1}, {r - 1, c - 1}, {r - 1, c + 1}, {r + 1, c - 1}, {r + 1, c + 1}};
 
@@ -91,9 +86,9 @@ Point_Set *update_star_neighbour_set(Point_To_Star_Map *point_to_star, Point_Set
     return star_neighbour_set;
 }
 
-long long int calculate_gear_ratio_from_star_info(Point_To_Star_Map *point_to_star)
+size_t calculate_gear_ratio_from_star_info(Point_To_Star_Map *point_to_star)
 {
-    long long int total_gear_ratio = 0;
+    size_t total_gear_ratio = 0;
     for (int i = 0; i < hmlen(point_to_star); i++)
     {
         Star star = point_to_star[i].value;
@@ -104,7 +99,7 @@ long long int calculate_gear_ratio_from_star_info(Point_To_Star_Map *point_to_st
     return total_gear_ratio;
 }
 
-int part1(char **grid, int ROWS, int COLS)
+size_t part1(char **grid, int ROWS, int COLS)
 {
     if (ROWS != COLS)
     {
@@ -112,7 +107,7 @@ int part1(char **grid, int ROWS, int COLS)
         return 1;
     }
 
-    int part_number_sum = 0;
+    size_t part_number_sum = 0;
     int cur_num = 0;
     bool is_cur_num_valid = false;
     for (int r = 0; r < ROWS; r++)
@@ -122,10 +117,7 @@ int part1(char **grid, int ROWS, int COLS)
             if (isdigit(grid[r][c]))
             {
                 cur_num = cur_num * 10 + (grid[r][c] - '0');
-                if (at_least_one_neighbour_is_symbol(grid, r, c, ROWS - 1, COLS - 1))
-                {
-                    is_cur_num_valid = true;
-                }
+                is_cur_num_valid = is_cur_num_valid || at_least_one_neighbour_is_symbol(grid, r, c, ROWS - 1, COLS - 1);
             }
             else
             {
@@ -143,7 +135,7 @@ int part1(char **grid, int ROWS, int COLS)
     return part_number_sum;
 }
 
-long long int part2(char **grid, int ROWS, int COLS)
+size_t part2(char **grid, int ROWS, int COLS)
 {
     if (ROWS != COLS)
     {
@@ -151,8 +143,8 @@ long long int part2(char **grid, int ROWS, int COLS)
         return 1;
     }
 
-    Point_To_Star_Map *point_to_star = NULL; // (star_x, star_y): {neighbourProduct, neighbourCount}
-    // find all stars
+    Point_To_Star_Map *point_to_star = NULL; // (star_r, star_c): {neighbourProduct, neighbourCount}
+
     for (int r = 0; r < ROWS; r++)
     {
         for (int c = 0; c < COLS; c++)
@@ -191,7 +183,7 @@ long long int part2(char **grid, int ROWS, int COLS)
         cur_num = 0;
     }
 
-    long long int total_gear_ratio = calculate_gear_ratio_from_star_info(point_to_star);
+    size_t total_gear_ratio = calculate_gear_ratio_from_star_info(point_to_star);
 
     hmfree(point_to_star);
     return total_gear_ratio;
@@ -209,7 +201,7 @@ int main(int argc, char **argv)
     char **lines = NULL;
     int linecount = read_file_to_lines(&lines, file_path);
 
-    printf("Part 1: %i\n", part1(lines, linecount - 1, strlen(lines[0])));
-    printf("Part 2: %lli\n", part2(lines, linecount - 1, strlen(lines[0])));
+    printf("Part 1: %zu\n", part1(lines, linecount - 1, strlen(lines[0])));
+    printf("Part 2: %zu\n", part2(lines, linecount - 1, strlen(lines[0])));
     return 0;
 }
