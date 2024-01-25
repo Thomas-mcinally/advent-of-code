@@ -20,27 +20,13 @@ int main(int argc, char **argv) {
     for (int i = 0; i < lineCount-1; i++)
     {
         int j = 0;
-        while (1)
-        {
-            if (isdigit(lines[i][j]))
-            {
-                count += (lines[i][j] - '0') * 10;
-                break;
-            }
-
-            j++;
-        }
+        while (!isdigit(lines[i][j])) j++;
+        count += (lines[i][j] - '0') * 10;
 
         j = strlen(lines[i]) - 1;
-        while (1)
-        {
-            if (isdigit(lines[i][j]))
-            {
-                count += lines[i][j] - '0';
-                break;
-            }
-            j--;
-        }
+        while (!isdigit(lines[i][j])) j--;
+        count += lines[i][j] - '0';
+
         free(lines[i]);
     }
     free(lines);

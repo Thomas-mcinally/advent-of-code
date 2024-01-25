@@ -6,18 +6,19 @@
 
 #include "aoc_lib.h"
 
-int read_string_digit(char *string, bool is_start)
+int read_string_digit(char *string, bool reverse)
 {
-    if (strncmp(is_start?string:string-3, "zero", 4) == 0) return 0;
-    if (strncmp(is_start?string:string-2, "one", 3) == 0) return 1;
-    if (strncmp(is_start?string:string-2, "two", 3) == 0) return 2;
-    if (strncmp(is_start?string:string-4, "three", 5) == 0) return 3;
-    if (strncmp(is_start?string:string-3, "four", 4) == 0) return 4;
-    if (strncmp(is_start?string:string-3, "five", 4) == 0) return 5;
-    if (strncmp(is_start?string:string-2, "six", 3) == 0) return 6;
-    if (strncmp(is_start?string:string-4, "seven", 5) == 0) return 7;
-    if (strncmp(is_start?string:string-4, "eight", 5) == 0) return 8;
-    if (strncmp(is_start?string:string-3, "nine", 4) == 0) return 9;
+    if (isdigit(*string)) return *string - '0';
+    if (strncmp(reverse?string-3:string, "zero", 4) == 0) return 0;
+    if (strncmp(reverse?string-2:string, "one", 3) == 0) return 1;
+    if (strncmp(reverse?string-2:string, "two", 3) == 0) return 2;
+    if (strncmp(reverse?string-4:string, "three", 5) == 0) return 3;
+    if (strncmp(reverse?string-3:string, "four", 4) == 0) return 4;
+    if (strncmp(reverse?string-3:string, "five", 4) == 0) return 5;
+    if (strncmp(reverse?string-2:string, "six", 3) == 0) return 6;
+    if (strncmp(reverse?string-4:string, "seven", 5) == 0) return 7;
+    if (strncmp(reverse?string-4:string, "eight", 5) == 0) return 8;
+    if (strncmp(reverse?string-3:string, "nine", 4) == 0) return 9;
     return -1;
 }
 
@@ -36,49 +37,16 @@ int main(int argc, char **argv) {
     for (int i = 0; i < lineCount-1; i++)
     {
         int j = 0;
-        while (1)
-        {
-            if (isdigit(lines[i][j]))
-            {
-                count += (lines[i][j] - '0') * 10;
-                break;
-            }
-            int string_digit = read_string_digit(&lines[i][j], true);
-            if (string_digit != -1)
-            {
-                count += string_digit * 10;
-                break;
-            }
-            j++;
-        }
+        while (read_string_digit(&lines[i][j], false) == -1) j++;
+        count += read_string_digit(&lines[i][j], false) * 10;
 
         j = strlen(lines[i]) - 1;
-        while (1)
-        {
-            if (isdigit(lines[i][j]))
-            {
-                count += lines[i][j] - '0';
-                break;
-            }
-            int string_digit = read_string_digit(&lines[i][j], false);
-            if (string_digit != -1)
-            {
-                count += string_digit;
-                break;
-            }
-            j--;
-        }
+        while (read_string_digit(&lines[i][j], true) == -1) j--;
+        count += read_string_digit(&lines[i][j], true);
+
         free(lines[i]);
     }
     free(lines);
     printf("Part2 sol: %i\n", count);
     return 0;
 }
-
-
-
-// Can improve time complexity by using a Trie
-// Be careful with chars in middle of num that is start of other num -> cant discard all prev seen chars when new char can't be added to cur_word.
-// When new_char can't be added to cur_word: 1) If can be added to prev_char, do so. 2) Else, discard all prev chars and start new word.
-// for example ninine, threight, seveight
-// Example implementation, in Python: https://pastebin.com/HMuKKJqQ
