@@ -16,30 +16,32 @@ int main(int argc, char **argv) {
     char *file_path = argv[1];
     char **lines = NULL;
     int lineCount = read_file_to_lines(&lines, file_path);
+
     int *i_to_copies = malloc(lineCount * sizeof(int));
     for (int i = 0; i < lineCount; i++) i_to_copies[i] = 1;
+    
     int total_score = 0;
     int total_scratchcards = 0;
     for (int i = 0; i < lineCount-1; i++)
     {
-        int seen_nums[101] = {0}; // max num is 99
+        int is_winning_number[101] = {0}; // max num is 99
 
 
         int j = 10;
         while (lines[i][j] != '|') 
         {
+            while (lines[i][j] == ' ') j++;
             int next_num = extract_number_from_string_starting_from(lines[i], &j);
-            if (next_num != 0) seen_nums[next_num] = 1;
-            if (lines[i][j] == ' ') j++;
+            is_winning_number[next_num] = 1;
         }
+        j++;
 
-        j += 2;
         int matches_found = 0;
         while (lines[i][j] != '\0')
         {
+            while (lines[i][j] == ' ') j++;
             int next_num = extract_number_from_string_starting_from(lines[i], &j);
-            if (seen_nums[next_num]) matches_found += 1;
-            if (lines[i][j] == ' ') j++;
+            if (is_winning_number[next_num]) matches_found += 1;
         }
 
         if (matches_found != 0) total_score += pow(2, matches_found - 1);
