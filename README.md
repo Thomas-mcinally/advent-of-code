@@ -2,13 +2,11 @@
 - My first time writing code in C!
 
 ## Todo
-- Refactor days - At least the ones highlighted below
+- Improve solutions - Import/implement and use data structures
 - Add tests
 - Add github action that builds and tests code
 - Get feedback from experienced C developer
-- Redo in C++ to see main differences?
 
-- Days 1-7: Use dynamic arrays where this helpsa keep code clean
 - Day1 part2: Improve TC by using Trie
 - Day9: https://www.reddit.com/r/adventofcode/comments/18eiv3z/2023_day_9_how_to_solve_it_by_only_iterating/
 - Day11: Improve BFS by using queue data structure. Currently when i queue.popleft(), it is an O(N) operation.
