@@ -99,8 +99,8 @@ void sort_hands_into_buckets_part2(char **hands, size_t num_hands, char **bucket
     }
 }
 
-long long unsigned int calculate_score_from_buckets(char **buckets[], int item_count) {
-    long long unsigned int total = 0;
+size_t calculate_score_from_buckets(char **buckets[], int item_count) {
+    size_t total = 0;
     int rank = item_count;
     for (int i=0; i<7; i++) {
         if (*buckets[i] == NULL) continue;
@@ -129,19 +129,19 @@ int main(int argc, char **argv)
 
     char **buckets[7] = {NULL};
     sort_hands_into_buckets(lines, linecount, buckets);
-    long long unsigned int part1_total = calculate_score_from_buckets(buckets, linecount);
+    size_t part1_total = calculate_score_from_buckets(buckets, linecount);
     for (int i=0; i<7; i++) arrfree(buckets[i]);
     
     strcpy(order_of_chars, "AKQT98765432J");
     sort_hands_into_buckets_part2(lines, linecount, buckets);
-    long long unsigned int part2_total = calculate_score_from_buckets(buckets, linecount);
+    size_t part2_total = calculate_score_from_buckets(buckets, linecount);
     for (int i=0; i<7; i++) arrfree(buckets[i]);
     for (int i=0; i<linecount; i++) free(lines[i]);
     free(lines);
 
 
-    printf("part1: %llu\n", part1_total);
-    printf("part2: %llu\n", part2_total);
+    printf("part1: %zu\n", part1_total);
+    printf("part2: %zu\n", part2_total);
 
     return 0;
 }
