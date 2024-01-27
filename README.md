@@ -1,5 +1,4 @@
 # advent-of-code-2023
-- My first time writing code in C!
 
 ## Todo
 - Add tests
