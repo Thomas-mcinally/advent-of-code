@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
         int is_winning_number[101] = {0}; // max num is 99
 
 
-        int j = 10;
+        int j = strchr(lines[i], ':') - lines[i] + 1;
         while (lines[i][j] != '|') 
         {
             while (lines[i][j] == ' ') j++;
