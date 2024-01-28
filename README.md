@@ -14,3 +14,6 @@ Build and run debugger:
 
 Remove binaries:
 - `find . -name "*.out" -type f -delete`
+
+Run tests in all subdirectories
+- `find . -name 'tests.sh' -exec bash {} \;`

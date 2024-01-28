@@ -103,7 +103,7 @@ size_t calculate_score_from_buckets(char **buckets[], int item_count) {
     size_t total = 0;
     int rank = item_count;
     for (int i=0; i<7; i++) {
-        if (*buckets[i] == NULL) continue;
+        if (buckets[i] == NULL || *buckets[i] == NULL) continue;
         qsort(buckets[i], arrlen(buckets[i]), sizeof(buckets[i][0]), custom_compare);
         
         for (int j=0; j<arrlen(buckets[i]); j++) {
