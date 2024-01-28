@@ -15,4 +15,8 @@ jobs:
 
       - name: Run tests
         shell: bash
-        run: find . -name 'tests.sh' -exec bash -c 'bash "$0" || exit 1' {} \;
+        run: |
+          while IFS= read -r -d '' file
+          do
+            bash "$file" || exit 1
+          done < <(find . -name 'tests.sh' -print0)
