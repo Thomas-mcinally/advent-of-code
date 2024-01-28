@@ -6,10 +6,10 @@
 
 ## Scripts
 Build and run:
-- `gcc main.c ../libs/aoc_lib.c -I ../libs && ./a.out input.txt`
+- `clang main.c ../libs/aoc_lib.c -I ../libs && ./a.out input.txt`
 
 Build and run debugger:
-- `gcc main.c ../libs/aoc_lib.c -I ../libs -g && lldb a.out input.txt`
+- `clang main.c ../libs/aoc_lib.c -I ../libs -g && lldb a.out input.txt`
 
 Run tests in all subdirectories
 - `find . -name 'tests.sh' -exec bash {} \;`

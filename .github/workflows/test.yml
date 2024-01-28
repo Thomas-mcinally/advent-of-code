@@ -13,9 +13,11 @@ jobs:
       - name: Git clone the repository
         uses: actions/checkout@v3
 
+      - name: Install Clang
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang
+
       - name: Run tests
         shell: bash
         run: find . -name 'tests.sh' -exec bash {} \;
-
-      - name: print gcc version
-        run: gcc --version

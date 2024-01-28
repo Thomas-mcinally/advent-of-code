@@ -6,8 +6,7 @@ run_test() {
     main_file_relative_path=$3
     expected_output=$4
 
-    eval "gcc $main_file_relative_path ../../libs/aoc_lib.c -I ../../libs -lm"
-    chmod +x ./a.out
+    eval "clang $main_file_relative_path ../../libs/aoc_lib.c -I ../../libs -lm"
     output=$(./a.out $input_file_relative_path)
     rm ./a.out
 
