@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
     int part1_solution = 0;
     int part2_solution = 0;
 
-    for (int i = 0; i < lineCount-1; i++)
+    for (int i = 0; i < lineCount; i++)
     {
         int j = 5;
         int game_id = extract_number_from_string_starting_from(lines[i], &j);
