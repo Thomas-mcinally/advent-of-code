@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     
     int total_score = 0;
     int total_scratchcards = 0;
-    for (int i = 0; i < lineCount-1; i++)
+    for (int i = 0; i < lineCount; i++)
     {
         int is_winning_number[101] = {0}; // max num is 99
 
