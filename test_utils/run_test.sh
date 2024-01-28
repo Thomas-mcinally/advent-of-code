@@ -8,7 +8,7 @@ run_test() {
 
     eval "gcc $main_file_relative_path ../../libs/aoc_lib.c -I ../../libs"
     output=$(./a.out $input_file_relative_path)
-    rm a.out
+    rm ./a.out
 
     if [[ $output = *"$expected_output"* ]]; then
         echo "Test $test_name passed"
