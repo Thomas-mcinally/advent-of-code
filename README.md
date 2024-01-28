@@ -1,7 +1,7 @@
 # advent-of-code-2023
 
 ## Todo
-- Fix github workflow - currently failing
+- Find out why test workflow doesnt work with ubuntu workflow runner
 - Make general solution to day25, and add test
 
 ## Scripts
