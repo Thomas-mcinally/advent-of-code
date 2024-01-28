@@ -1,9 +1,9 @@
 #!/bin/bash
 
-gcc main2.c ../libs/aoc_lib.c -I ../libs
+gcc ../main2.c ../../libs/aoc_lib.c -I ../../libs
 
-output=$(./a.out input.txt)
-expected_output="Part2 sol: 54518"
+output=$(./a.out input2.txt)
+expected_output="Part2 sol: 281"
 
 if [ "$output" = "$expected_output" ]; then
     echo "Test passed"
