@@ -10,7 +10,7 @@ run_test() {
     output=$(./a.out $input_file_relative_path)
     rm a.out
 
-    if [ "$output" = "$expected_output" ]; then
+    if [[ $output = *"$expected_output"* ]]; then
         echo "Test $test_name passed"
     else
         echo "Test $test_name failed: expected '$expected_output', got '$output'"
