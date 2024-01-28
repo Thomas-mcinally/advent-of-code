@@ -201,7 +201,7 @@ int main(int argc, char **argv)
     char **lines = NULL;
     int linecount = read_file_to_lines(&lines, file_path);
 
-    printf("Part1 sol: %zu\n", part1(lines, linecount - 1, strlen(lines[0])));
-    printf("Part2 sol: %zu\n", part2(lines, linecount - 1, strlen(lines[0])));
+    printf("Part1 sol: %zu\n", part1(lines, linecount, strlen(lines[0])));
+    printf("Part2 sol: %zu\n", part2(lines, linecount, strlen(lines[0])));
     return 0;
 }
