@@ -1,9 +1,9 @@
 # advent-of-code-2023
 
 ## Todo
-- Add tests for all days
 - Standardise output format for all days
 - Remove need for newline in input (many of early days i did this for some reason)
+- Make general solution to day25, and add test
 
 ## Scripts
 Build and run:
