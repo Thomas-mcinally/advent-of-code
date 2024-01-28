@@ -8,11 +8,15 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v3
 
       - name: Run tests
         shell: bash
-        run: find . -name 'tests.sh' -exec bash {} \;
+        run: |
+          while IFS= read -r -d '' file
+          do
+            bash "$file" || exit 1
+          done < <(find . -name 'tests.sh' -print0)

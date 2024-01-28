@@ -6,7 +6,7 @@ run_test() {
     main_file_relative_path=$3
     expected_output=$4
 
-    eval "gcc $main_file_relative_path ../../libs/aoc_lib.c -I ../../libs"
+    eval "clang $main_file_relative_path ../../libs/aoc_lib.c -I ../../libs -lm"
     output=$(./a.out $input_file_relative_path)
     rm ./a.out
 
@@ -14,6 +14,6 @@ run_test() {
         echo "Test $test_name passed"
     else
         echo "Test $test_name failed: expected '$expected_output', got '$output'"
-        exit 1
+        return 1
     fi
 }
