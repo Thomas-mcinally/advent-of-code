@@ -1,8 +1,9 @@
 # advent-of-code-2023
 
 ## Todo
-- Add tests
-- Add github action that builds and tests code
+- Add tests for all days
+- Standardise output format for all days
+- Remove need for newline in input (many of early days i did this for some reason)
 
 ## Scripts
 Build and run:
