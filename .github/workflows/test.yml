@@ -13,6 +13,6 @@ jobs:
       - name: Git clone the repository
         uses: actions/checkout@v3
 
-      - name: Run day01 tests
+      - name: Run tests
         shell: bash
-        run: ./day01/tests/tests.sh
+        run: find . -name 'tests.sh' -exec bash {} \;
