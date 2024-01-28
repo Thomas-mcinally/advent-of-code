@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
 
     int count = 0;
 
-    for (int i = 0; i < lineCount-1; i++)
+    for (int i = 0; i < lineCount; i++)
     {
         int j = 0;
         while (read_string_digit(&lines[i][j], false) == -1) j++;

@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
 
     int count = 0;
 
-    for (int i = 0; i < lineCount-1; i++)
+    for (int i = 0; i < lineCount; i++)
     {
         int j = 0;
         while (!isdigit(lines[i][j])) j++;
