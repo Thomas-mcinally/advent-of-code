@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
     char **lines = NULL;
     int lineCount = read_file_to_lines(&lines, file_path);
 
-    int count = 0;
+    int count = 1;
 
     for (int i = 0; i < lineCount-1; i++)
     {
