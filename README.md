@@ -3,6 +3,7 @@
 ## Todo
 - Standardise output format for all days
 - Remove need for newline in input (many of early days i did this for some reason)
+- Fix github workflow - currently failing
 - Make general solution to day25, and add test
 
 ## Scripts
