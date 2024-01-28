@@ -15,4 +15,4 @@ jobs:
 
       - name: Run tests
         shell: bash
-        run: find . -name 'tests.sh' -exec bash {} \;
+        run: find . -name 'tests.sh' -exec bash -c 'bash "$0" || exit 1' {} \;
