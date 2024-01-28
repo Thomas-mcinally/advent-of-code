@@ -15,4 +15,4 @@ jobs:
 
       - name: Run day01 tests
         shell: bash
-        run: ./day01/tests/test_main.sh && ./day01/tests/test_main2.sh
+        run: ./day01/tests/tests.sh
