@@ -54,6 +54,6 @@ int main(int argc, char **argv) {
     }
     free(lines);
     free(i_to_copies);
-    printf("Part1: %i \n", total_score);
-    printf("Part2: %i \n", total_scratchcards);
+    printf("Part1 sol: %i \n", total_score);
+    printf("Part2 sol: %i \n", total_scratchcards);
 }

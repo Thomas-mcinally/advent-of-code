@@ -77,7 +77,7 @@ int main(int argc, char **argv)
     int ROWS = read_file_to_lines(&grid, file_path);
     int COLS = strlen(grid[0]);
 
-    printf("part1 sol: %d\n", find_energized_tiles_given_starting_pos(grid, ROWS, COLS, 0, 0, RIGHT));
+    printf("Part1 sol: %d\n", find_energized_tiles_given_starting_pos(grid, ROWS, COLS, 0, 0, RIGHT));
 
     int max_count = 0;
     for (int r = 0; r < ROWS; r++)
@@ -91,7 +91,7 @@ int main(int argc, char **argv)
         max_count = max(max_count, find_energized_tiles_given_starting_pos(grid, ROWS, COLS, ROWS - 1, c, UP));
     }
 
-    printf("part2 sol: %d\n", max_count);
+    printf("Part2 sol: %d\n", max_count);
 
     for (int r = 0; r < ROWS; r++) free(grid[r]);
     free(grid);

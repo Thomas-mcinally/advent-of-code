@@ -39,7 +39,7 @@ void part1(Node_To_Neighbours *adj, char *instructions, int instruction_length)
         step_count++;
         i = (i+1) % instruction_length;
     }
-    printf("Part1: %d\n", step_count);
+    printf("Part1 sol: %d\n", step_count);
 }
 
 void part2_lcm(Node_To_Neighbours *adj, char *instructions, int instruction_length)
@@ -69,7 +69,7 @@ void part2_lcm(Node_To_Neighbours *adj, char *instructions, int instruction_leng
     }
 
     size_t ans = lcm(steps_to_reach_end, N);
-    printf("Part2: %zu\n", ans);
+    printf("Part2 sol: %zu\n", ans);
     arrfree(level);
 }
 

@@ -87,7 +87,7 @@ int main(int argc, char **argv)
         if (remaining_steps % 2 == 0) part1_count++;
     }
 
-    printf("part1 result: %zu\n", part1_count);
+    printf("Part1 sol: %zu\n", part1_count);
 
     size_t even_corners = 0;
     size_t odd_corners = 0;
@@ -105,7 +105,7 @@ int main(int argc, char **argv)
     assert(N == 202300); // should be this for real AOC input
 
     size_t part2_count = (N+1)*(N+1)*odd_full + N*N*even_full - (N+1)*odd_corners + N*even_corners;
-    printf("part2 result: %zu\n", part2_count);
+    printf("Part2 sol: %zu\n", part2_count);
     return 0;
 }
 

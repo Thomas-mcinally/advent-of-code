@@ -83,8 +83,8 @@ int main(int argc, char **argv)
     int COLS = strlen(grid[0]);
 
     
-    printf("part1: %zu\n", calculate_total_distance(2, grid, ROWS, COLS));
-    printf("part2: %zu\n", calculate_total_distance(1000000, grid, ROWS, COLS));
+    printf("Part1 sol: %zu\n", calculate_total_distance(2, grid, ROWS, COLS));
+    printf("Part2 sol: %zu\n", calculate_total_distance(1000000, grid, ROWS, COLS));
 
 }
 

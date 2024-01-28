@@ -164,7 +164,7 @@ int main(int argc, char **argv)
             break;
         }
     }
-    printf("Part1: %d\n", (loop_length + 1) / 2);
+    printf("Part1 sol: %d\n", (loop_length + 1) / 2);
 
     for(int r=0; r<ROWS; r++){
         for(int c=0; c<COLS; c++){
@@ -174,7 +174,7 @@ int main(int argc, char **argv)
         }
     }
     int total_enclosed_land = get_total_enclosed_land(grid, ROWS, COLS);
-    printf("Part2: %d\n", total_enclosed_land);
+    printf("Part2 sol: %d\n", total_enclosed_land);
 }
 
 // For part2:

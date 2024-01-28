@@ -191,8 +191,8 @@ int main(int argc, char **argv)
     for(int i = 0; i < item_count; i++) items[i] = malloc(4 * sizeof(int));
     populate_items_array(sections[1], items, item_count);
 
-    printf("Part 1: %zu\n", part1(workflows, items, item_count));
-    printf("Part 2: %zu\n", part2(workflows, "in", 1, 4000, 1, 4000, 1, 4000, 1, 4000));
+    printf("Part1 sol: %zu\n", part1(workflows, items, item_count));
+    printf("Part2 sol: %zu\n", part2(workflows, "in", 1, 4000, 1, 4000, 1, 4000, 1, 4000));
 
     for (int i = 0; i < section_count; i++) free(sections[i]);
     free(sections);

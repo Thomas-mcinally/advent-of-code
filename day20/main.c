@@ -199,7 +199,7 @@ int main(int argc, char **argv)
         }
     }
 
-    printf("part1 result: %zu\n", low_pulse_count * high_pulse_count);
+    printf("Part1 sol: %zu\n", low_pulse_count * high_pulse_count);
 
 
     arrfree(queue);

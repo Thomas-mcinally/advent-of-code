@@ -129,8 +129,8 @@ int main(int argc, char **argv)
     int COLS = strlen(grid[0]);
 
 
-    printf("part1 result: %zu\n", min_path(grid, ROWS, COLS, 3, 1));
-    printf("part2 result: %zu\n", min_path(grid, ROWS, COLS, 10, 4));
+    printf("Part1 sol: %zu\n", min_path(grid, ROWS, COLS, 3, 1));
+    printf("Part2 sol: %zu\n", min_path(grid, ROWS, COLS, 10, 4));
 
     for(int i = 0; i<ROWS; i++) free(grid[i]);
     free(grid);

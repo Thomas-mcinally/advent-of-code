@@ -66,9 +66,9 @@ int main(int argc, char **argv)
 
     size_t longest_pathlength_part1 = 0;
     backtrack_part1(grid, ROWS, COLS, 0, 1, 0, &longest_pathlength_part1);
-    printf("part1 sol: %zu\n", longest_pathlength_part1);
+    printf("Part1 sol: %zu\n", longest_pathlength_part1);
 
     size_t longest_pathlength_part2 = 0;
     backtrack_part2(grid, ROWS, COLS, 0, 1, 0, &longest_pathlength_part2);
-    printf("part2 sol: %zu\n", longest_pathlength_part2);
+    printf("Part2 sol: %zu\n", longest_pathlength_part2);
 }

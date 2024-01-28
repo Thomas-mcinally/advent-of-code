@@ -87,7 +87,7 @@ int main(int argc, char **argv)
     int COLS = strlen(grid[0]);
 
     tilt_north(grid, ROWS, COLS);
-    printf("part1 sol: %zu\n", calculate_north_beam_load(grid, ROWS, COLS));
+    printf("Part1 sol: %zu\n", calculate_north_beam_load(grid, ROWS, COLS));
 
     // north_beam_load values after each transformation form a linked list with a cycle
     // Observed cycle length of 18 (from experimenting with data)
@@ -101,7 +101,7 @@ int main(int argc, char **argv)
         tilt_east(grid, ROWS, COLS);
     }
 
-    printf("part2 sol: %zu\n", calculate_north_beam_load(grid, ROWS, COLS));
+    printf("Part2 sol: %zu\n", calculate_north_beam_load(grid, ROWS, COLS));
 
     for (int r=0; r<ROWS; r++) free(grid[r]);
     free(grid);

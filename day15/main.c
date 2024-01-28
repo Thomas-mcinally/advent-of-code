@@ -194,7 +194,7 @@ int main(int argc, char **argv)
     char *file_path = argv[1];
     
 
-    printf("part1 sol: %zu\n", part1(file_path));
+    printf("Part1 sol: %zu\n", part1(file_path));
 
-    printf("part2 sol: %zu\n", part2(file_path));
+    printf("Part2 sol: %zu\n", part2(file_path));
 }

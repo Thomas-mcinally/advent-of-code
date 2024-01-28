@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 
     size_t shoestring_area = 0;
     for (int i=0; i < linecount; i++) shoestring_area += det(points[i], points[i+1]);
-    printf("part1 solution: %zu\n", shoestring_area/2 + edge_count/2 + 1);
+    printf("Part1 sol: %zu\n", shoestring_area/2 + edge_count/2 + 1);
 
 
     edge_count = 0;
@@ -85,7 +85,7 @@ int main(int argc, char **argv)
 
     shoestring_area = 0;
     for (int i=0; i < linecount; i++) shoestring_area += det(points[i], points[i+1]);
-    printf("part2 solution: %zu\n", shoestring_area/2 + edge_count/2 + 1);
+    printf("Part2 sol: %zu\n", shoestring_area/2 + edge_count/2 + 1);
 
 
     free(points);

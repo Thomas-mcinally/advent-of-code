@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
     printf("Graph 1 size: %zu\n", graph1_size);
     printf("Graph 2 size: %zu\n", graph2_size);
 
-    printf("part1 solution: %zu\n", graph1_size * graph2_size);
+    printf("Part1 sol: %zu\n", graph1_size * graph2_size);
 
 
 }

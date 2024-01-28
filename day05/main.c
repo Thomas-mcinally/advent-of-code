@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
       lowest_location = step;
     }
   }
-  printf("Part1 result: %lli\n", lowest_location);
+  printf("Part1 sol: %lli\n", lowest_location);
 }
 
 // Think of as interval question, use input to form a list of non-overlapping intervals

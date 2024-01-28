@@ -119,5 +119,5 @@ int main(int argc, char **argv) {
 
         }
     }
-    printf("Part 1: %zu\n", part1_count);
+    printf("Part1 sol: %zu\n", part1_count);
 }

@@ -69,8 +69,8 @@ int main(int argc, char **argv) {
         for (int i=0; i<ROWS; i++) free(grid[i]);
         free(grid);
     }
-    printf("Answer to part 1 = %zu\n", total_1);
-    printf("Answer to part 2 = %zu\n", total_2);
+    printf("Part1 sol: %zu\n", total_1);
+    printf("Part2 sol: %zu\n", total_2);
 
     for (int i=0; i<section_count; i++) free(sections[i]);
     free(sections);

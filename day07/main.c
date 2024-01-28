@@ -140,8 +140,8 @@ int main(int argc, char **argv)
     free(lines);
 
 
-    printf("part1: %zu\n", part1_total);
-    printf("part2: %zu\n", part2_total);
+    printf("Part1 sol: %zu\n", part1_total);
+    printf("Part2 sol: %zu\n", part2_total);
 
     return 0;
 }

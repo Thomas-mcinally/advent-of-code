@@ -155,7 +155,7 @@ int main(int argc, char **argv) {
         if(safe_to_disintegrate) safe_to_disintegrate_count++;
         
     }
-    printf("part1 solution: %zu\n", safe_to_disintegrate_count);
+    printf("Part1 sol: %zu\n", safe_to_disintegrate_count);
 
 
     size_t part2_count = 0;
@@ -189,7 +189,7 @@ int main(int argc, char **argv) {
         }  
     }
 
-    printf("part2 solution: %zu\n", part2_count);
+    printf("Part2 sol: %zu\n", part2_count);
 
     return 0;
 }

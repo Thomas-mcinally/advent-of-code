@@ -110,7 +110,7 @@ int main(int argc, char **argv)
         free(dot_count_s_2);
     }
 
-    printf("Total combos: %zu\n", total_combos); 
-    printf("Total combos part 2: %zu\n", total_combos_part_2); 
+    printf("Part1 sol: %zu\n", total_combos); 
+    printf("Part2 sol: %zu\n", total_combos_part_2); 
     free(lines);
 }

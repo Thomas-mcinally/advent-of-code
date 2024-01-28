@@ -120,7 +120,7 @@ int main(int argc, char **argv)
     {
       if (cur >= seeds[i][0] && cur <= seeds[i][0] + seeds[i][1] - 1)
       {
-        printf("Part 2 sol: %lli\n", lowest_location);
+        printf("Part2 sol: %lli\n", lowest_location);
         return 0;
       }
     }

@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
     }
     free(lines);
     
-    printf("part1 solution: %i\n", part1_solution);
-    printf("part2 solution: %i\n", part2_solution);
+    printf("Part1 sol: %i\n", part1_solution);
+    printf("Part2 sol: %i\n", part2_solution);
     return 0;
 }

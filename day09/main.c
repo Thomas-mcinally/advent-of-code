@@ -75,8 +75,8 @@ int main(int argc, char **argv)
     }
     arrfree(num_arrs);
 
-    printf("Part1: %d\n", part1_result);
-    printf("Part2: %d\n", part2_result);
+    printf("Part1 sol: %d\n", part1_result);
+    printf("Part2 sol: %d\n", part2_result);
 
     for (int i = 0; i < linecount; i++)
         free(lines[i]);
