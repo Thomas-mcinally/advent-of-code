@@ -105,10 +105,10 @@ int is_hexadecimal(char c) {
 }
 
 
-long long int extract_number_from_string(const char *str)
+size_t extract_number_from_string(const char *str)
 {
   size_t index = 0;
-  long long int result = 0;
+  size_t result = 0;
   while (isdigit(str[index]))
   {
     result *= 10;

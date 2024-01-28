@@ -1,13 +1,17 @@
 #include <stdio.h>
 
-size_t number_of_ways_to_win(size_t time_limit, size_t record_distance)
+#include "aoc_lib.h"
+#define STB_DS_IMPLEMENTATION
+#include "stb_ds.h"
+
+int number_of_ways_to_win(int time_limit, int record_distance)
 {
-    size_t l = 0;
-    size_t r = time_limit;
+    int l = 0;
+    int r = time_limit;
     while (l <= r)
     {
-        size_t mid = l + (r - l) / 2;
-        size_t distance_traveled = (time_limit - mid) * mid;
+        int mid = l + (r - l) / 2;
+        int distance_traveled = (time_limit - mid) * mid;
         if (distance_traveled > record_distance)
             r = mid - 1;
         else
@@ -16,22 +20,45 @@ size_t number_of_ways_to_win(size_t time_limit, size_t record_distance)
     return time_limit - r * 2 - 1;
 }
 
-int main()
+int main(int argc, char **argv)
 {
-    int times[] = {59, 79, 65, 75};
-    int distances[] = {597, 1234, 1032, 1328};
-    size_t part1_result = 1;
-    for (int i = 0; i < 4; i++)
+    if (argc != 2) {
+        fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
+        exit(1);
+    }
+
+    char *file_path = argv[1];
+    char **lines = NULL;
+    int linecount = read_file_to_lines(&lines, file_path);
+
+
+    int *times = NULL;
+    int *distances = NULL;
+
+    int i = strchr(lines[0], ':') - lines[0] + 1;
+    while (lines[0][i] != '\0') {
+        while (lines[0][i] == ' ') i++;
+        arrput(times, extract_number_from_string_starting_from(lines[0], &i));
+        }
+
+    i = strchr(lines[1], ':') - lines[1] + 1;
+    while (lines[1][i] != '\0') {
+        while (lines[1][i] == ' ') i++;
+        arrput(distances, extract_number_from_string_starting_from(lines[1], &i));
+    }
+    int part1_result = 1;
+    for (int i = 0; i < arrlen(times); i++)
     {
         part1_result *= number_of_ways_to_win(times[i], distances[i]);
     }
 
-    printf("Part1 sol: %zu\n", part1_result);
+    printf("Part1 sol: %d\n", part1_result);
 
-    size_t part_2_time = 59796575;
-    size_t part_2_distance = 597123410321328;
-    size_t part2_result = number_of_ways_to_win(part_2_time, part_2_distance);
-    printf("Part2 sol: %zu\n", part2_result);
 
+    arrfree(times);
+    arrfree(distances);
+    for(int i=0; i<linecount; i++) free(lines[i]);
+    free(lines);
+    
     return 0;
 }
