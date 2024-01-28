@@ -8,11 +8,11 @@ expected_output="Part2 sol: 281"
 cd "$(dirname "$0")"
 eval $build_command
 output=$(./a.out $input_file_path)
+rm a.out
 
 if [ "$output" = "$expected_output" ]; then
     echo "Test $test_name passed"
 else
     echo "Test $test_name failed: expected '$expected_output', got '$output'"
+    exit 1
 fi
-
-rm a.out
