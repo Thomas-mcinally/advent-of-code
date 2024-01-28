@@ -16,3 +16,6 @@ jobs:
       - name: Run tests
         shell: bash
         run: find . -name 'tests.sh' -exec bash {} \;
+
+      - name: print gcc version
+        run: gcc --version
