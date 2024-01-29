@@ -113,5 +113,4 @@ int main(int argc, char **argv)
     printf("Part1 sol: %zu\n", total_combos); 
     printf("Part2 sol: %zu\n", total_combos_part_2); 
     free(lines);
-    return 0;
 }
