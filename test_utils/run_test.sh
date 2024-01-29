@@ -6,7 +6,7 @@ run_test() {
     main_file_relative_path=$3
     expected_output=$4
 
-    eval "clang $main_file_relative_path ../../libs/aoc_lib.c -I ../../libs -lm"
+    eval "clang $main_file_relative_path ../../libs/aoc_lib.c -I ../../libs -lm -std=c99"
     output=$(./a.out $input_file_relative_path)
     rm ./a.out
 
