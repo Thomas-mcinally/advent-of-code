@@ -10,3 +10,5 @@ fi
 if ! run_test "part2" "./test_input2.txt" "../main2.c" "Part2 sol: 71503"; then
     exit 1
 fi
+
+echo "success"

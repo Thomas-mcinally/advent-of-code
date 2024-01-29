@@ -14,6 +14,6 @@ run_test() {
         echo "Test $test_name passed"
     else
         echo "Test $test_name failed: expected '$expected_output', got '$output'"
-        return 1
+        exit 1
     fi
 }
