@@ -1,7 +1,7 @@
 # advent-of-code-2023
 
 ## Todo
-- Find out why test workflow doesnt work with ubuntu workflow runner
+- Find out why test workflow doesnt work with ubuntu workflow runner and macos runner doesnt work with day12 tests
 - Make general solution to day25, and add test
 
 ## Scripts
