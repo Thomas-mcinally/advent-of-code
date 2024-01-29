@@ -8,4 +8,3 @@ if ! run_test "part1" "./test_input.txt" "../main.c" "Part1 sol: 32000000"; then
     exit 1
 fi
 
-echo "success"

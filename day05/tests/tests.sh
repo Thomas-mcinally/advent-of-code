@@ -11,4 +11,3 @@ if ! run_test "part2" "./test_input.txt" "../main2.c" "Part2 sol: 46"; then
     exit 1
 fi
 
-echo "success"
