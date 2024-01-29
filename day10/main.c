@@ -1,6 +1,5 @@
 #include <string.h>
 #include <stdio.h>
-#include <stdbool.h>
 
 #include "aoc_lib.h"
 #define STB_DS_IMPLEMENTATION
