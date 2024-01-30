@@ -76,6 +76,22 @@ int main(int argc, char **argv) {
 
 
 
-// Part1 approach:
+// approach:
 // By inspecting graph visually, found that my linkers are mhb/zqg, sjr/jlt, fjn/mzb
 // Removed these edges then explored both graphs to find nr. of nodes in each. Startpoints: mhb and zqg
+
+
+
+
+// Proper approach: Karger's Min-cut algorithm
+// https://en.wikipedia.org/wiki/Karger%27s_algorithm
+// 
+
+// PSEUDOCODE:
+// while len(vertices) > 2:
+//  random_edge = rand(graph)
+//  random_edge.u.neighbours.extend(random_edge.v.neighbours) // u will now have itself as a neighbour
+//  Update adjacency list so nothing points to v anymore (might be hard)
+
+
+// Think best implementation probably uses a union-find data structure
