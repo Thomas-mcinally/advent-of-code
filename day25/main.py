@@ -3,7 +3,7 @@ from copy import deepcopy
 import random
 
 # General solution possible with Kergers mincut algo
-# Implement Kergers in python first to get a working version, do it in C afterwards
+# Implemented in python because got lazy
 
 adjacency_list = defaultdict(lambda: defaultdict(int))  # {node: {neighbor: edge_count}}
 input_lines = open('input.txt').read().splitlines()
@@ -13,16 +13,13 @@ for line in input_lines:
     neighbours = neighbours_string.strip().split(" ")
 
     for neighbour in neighbours:
-        adjacency_list[start][neighbour] += 1
-        adjacency_list[neighbour][start] += 1
+        adjacency_list[start][neighbour] = 1
+        adjacency_list[neighbour][start] = 1
 
 
 
 min_cut = float("inf")
-partition1 = 0
-partition2 = 0
-iterations = 0
-while iterations < 100:
+while min_cut != 3:
     adjacency_list_copy = deepcopy(adjacency_list)
     node_to_absorbed_nodes = {key: 1 for key in adjacency_list}
     while len(adjacency_list_copy) > 2:
@@ -33,7 +30,7 @@ while iterations < 100:
         finish = random.choice(list(start_neighbours.keys()))
         finish_neighbours = adjacency_list_copy[finish]
 
-        # make neighbours of finish neighbours of start instead
+        # remove "finish" node and redirect edges to/from it
         for key, value in finish_neighbours.items():
             del adjacency_list_copy[key][finish]
             if key == start: continue
@@ -45,7 +42,6 @@ while iterations < 100:
         del adjacency_list_copy[finish]
         del node_to_absorbed_nodes[finish]
     
-    iterations += 1
     node1, node2 = [key for key in adjacency_list_copy.keys()]
     if adjacency_list_copy[node1][node2] < min_cut:
         min_cut = adjacency_list_copy[node1][node2]
@@ -55,5 +51,8 @@ while iterations < 100:
 
 print("min cut found")
 print(partition1*partition2)
+print(partition1)
+print(partition2)
+print(min_cut)
 
 
