@@ -76,6 +76,6 @@ int main(int argc, char **argv) {
 
 
 
-// Part1 approach:
+// approach:
 // By inspecting graph visually, found that my linkers are mhb/zqg, sjr/jlt, fjn/mzb
 // Removed these edges then explored both graphs to find nr. of nodes in each. Startpoints: mhb and zqg
