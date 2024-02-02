@@ -140,5 +140,5 @@ int main(int argc, char **argv) {
     printf("Partition 1: %d\n", partition1);
     printf("Partition 2: %d\n", partition2);
 
-    printf("Solution: %d\n", partition1*partition2);
+    printf("Part1 sol: %d\n", partition1*partition2);
 }
