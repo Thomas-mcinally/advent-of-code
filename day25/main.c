@@ -34,19 +34,6 @@ int random_neighbour_of_node(int **adjacency_matrix, int node){
     }
 }
 
-void print_adjacency_matrix(int **adjacency_matrix){
-    printf("   ");
-    for (int c=0; c<MAX_NODES; c++) printf("%d, ", c);
-    printf("\n");
-    for (int i=0; i<MAX_NODES; i++){
-        printf("%d: ", i);
-        for (int j=0; j<MAX_NODES; j++){
-            printf("%d, ", adjacency_matrix[i][j]);
-        }
-        printf("\n");
-    }
-}
-
 int **copy_adjacency_matrix(int **adjacency_matrix){
     int **adjacency_matrix_copy = calloc(MAX_NODES, sizeof(int*));
     for (int i = 0; i < MAX_NODES; i++) {
@@ -76,7 +63,7 @@ int main(int argc, char **argv) {
 
     int total_nodes = 0;
     Node_To_Index *lookup_table = NULL;
-    
+
     int **adjacency_matrix = calloc(MAX_NODES, sizeof(int*));
     for (int i = 0; i < MAX_NODES; i++) {
         adjacency_matrix[i] = calloc(MAX_NODES, sizeof(int));
@@ -107,10 +94,8 @@ int main(int argc, char **argv) {
         }
     }
 
-
-
-
-    int min_cut = 0x7FFFFFFF;
+    // kergers mincut algo, assume min cut is 3 (given in question)
+    int min_cut = 0;
     int partition1 = 0;
     int partition2 = 0;
     while (min_cut != 3){
@@ -142,6 +127,8 @@ int main(int argc, char **argv) {
                     min_cut = adjacency_matrix_copy[i][j];
                     partition1 = node_to_absorbed_nodes[i];
                     partition2 = node_to_absorbed_nodes[j];
+                    if (min_cut < 3) printf("Something went wrong, shouldnt get mincut lower than 3");
+                    break;
                 }
             }
         }
