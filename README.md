@@ -1,9 +1,5 @@
 # advent-of-code-2023
 
-## Todo
-- Find out why test workflow doesnt work with ubuntu workflow runner
-- Make general solution to day25, and add test
-
 ## Scripts
 Build and run:
 - `clang main.c ../libs/aoc_lib.c -I ../libs && ./a.out input.txt`
