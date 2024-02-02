@@ -5,7 +5,7 @@
 
 #include "aoc_lib.h"
 
-#define MAX_NODES 20
+#define MAX_NODES 2000
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 
