@@ -39,14 +39,33 @@ void print_adjacency_matrix(int **adjacency_matrix){
     for (int c=0; c<MAX_NODES; c++) printf("%d, ", c);
     printf("\n");
     for (int i=0; i<MAX_NODES; i++){
-    printf("%d: ", i);
-    for (int j=0; j<MAX_NODES; j++){
-        printf("%d, ", adjacency_matrix[i][j]);
+        printf("%d: ", i);
+        for (int j=0; j<MAX_NODES; j++){
+            printf("%d, ", adjacency_matrix[i][j]);
+        }
+        printf("\n");
     }
-    printf("\n");
 }
 
+int **copy_adjacency_matrix(int **adjacency_matrix){
+    int **adjacency_matrix_copy = calloc(MAX_NODES, sizeof(int*));
+    for (int i = 0; i < MAX_NODES; i++) {
+        adjacency_matrix_copy[i] = calloc(MAX_NODES, sizeof(int));
+    }
+    for (int i=0; i<MAX_NODES; i++){
+        for (int j=0; j<MAX_NODES; j++){
+            adjacency_matrix_copy[i][j] = adjacency_matrix[i][j];
+        }
+    }
+    return adjacency_matrix_copy;
 }
+
+void deallocate_adjacency_matrix(int **adjacency_matrix){
+    for (int i=0; i<MAX_NODES; i++) free(adjacency_matrix[i]);
+    free(adjacency_matrix);
+}
+
+
 
 
 int main(int argc, char **argv) {
@@ -105,15 +124,7 @@ int main(int argc, char **argv) {
     int partition2 = 0;
     while (min_cut != 3){
         int total_nodes = shlen(adjacency_list);
-        int **adjacency_matrix_copy = calloc(MAX_NODES, sizeof(int*));
-        for (int i = 0; i < MAX_NODES; i++) {
-            adjacency_matrix_copy[i] = calloc(MAX_NODES, sizeof(int));
-        }
-        for (int i=0; i<MAX_NODES; i++){
-            for (int j=0; j<MAX_NODES; j++){
-                adjacency_matrix_copy[i][j] = adjacency_matrix[i][j];
-            }
-        }
+        int **adjacency_matrix_copy = copy_adjacency_matrix(adjacency_matrix);
         int *node_to_absorbed_nodes = calloc(MAX_NODES, sizeof(int));
         for (int i=0; i<MAX_NODES; i++) node_to_absorbed_nodes[i] = 1;
         while (total_nodes > 2){
@@ -147,8 +158,7 @@ int main(int argc, char **argv) {
             }
         }
 
-        for (int i=0; i<MAX_NODES; i++) free(adjacency_matrix_copy[i]);
-        free(adjacency_matrix_copy);
+        deallocate_adjacency_matrix(adjacency_matrix_copy);
 }
     
     printf("Min cut: %d\n", min_cut);
@@ -161,3 +171,6 @@ int main(int argc, char **argv) {
 }
 
 
+//Refactoring ideas
+// Build up lookup table and adjacency matrix at the same time, dont need adjacency list
+// Get actual number of nodes when building uo adjacency matrix, and use this in code instead of MAX_NODES
