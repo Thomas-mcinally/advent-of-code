@@ -11,8 +11,8 @@
 
 typedef struct {
     char *key;
-    char **value;
-} Node_To_Neighbours;
+    int value;
+} Node_To_Index;
 
 
 int random_node_from_adjacency_matrix(int **adjacency_matrix){
@@ -74,11 +74,17 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
+    int total_nodes = 0;
+    Node_To_Index *lookup_table = NULL;
+    
+    int **adjacency_matrix = calloc(MAX_NODES, sizeof(int*));
+    for (int i = 0; i < MAX_NODES; i++) {
+        adjacency_matrix[i] = calloc(MAX_NODES, sizeof(int));
+    }
+
     char *file_path = argv[1];
     char **lines = NULL;
     int lineCount = read_file_to_lines(&lines, file_path);
-    Node_To_Neighbours *adjacency_list = NULL;
-    shdefault(adjacency_list, NULL);
     for (int i = 0; i < lineCount; i++) {
         char *separator = strchr(lines[i], ':');
         *separator = '\0';
@@ -89,30 +95,15 @@ int main(int argc, char **argv) {
         for (int j = 0; j < neighbourCount; j++) {
             char *a = lines[i];
             char *b = neighbours[j];
-            char **a_neighbours = shget(adjacency_list, a);
-            char **b_neighbours = shget(adjacency_list, b);
+            int a_idx = shgeti(lookup_table, a);
+            int b_idx = shgeti(lookup_table, b);
+            if (a_idx == -1) a_idx = total_nodes++;
+            if (b_idx == -1) b_idx = total_nodes++;
+            shput(lookup_table, a, a_idx);
+            shput(lookup_table, b, b_idx);
 
-            arrput(a_neighbours, b);
-            arrput(b_neighbours, a);
-
-            shput(adjacency_list, a, a_neighbours);
-            shput(adjacency_list, b, b_neighbours);
-        }
-    }
-
-
-    // build up adjacency matrix of size N x N. Int matrix, value indicates nr of edges 
-
-    int **adjacency_matrix = calloc(MAX_NODES, sizeof(int*));
-    for (int i = 0; i < MAX_NODES; i++) {
-        adjacency_matrix[i] = calloc(MAX_NODES, sizeof(int));
-    }
-
-    for (int i=0; i<shlen(adjacency_list); i++){
-        int a_idx = i;
-        for (int j=0; j<arrlen(adjacency_list[i].value); j++){
-            int b_idx = shgeti(adjacency_list, adjacency_list[i].value[j]);
             adjacency_matrix[a_idx][b_idx] = 1;
+            adjacency_matrix[b_idx][a_idx] = 1;
         }
     }
 
@@ -123,14 +114,14 @@ int main(int argc, char **argv) {
     int partition1 = 0;
     int partition2 = 0;
     while (min_cut != 3){
-        int total_nodes = shlen(adjacency_list);
+        int nodes_remaining = total_nodes;
         int **adjacency_matrix_copy = copy_adjacency_matrix(adjacency_matrix);
-        int *node_to_absorbed_nodes = calloc(MAX_NODES, sizeof(int));
-        for (int i=0; i<MAX_NODES; i++) node_to_absorbed_nodes[i] = 1;
-        while (total_nodes > 2){
+        int *node_to_absorbed_nodes = calloc(total_nodes, sizeof(int));
+        for (int i=0; i<total_nodes; i++) node_to_absorbed_nodes[i] = 1;
+        while (nodes_remaining > 2){
             int start = random_node_from_adjacency_matrix(adjacency_matrix_copy);
             int finish = random_neighbour_of_node(adjacency_matrix_copy, start);
-            for (int i=0; i<MAX_NODES; i++){
+            for (int i=0; i<total_nodes; i++){
                 int edges_from_finish_to_i = adjacency_matrix_copy[finish][i];
                 adjacency_matrix_copy[finish][i] = 0;
                 adjacency_matrix_copy[i][finish] = 0;
@@ -142,18 +133,15 @@ int main(int argc, char **argv) {
             node_to_absorbed_nodes[start] += node_to_absorbed_nodes[finish];
             node_to_absorbed_nodes[finish] = 0;
 
-            total_nodes--;
+            nodes_remaining--;
         }
 
-        for (int i=0; i<MAX_NODES; i++){
-            for (int j=0; j<MAX_NODES; j++){
+        for (int i=0; i<total_nodes; i++){
+            for (int j=0; j<total_nodes; j++){
                 if (adjacency_matrix_copy[i][j] != 0){
-                    if (adjacency_matrix_copy[i][j] < min_cut) {
-                        min_cut = adjacency_matrix_copy[i][j];
-                        partition1 = node_to_absorbed_nodes[i];
-                        partition2 = node_to_absorbed_nodes[j];
-                    }
-                    break;
+                    min_cut = adjacency_matrix_copy[i][j];
+                    partition1 = node_to_absorbed_nodes[i];
+                    partition2 = node_to_absorbed_nodes[j];
                 }
             }
         }
@@ -166,11 +154,4 @@ int main(int argc, char **argv) {
     printf("Partition 2: %d\n", partition2);
 
     printf("Solution: %d\n", partition1*partition2);
-
-    return 0;
 }
-
-
-//Refactoring ideas
-// Build up lookup table and adjacency matrix at the same time, dont need adjacency list
-// Get actual number of nodes when building uo adjacency matrix, and use this in code instead of MAX_NODES
