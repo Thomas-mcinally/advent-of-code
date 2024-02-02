@@ -1,0 +1,44 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     a.out
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _stbds_arrgrowf, symObjAddr: 0x0, symBinAddr: 0x1000040D8, symSize: 0x25C }
+  - { offsetInCU: 0x4E, offset: 0x4E, size: 0x8, addend: 0x0, symName: _stbds_hash_seed, symObjAddr: 0x3580, symBinAddr: 0x10000C000, symSize: 0x0 }
+  - { offsetInCU: 0x269, offset: 0x269, size: 0x8, addend: 0x0, symName: _stbds_arrgrowf, symObjAddr: 0x0, symBinAddr: 0x1000040D8, symSize: 0x25C }
+  - { offsetInCU: 0x2F0, offset: 0x2F0, size: 0x8, addend: 0x0, symName: _stbds_arrfreef, symObjAddr: 0x25C, symBinAddr: 0x100004334, symSize: 0x28 }
+  - { offsetInCU: 0x316, offset: 0x316, size: 0x8, addend: 0x0, symName: _stbds_rand_seed, symObjAddr: 0x284, symBinAddr: 0x10000435C, symSize: 0x1C }
+  - { offsetInCU: 0x33C, offset: 0x33C, size: 0x8, addend: 0x0, symName: _stbds_hash_string, symObjAddr: 0x2A0, symBinAddr: 0x100004378, symSize: 0x118 }
+  - { offsetInCU: 0x384, offset: 0x384, size: 0x8, addend: 0x0, symName: _stbds_hash_bytes, symObjAddr: 0x3B8, symBinAddr: 0x100004490, symSize: 0x290 }
+  - { offsetInCU: 0x415, offset: 0x415, size: 0x8, addend: 0x0, symName: _stbds_siphash_bytes, symObjAddr: 0x648, symBinAddr: 0x100004720, symSize: 0x668 }
+  - { offsetInCU: 0x4D9, offset: 0x4D9, size: 0x8, addend: 0x0, symName: _stbds_hmfree_func, symObjAddr: 0xCD0, symBinAddr: 0x100004DA8, symSize: 0xF4 }
+  - { offsetInCU: 0x52B, offset: 0x52B, size: 0x8, addend: 0x0, symName: _stbds_strreset, symObjAddr: 0xDC4, symBinAddr: 0x100004E9C, symSize: 0x74 }
+  - { offsetInCU: 0x56F, offset: 0x56F, size: 0x8, addend: 0x0, symName: _stbds_hmget_key_ts, symObjAddr: 0xE38, symBinAddr: 0x100004F10, symSize: 0x178 }
+  - { offsetInCU: 0x659, offset: 0x659, size: 0x8, addend: 0x0, symName: _stbds_hm_find_slot, symObjAddr: 0xFB0, symBinAddr: 0x100005088, symSize: 0x2FC }
+  - { offsetInCU: 0x747, offset: 0x747, size: 0x8, addend: 0x0, symName: _stbds_hmget_key, symObjAddr: 0x12AC, symBinAddr: 0x100005384, symSize: 0x64 }
+  - { offsetInCU: 0x7CB, offset: 0x7CB, size: 0x8, addend: 0x0, symName: _stbds_hmput_default, symObjAddr: 0x1310, symBinAddr: 0x1000053E8, symSize: 0xDC }
+  - { offsetInCU: 0x804, offset: 0x804, size: 0x8, addend: 0x0, symName: _stbds_hmput_key, symObjAddr: 0x13EC, symBinAddr: 0x1000054C4, symSize: 0x7F0 }
+  - { offsetInCU: 0x97F, offset: 0x97F, size: 0x8, addend: 0x0, symName: _stbds_make_hash_index, symObjAddr: 0x1BDC, symBinAddr: 0x100005CB4, symSize: 0x590 }
+  - { offsetInCU: 0xB1C, offset: 0xB1C, size: 0x8, addend: 0x0, symName: _stbds_probe_position, symObjAddr: 0x216C, symBinAddr: 0x100006244, symSize: 0x30 }
+  - { offsetInCU: 0xB73, offset: 0xB73, size: 0x8, addend: 0x0, symName: _stbds_is_key_equal, symObjAddr: 0x219C, symBinAddr: 0x100006274, symSize: 0xC8 }
+  - { offsetInCU: 0xBF7, offset: 0xBF7, size: 0x8, addend: 0x0, symName: _stbds_strdup, symObjAddr: 0x2264, symBinAddr: 0x10000633C, symSize: 0x54 }
+  - { offsetInCU: 0xC3F, offset: 0xC3F, size: 0x8, addend: 0x0, symName: _stbds_stralloc, symObjAddr: 0x22B8, symBinAddr: 0x100006390, symSize: 0x1E8 }
+  - { offsetInCU: 0xCED, offset: 0xCED, size: 0x8, addend: 0x0, symName: _stbds_shmode_func, symObjAddr: 0x24A0, symBinAddr: 0x100006578, symSize: 0x94 }
+  - { offsetInCU: 0xD44, offset: 0xD44, size: 0x8, addend: 0x0, symName: _stbds_hmdel_key, symObjAddr: 0x2534, symBinAddr: 0x10000660C, symSize: 0x3B8 }
+  - { offsetInCU: 0xE4D, offset: 0xE4D, size: 0x8, addend: 0x0, symName: _random_node_from_adjacency_matrix, symObjAddr: 0x28EC, symBinAddr: 0x1000069C4, symSize: 0x94 }
+  - { offsetInCU: 0xEAD, offset: 0xEAD, size: 0x8, addend: 0x0, symName: _random_neighbour_of_node, symObjAddr: 0x2980, symBinAddr: 0x100006A58, symSize: 0x68 }
+  - { offsetInCU: 0xEFF, offset: 0xEFF, size: 0x8, addend: 0x0, symName: _print_adjacency_matrix, symObjAddr: 0x29E8, symBinAddr: 0x100006AC0, symSize: 0x134 }
+  - { offsetInCU: 0xF77, offset: 0xF77, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x2B1C, symBinAddr: 0x100006BF4, symSize: 0xA14 }
+  - { offsetInCU: 0x12FA, offset: 0x12FA, size: 0x8, addend: 0x0, symName: _stbds_log2, symObjAddr: 0x3530, symBinAddr: 0x100007608, symSize: 0x4C }
+  - { offsetInCU: 0x26, offset: 0x13A1, size: 0x8, addend: 0x0, symName: _read_entire_file, symObjAddr: 0x0, symBinAddr: 0x100007654, symSize: 0x140 }
+  - { offsetInCU: 0x42, offset: 0x13BD, size: 0x8, addend: 0x0, symName: _read_entire_file, symObjAddr: 0x0, symBinAddr: 0x100007654, symSize: 0x140 }
+  - { offsetInCU: 0x94, offset: 0x140F, size: 0x8, addend: 0x0, symName: _split_string_by_delimiter_string, symObjAddr: 0x140, symBinAddr: 0x100007794, symSize: 0x158 }
+  - { offsetInCU: 0x116, offset: 0x1491, size: 0x8, addend: 0x0, symName: _read_file_to_lines, symObjAddr: 0x298, symBinAddr: 0x1000078EC, symSize: 0x50 }
+  - { offsetInCU: 0x168, offset: 0x14E3, size: 0x8, addend: 0x0, symName: _count_lines, symObjAddr: 0x2E8, symBinAddr: 0x10000793C, symSize: 0x70 }
+  - { offsetInCU: 0x19E, offset: 0x1519, size: 0x8, addend: 0x0, symName: _extract_number_from_string_starting_from, symObjAddr: 0x358, symBinAddr: 0x1000079AC, symSize: 0x94 }
+  - { offsetInCU: 0x1E2, offset: 0x155D, size: 0x8, addend: 0x0, symName: _max, symObjAddr: 0x3EC, symBinAddr: 0x100007A40, symSize: 0x48 }
+  - { offsetInCU: 0x218, offset: 0x1593, size: 0x8, addend: 0x0, symName: _min, symObjAddr: 0x434, symBinAddr: 0x100007A88, symSize: 0x48 }
+  - { offsetInCU: 0x24E, offset: 0x15C9, size: 0x8, addend: 0x0, symName: _is_hexadecimal, symObjAddr: 0x47C, symBinAddr: 0x100007AD0, symSize: 0xA0 }
+  - { offsetInCU: 0x276, offset: 0x15F1, size: 0x8, addend: 0x0, symName: _extract_number_from_string, symObjAddr: 0x51C, symBinAddr: 0x100007B70, symSize: 0x88 }
+  - { offsetInCU: 0x2BA, offset: 0x1635, size: 0x8, addend: 0x0, symName: _extract_hex_val_from_string, symObjAddr: 0x5A4, symBinAddr: 0x100007BF8, symSize: 0xEC }
+  - { offsetInCU: 0x30C, offset: 0x1687, size: 0x8, addend: 0x0, symName: _count_lines_in_string, symObjAddr: 0x690, symBinAddr: 0x100007CE4, symSize: 0x70 }
+...

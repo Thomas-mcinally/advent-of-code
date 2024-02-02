@@ -5,6 +5,7 @@
 
 #include "aoc_lib.h"
 
+#define MAX_NODES 2000
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 
@@ -13,20 +14,40 @@ typedef struct {
     char **value;
 } Node_To_Neighbours;
 
-void dfs(Node_To_Neighbours *adjacency_list, char *node, int *is_node_visited, size_t *graph_size) {
-    int node_i = shgeti(adjacency_list, node);
-    if (is_node_visited[node_i]) {
-        return;
-    }
 
-    is_node_visited[node_i] = 1;
-    (*graph_size)++;
-
-    char **neighbours = shget(adjacency_list, node);
-    for (int i = 0; i < arrlen(neighbours); i++) {
-        dfs(adjacency_list, neighbours[i], is_node_visited, graph_size);
+int random_node_from_adjacency_matrix(int **adjacency_matrix){
+    // Chooses a random node from adjacency matrix which still exists
+    while (1){
+        int node = rand() % MAX_NODES;
+        for (int i=0; i<MAX_NODES; i++){
+            if (adjacency_matrix[node][i] != 0) return node;
+            // Node exists of it has at least one edge
+        }
     }
 }
+
+int random_neighbour_of_node(int **adjacency_matrix, int node){
+    // Chooses a random neighbour of a node
+    while (1){
+        int neighbour = rand() % MAX_NODES;
+        if (adjacency_matrix[node][neighbour] != 0) return neighbour;
+    }
+}
+
+void print_adjacency_matrix(int **adjacency_matrix){
+    printf("   ");
+    for (int c=0; c<MAX_NODES; c++) printf("%d, ", c);
+    printf("\n");
+    for (int i=0; i<MAX_NODES; i++){
+    printf("%d: ", i);
+    for (int j=0; j<MAX_NODES; j++){
+        printf("%d, ", adjacency_matrix[i][j]);
+    }
+    printf("\n");
+}
+
+}
+
 
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -60,22 +81,83 @@ int main(int argc, char **argv) {
         }
     }
 
-    int *is_node_visited = calloc(shlen(adjacency_list), sizeof(int));
-    size_t graph1_size = 0;
-    dfs(adjacency_list, "mhb", is_node_visited, &graph1_size);
-    size_t graph2_size = 0;
-    dfs(adjacency_list, "zqg", is_node_visited, &graph2_size);
 
-    printf("Graph 1 size: %zu\n", graph1_size);
-    printf("Graph 2 size: %zu\n", graph2_size);
+    // build up adjacency matrix of size N x N. Int matrix, value indicates nr of edges 
 
-    printf("Part1 sol: %zu\n", graph1_size * graph2_size);
+    int **adjacency_matrix = calloc(MAX_NODES, sizeof(int*));
+    for (int i = 0; i < MAX_NODES; i++) {
+        adjacency_matrix[i] = calloc(MAX_NODES, sizeof(int));
+    }
+
+    for (int i=0; i<shlen(adjacency_list); i++){
+        int a_idx = i;
+        for (int j=0; j<arrlen(adjacency_list[i].value); j++){
+            int b_idx = shgeti(adjacency_list, adjacency_list[i].value[j]);
+            adjacency_matrix[a_idx][b_idx] = 1;
+        }
+    }
 
 
+
+
+    int min_cut = 0x7FFFFFFF;
+    int partition1 = 0;
+    int partition2 = 0;
+    while (min_cut != 3){
+        int total_nodes = shlen(adjacency_list);
+        int **adjacency_matrix_copy = calloc(MAX_NODES, sizeof(int*));
+        for (int i = 0; i < MAX_NODES; i++) {
+            adjacency_matrix_copy[i] = calloc(MAX_NODES, sizeof(int));
+        }
+        for (int i=0; i<MAX_NODES; i++){
+            for (int j=0; j<MAX_NODES; j++){
+                adjacency_matrix_copy[i][j] = adjacency_matrix[i][j];
+            }
+        }
+        int *node_to_absorbed_nodes = calloc(MAX_NODES, sizeof(int));
+        for (int i=0; i<MAX_NODES; i++) node_to_absorbed_nodes[i] = 1;
+        while (total_nodes > 2){
+            int start = random_node_from_adjacency_matrix(adjacency_matrix_copy);
+            int finish = random_neighbour_of_node(adjacency_matrix_copy, start);
+            for (int i=0; i<MAX_NODES; i++){
+                int edges_from_finish_to_i = adjacency_matrix_copy[finish][i];
+                adjacency_matrix_copy[finish][i] = 0;
+                adjacency_matrix_copy[i][finish] = 0;
+
+                if (i==start) continue;
+                adjacency_matrix_copy[start][i] += edges_from_finish_to_i;
+                adjacency_matrix_copy[i][start] += edges_from_finish_to_i;
+            }
+            node_to_absorbed_nodes[start] += node_to_absorbed_nodes[finish];
+            node_to_absorbed_nodes[finish] = 0;
+
+            total_nodes--;
+        }
+
+        for (int i=0; i<MAX_NODES; i++){
+            for (int j=0; j<MAX_NODES; j++){
+                if (adjacency_matrix_copy[i][j] != 0){
+                    if (adjacency_matrix_copy[i][j] < min_cut) {
+                        min_cut = adjacency_matrix_copy[i][j];
+                        partition1 = node_to_absorbed_nodes[i];
+                        partition2 = node_to_absorbed_nodes[j];
+                    }
+                    break;
+                }
+            }
+        }
+
+        for (int i=0; i<MAX_NODES; i++) free(adjacency_matrix_copy[i]);
+        free(adjacency_matrix_copy);
+}
+    
+    printf("Min cut: %d\n", min_cut);
+    printf("Partition 1: %d\n", partition1);
+    printf("Partition 2: %d\n", partition2);
+
+    printf("Solution: %d\n", partition1*partition2);
+
+    return 0;
 }
 
 
-
-// approach:
-// By inspecting graph visually, found that my linkers are mhb/zqg, sjr/jlt, fjn/mzb
-// Removed these edges then explored both graphs to find nr. of nodes in each. Startpoints: mhb and zqg
