@@ -134,6 +134,7 @@ int main(int argc, char **argv) {
         }
 
         deallocate_adjacency_matrix(adjacency_matrix_copy);
+        free(node_to_absorbed_nodes);
 }
     
     printf("Min cut: %d\n", min_cut);
