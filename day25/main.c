@@ -210,6 +210,7 @@ int main(int argc, char **argv) {
         printf("total nodes: %d, line number: %d\n", total_nodes,i);
     }
 
+
     // kergers mincut algo, assume min cut is 3 (given in question)
     int min_cut = 0;
     int partition1 = 0;
