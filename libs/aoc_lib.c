@@ -76,6 +76,15 @@ int split_string_by_delimiter_string(const char *string_to_split, const char *de
   return result_count;
 }
 
+int read_file_to_lines(char ***lines, char *file_path)
+// Might be more useful if this excludes end-of-file line?
+{
+  char *content = read_entire_file(file_path);
+  int line_count = split_string_by_delimiter_string(content, "\n", lines);
+  free(content);
+  return line_count;
+}
+
 int count_lines(char *contents)
 {
   int result = 1;
