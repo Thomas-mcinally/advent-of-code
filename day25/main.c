@@ -96,6 +96,7 @@ int main(int argc, char **argv) {
     int partition1 = 0;
     int partition2 = 0;
     while (min_cut != 3){
+        printf("Trying again\n");
         int nodes_remaining = total_nodes;
         int **adjacency_matrix_copy = copy_adjacency_matrix(adjacency_matrix);
         int *node_to_absorbed_nodes = calloc(total_nodes, sizeof(int));
