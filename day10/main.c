@@ -145,7 +145,7 @@ int main(int argc, char **argv)
     int COLS = strlen(grid[0]);
 
     Point starting_position = find_starting_position(grid, ROWS, COLS);
-    printf("starting position r: %d, c: %d\n", starting_position.r, starting_position.c);
+
     Point first_positions[4] = {
         {starting_position.r + 1, starting_position.c},
         {starting_position.r - 1, starting_position.c},
