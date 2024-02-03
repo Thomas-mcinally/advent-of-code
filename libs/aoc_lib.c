@@ -19,7 +19,7 @@ char *read_entire_file(char *file_path)
   int sz = ftell(f);
   fseek(f, 0L, SEEK_SET);
 
-  char *contents = calloc(sz + 1, sizeof(char));
+  char *contents = calloc(2 * sz, sizeof(char));
   if (contents == NULL)
   {
     fprintf(stderr, "Could not allocate memory. Buy more RAM I guess?\n");
@@ -28,44 +28,27 @@ char *read_entire_file(char *file_path)
   fread(contents, 1, sz, f);
 
   fclose(f);
-  contents[sz] = '\0';
+
   return contents;
 }
 
 int split_string_by_delimiter_string(const char *string_to_split, const char *delimiter_string, char ***result_strings)
+// assumes string_to_split is nullterminated
+// populates result_strings array with nullterminated char arrays
+// does not modify input string
 {
   const char *substr_start = string_to_split;
   const char *pos_delim;
   int result_count = 0;
-  int capacity = 10;  // Initial capacity for result_strings
-
-  *result_strings = malloc(capacity * sizeof(char *));
-  if (*result_strings == NULL) {
-    fprintf(stderr, "Failed to allocate memory\n");
-    return -1;
-  }
 
   do
   {
     pos_delim = strstr(substr_start, delimiter_string);
 
-    size_t length = (pos_delim != NULL) ? (pos_delim - substr_start) : strlen(substr_start);
+    size_t length = (pos_delim != NULL) ? (pos_delim - substr_start) : strlen(substr_start); // If pos_delim is NULL, no delimiter found, so just copy the rest of the string
 
-    if (result_count >= capacity) {
-      capacity *= 2;  // Double the capacity
-      *result_strings = realloc(*result_strings, capacity * sizeof(char *));
-      if (*result_strings == NULL) {
-        fprintf(stderr, "Failed to allocate memory\n");
-        return -1;
-      }
-    }
-
+    *result_strings = realloc(*result_strings, (result_count + 1) * sizeof(char *));
     (*result_strings)[result_count] = malloc(length + 1);
-    if ((*result_strings)[result_count] == NULL) {
-      fprintf(stderr, "Failed to allocate memory\n");
-      return -1;
-    }
-
     strncpy((*result_strings)[result_count], substr_start, length);
     (*result_strings)[result_count][length] = '\0';
     result_count++;
