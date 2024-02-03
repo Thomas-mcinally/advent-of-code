@@ -66,6 +66,11 @@ int main(int argc, char **argv) {
     for (int i = 0; i < MAX_NODES; i++) {
         adjacency_matrix[i] = calloc(MAX_NODES, sizeof(int));
     }
+    for (int i=0; i<MAX_NODES; i++){
+        for (int j=0; j<MAX_NODES; j++){
+            adjacency_matrix[i][j] = 0;
+        }
+    }
 
     char *file_path = argv[1];
     char **lines = NULL;
