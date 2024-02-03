@@ -20,7 +20,3 @@ jobs:
           do
             bash "$file"
           done < <(find . -name 'tests.sh' -print0)
-      
-      - name: run day25
-        shell: bash
-        run: bash ./day25/tests/tests.sh

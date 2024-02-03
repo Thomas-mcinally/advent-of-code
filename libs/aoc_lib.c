@@ -50,6 +50,7 @@ int split_string_by_delimiter_string(const char *string_to_split, const char *de
     *result_strings = realloc(*result_strings, (result_count + 1) * sizeof(char *));
     (*result_strings)[result_count] = malloc(length + 1);
     strncpy((*result_strings)[result_count], substr_start, length);
+    (*result_strings)[result_count][length] = '\0';
     result_count++;
 
     substr_start = (pos_delim != NULL) ? pos_delim + strlen(delimiter_string) : NULL;
