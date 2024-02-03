@@ -207,14 +207,14 @@ int main(int argc, char **argv) {
             adjacency_matrix[a_idx][b_idx] = 1;
             adjacency_matrix[b_idx][a_idx] = 1;
         }
+        printf("total nodes: %d, line number: %d\n", total_nodes,i);
     }
-    printf("total nodes: %d\n", total_nodes);
+
     // kergers mincut algo, assume min cut is 3 (given in question)
     int min_cut = 0;
     int partition1 = 0;
     int partition2 = 0;
     while (min_cut != 3){
-        printf("Trying again\n");
         int nodes_remaining = total_nodes;
         int **adjacency_matrix_copy = copy_adjacency_matrix(adjacency_matrix);
         int *node_to_absorbed_nodes = malloc(total_nodes * sizeof(int));
