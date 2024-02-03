@@ -5,7 +5,7 @@
 
 #include "aoc_lib.h"
 
-#define MAX_NODES 2000
+#define MAX_NODES 20
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 
@@ -51,9 +51,6 @@ void deallocate_adjacency_matrix(int **adjacency_matrix){
     for (int i=0; i<MAX_NODES; i++) free(adjacency_matrix[i]);
     free(adjacency_matrix);
 }
-
-
-
 
 int main(int argc, char **argv) {
     if (argc != 2) {
