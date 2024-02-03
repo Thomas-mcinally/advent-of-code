@@ -22,4 +22,4 @@ jobs:
       #     done < <(find . -name 'tests.sh' -print0)
 
       - name: Run day 10 tests
-        run: bash day10/tests.sh
+        run: bash day10/tests/tests.sh
