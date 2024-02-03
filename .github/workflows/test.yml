@@ -13,13 +13,10 @@ jobs:
       - name: Git clone the repository
         uses: actions/checkout@v3
 
-      # - name: Run tests
-      #   shell: bash
-      #   run: |
-      #     while IFS= read -r -d '' file
-      #     do
-      #       bash "$file"
-      #     done < <(find . -name 'tests.sh' -print0)
-
-      - name: Run day 10 tests
-        run: bash day10/tests/tests.sh
+      - name: Run tests
+        shell: bash
+        run: |
+          while IFS= read -r -d '' file
+          do
+            bash "$file"
+          done < <(find . -name 'tests.sh' -print0)
