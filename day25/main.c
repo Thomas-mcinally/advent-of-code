@@ -7,8 +7,122 @@
 #include "aoc_lib.h"
 
 #define MAX_NODES 20
+// #define HASHMAP_SIZE 256
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
+
+
+
+
+// typedef struct LinkedListNode {
+//     char *key;
+//     int value;
+//     struct LinkedListNode *next;
+//     struct LinkedListNode *prev;
+// } LinkedListNode;
+
+// typedef struct{
+//     LinkedListNode *buckets[HASHMAP_SIZE];
+// } HashMap;
+
+// HashMap *create_empty_hashmap()
+// {
+//     // Must be freed by caller, can use free_hashmap
+//     HashMap *result = malloc(sizeof(HashMap));
+//     for (size_t i=0; i < HASHMAP_SIZE; i++)
+//     {
+//         result->buckets[i] = malloc(sizeof(LinkedListNode));
+//         result->buckets[i]->key = NULL;
+//         result->buckets[i]->value = 0;
+//         result->buckets[i]->next = NULL;
+//         result->buckets[i]->prev = NULL;
+//     }
+//     return result;
+// }
+
+// void free_hashmap(HashMap *map)
+// {
+//     for (size_t i=0; i < HASHMAP_SIZE; i++)
+//     {
+//         LinkedListNode *head = map->buckets[i];
+//         while (head->next != NULL){
+//             LinkedListNode *temp = head->next;
+//             free(head);
+//             head = temp;
+//         }
+//         free(head);
+//     }
+//     free(map);
+// }
+
+// int generate_string_hash(char *label)
+// {
+//     int hash = 0;
+//     while (*label != '\0')
+//     {
+//         hash += *label;
+//         hash *= 17;
+//         hash %= HASHMAP_SIZE;
+//         label++;
+//     }
+//     return hash;
+// }
+
+// void hashmap_put(HashMap *map, char *label, int val)
+// {
+//     int hash = generate_string_hash(label);
+//     LinkedListNode *head = map->buckets[hash];
+//     while (head->next != NULL){
+//         head = head->next;
+//         if (strcmp(head->key, label) == 0)
+//         {
+//             head->value = val;
+//             return;
+//         }
+//     }
+
+//     // this key isnt in map yet
+//     LinkedListNode *new_node = malloc(sizeof(LinkedListNode));
+//     new_node->key = label;
+//     new_node->value = val;
+//     new_node->next = NULL;
+//     new_node->prev = head;
+
+//     head->next = new_node;
+// }
+
+// int hashmap_get(HashMap *map, char *label)
+// {
+//     int hash = generate_string_hash(label);
+//     LinkedListNode *head = map->buckets[hash];
+//     while (head->next != NULL){
+//         head = head->next;
+//         if (strcmp(head->key, label) == 0)
+//         {
+//             return head->value;
+//         }
+//     }
+
+//     fprintf(stderr, "KeyError, the provided key doesn't exist in the hashmap\n");
+//     exit(1);
+// }
+
+// void hashmap_del(HashMap *map, char *label)
+// {
+//     int hash = generate_string_hash(label);
+//     LinkedListNode *head = map->buckets[hash];
+//     while (head->next != NULL){
+//         head = head->next;
+//         if (strcmp(head->key, label) == 0)
+//         {
+//             head->prev->next = head->next;
+//             if (head->next != NULL) head->next->prev = head->prev;
+//             return;
+//         }
+//     }
+
+//     // Key doesnt exist in hashmap, so do nothing
+// }
 
 typedef struct {
     char *key;
@@ -62,6 +176,7 @@ int main(int argc, char **argv) {
 
     int total_nodes = 0;
     Node_To_Index *lookup_table = NULL;
+    shdefault(lookup_table, -1);
 
     int **adjacency_matrix = malloc(MAX_NODES * sizeof(int*));
     for (int i = 0; i < MAX_NODES; i++) {
@@ -87,8 +202,8 @@ int main(int argc, char **argv) {
         for (int j = 0; j < neighbourCount; j++) {
             char *a = lines[i];
             char *b = neighbours[j];
-            int a_idx = shgeti(lookup_table, a);
-            int b_idx = shgeti(lookup_table, b);
+            int a_idx = shget(lookup_table, a);
+            int b_idx = shget(lookup_table, b);
             if (a_idx == -1) a_idx = total_nodes++;
             if (b_idx == -1) b_idx = total_nodes++;
             shput(lookup_table, a, a_idx);
@@ -103,7 +218,6 @@ int main(int argc, char **argv) {
     int min_cut = 0;
     int partition1 = 0;
     int partition2 = 0;
-    srand(5); // Seed random number generator
     while (min_cut != 3){
         printf("Trying again\n");
         int nodes_remaining = total_nodes;
