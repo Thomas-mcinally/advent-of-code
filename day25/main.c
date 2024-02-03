@@ -124,7 +124,7 @@ int main(int argc, char **argv) {
                     min_cut = adjacency_matrix_copy[i][j];
                     partition1 = node_to_absorbed_nodes[i];
                     partition2 = node_to_absorbed_nodes[j];
-                    if (min_cut < 3) printf("Something went wrong, shouldnt get mincut lower than 3");
+                    if (min_cut < 3) printf("Something went wrong, shouldnt get mincut lower than 3. Min_cut: %d\n", min_cut);
                     break;
                 }
             }
