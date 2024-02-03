@@ -76,6 +76,7 @@ int main(int argc, char **argv) {
     char *file_path = argv[1];
     char **lines = NULL;
     int lineCount = read_file_to_lines(&lines, file_path);
+    printf("Read %d lines\n", lineCount);
     for (int i = 0; i < lineCount; i++) {
         char *separator = strchr(lines[i], ':');
         *separator = '\0';
@@ -97,7 +98,7 @@ int main(int argc, char **argv) {
             adjacency_matrix[b_idx][a_idx] = 1;
         }
     }
-
+    printf("total nodes: %d\n", total_nodes);
     // kergers mincut algo, assume min cut is 3 (given in question)
     int min_cut = 0;
     int partition1 = 0;
