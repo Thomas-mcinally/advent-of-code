@@ -199,8 +199,15 @@ int main(int argc, char **argv) {
             char *b = neighbours[j];
             int a_idx = hashmap_get(lookup_table, a);
             int b_idx = hashmap_get(lookup_table, b);
-            if (a_idx == -1) a_idx = total_nodes++;
-            if (b_idx == -1) b_idx = total_nodes++;
+            if (a_idx == -1) {
+                a_idx = total_nodes++;
+                printf("node a: %s not seen before\n", a);
+            }
+            if (b_idx == -1){
+                b_idx = total_nodes++;
+                printf("node b: %s not seen before\n", b);
+            
+            }
             hashmap_put(lookup_table, a, a_idx);
             hashmap_put(lookup_table, b, b_idx);
 
