@@ -19,7 +19,7 @@ char *read_entire_file(char *file_path)
   int sz = ftell(f);
   fseek(f, 0L, SEEK_SET);
 
-  char *contents = calloc(2 * sz, sizeof(char));
+  char *contents = calloc(sz + 1, sizeof(char));
   if (contents == NULL)
   {
     fprintf(stderr, "Could not allocate memory. Buy more RAM I guess?\n");
@@ -28,7 +28,7 @@ char *read_entire_file(char *file_path)
   fread(contents, 1, sz, f);
 
   fclose(f);
-
+  contents[sz] = '\0';
   return contents;
 }
 
