@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 
 #include "aoc_lib.h"
 
@@ -95,6 +96,7 @@ int main(int argc, char **argv) {
     int min_cut = 0;
     int partition1 = 0;
     int partition2 = 0;
+    srand(time(NULL)); // Seed random number generator
     while (min_cut != 3){
         printf("Trying again\n");
         int nodes_remaining = total_nodes;
