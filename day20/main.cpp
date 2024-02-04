@@ -8,8 +8,8 @@
 #include "stb_ds.h"
 
 typedef struct {
-    char *origin;
-    char *destination;
+    const char *origin;
+    const char *destination;
     char type;
 } Pulse;
 
@@ -30,9 +30,9 @@ typedef struct {
     Module_State *value;
 } Node_To_State;
 
-Pulse *create_new_pulse(char *origin, char *destination, char type)
+Pulse *create_new_pulse(const char *origin, const char *destination, char type)
 {
-    Pulse *pulse = malloc(sizeof(Pulse));
+    Pulse *pulse = (Pulse*)malloc(sizeof(Pulse));
     pulse->origin = origin;
     pulse->destination = destination;
     pulse->type = type;
@@ -46,20 +46,20 @@ Node_To_State *create_new_state_dict(char **lines, int linecount)
     {
         char *key = lines[i];
         if (key[0] != '&' && key[0] != '%') continue;
-        Module_State *value = malloc(sizeof(Module_State));
+        Module_State *value = (Module_State*)malloc(sizeof(Module_State));
         value->type = key[0];
         value->on = 0;
         value->last_sent_pulse_type = 'L';
         shput(state, key+1, value);
     }
 
-    Module_State *button_state = malloc(sizeof(Module_State));
+    Module_State *button_state = (Module_State*)malloc(sizeof(Module_State));
     button_state->type = '-';
     button_state->on = 0;
     button_state->last_sent_pulse_type = 'L';
     shput(state, "button", button_state);
 
-    Module_State *broadcaster_state = malloc(sizeof(Module_State));
+    Module_State *broadcaster_state = (Module_State*)malloc(sizeof(Module_State));
     broadcaster_state->type = '-';
     broadcaster_state->on = 0;
     broadcaster_state->last_sent_pulse_type = 'L';
@@ -83,7 +83,7 @@ Node_To_Neighbours *create_adjacency_list(char **lines, int linecount)
     Node_To_Neighbours *adj = NULL;
     for (int i = 0; i < linecount; i++)
     {
-        char **neighbours = malloc(10 * sizeof(char*));
+        char **neighbours = (char**)malloc(10 * sizeof(char*));
         char *key = lines[i];
         char *end_of_key = strchr(lines[i], ' ');
         *end_of_key = '\0';
@@ -108,7 +108,7 @@ void free_adjacency_list(Node_To_Neighbours *adj)
     shfree(adj);
 }
 
-void modify_state(Node_To_State *state, char *pulse_dest, char pulse_type, char *pulse_origin)
+void modify_state(Node_To_State *state, const char *pulse_dest, char pulse_type, const char *pulse_origin)
 {
     if (shgeti(state, pulse_dest) == -1) return; // dest node has no neighbours. E.g. "output", "button"
     Module_State *dest_state = shget(state, pulse_dest);
@@ -124,7 +124,7 @@ void modify_state(Node_To_State *state, char *pulse_dest, char pulse_type, char 
     }
 }
 
-Pulse **add_new_pulses_to_queue(Node_To_Neighbours *adj, Node_To_State *state, char *pulse_dest, char pulse_type, Pulse **queue)
+Pulse **add_new_pulses_to_queue(Node_To_Neighbours *adj, Node_To_State *state, const char *pulse_dest, char pulse_type, Pulse **queue)
 {
     if (shgeti(adj, pulse_dest) == -1) return queue; // dest node has no neighbours. E.g. "output"
     Module_State *dest_state = shget(state, pulse_dest);
