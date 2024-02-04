@@ -14,7 +14,6 @@ typedef struct {
     int value;
 } Node_To_Index;
 
-
 int random_node_from_adjacency_matrix(int **adjacency_matrix){
     // Chooses a random node from adjacency matrix which still exists
     while (1){
@@ -51,9 +50,6 @@ void deallocate_adjacency_matrix(int **adjacency_matrix){
     for (int i=0; i<MAX_NODES; i++) free(adjacency_matrix[i]);
     free(adjacency_matrix);
 }
-
-
-
 
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -127,7 +123,7 @@ int main(int argc, char **argv) {
                     min_cut = adjacency_matrix_copy[i][j];
                     partition1 = node_to_absorbed_nodes[i];
                     partition2 = node_to_absorbed_nodes[j];
-                    if (min_cut < 3) printf("Something went wrong, shouldnt get mincut lower than 3");
+                    if (min_cut < 3) {printf("Something went wrong, shouldnt get mincut lower than 3"); exit(1);}
                     break;
                 }
             }
