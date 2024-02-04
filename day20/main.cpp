@@ -1,151 +1,110 @@
-#include <string.h>
-#include <stdio.h>
-#include <stdbool.h>
+#include <cstring>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <deque>
 
 #include "aoc_lib.h"
 
-#define STB_DS_IMPLEMENTATION
-#include "stb_ds.h"
-
-typedef struct {
-    const char *origin;
-    const char *destination;
+struct Pulse {
+    std::string origin;
+    std::string destination;
     char type;
-} Pulse;
+};
 
-typedef struct {
-    char *key;
-    char **value;
-} Node_To_Neighbours;
-
-
-typedef struct {
+struct Module_State {
     char type;
     int on; // 0 or 1. Relevant for flipflop nodes
     char last_sent_pulse_type; // L or H
-} Module_State;
+};
 
-typedef struct {
-    char *key;
-    Module_State *value;
-} Node_To_State;
-
-Pulse *create_new_pulse(const char *origin, const char *destination, char type)
-{
-    Pulse *pulse = (Pulse*)malloc(sizeof(Pulse));
-    pulse->origin = origin;
-    pulse->destination = destination;
-    pulse->type = type;
-    return pulse;
-}
-
-Node_To_State *create_new_state_dict(char **lines, int linecount)
-{
-    Node_To_State *state = NULL;
-    for (int i = 0; i < linecount; i++)
-    {
-        char *key = lines[i];
-        if (key[0] != '&' && key[0] != '%') continue;
-        Module_State *value = (Module_State*)malloc(sizeof(Module_State));
-        value->type = key[0];
-        value->on = 0;
-        value->last_sent_pulse_type = 'L';
-        shput(state, key+1, value);
+std::unordered_map<std::string, Module_State> create_new_state_dict(char **lines, int linecount) {
+    std::unordered_map<std::string, Module_State> state;
+    for (int i = 0; i < linecount; i++) {
+        std::string line = lines[i];
+        if (line[0] != '&' && line[0] != '%') continue; //broadcaster
+        Module_State value;
+        value.type = line[0];
+        value.on = 0;
+        value.last_sent_pulse_type = 'L';
+        state[line.substr(1)] = value;
     }
 
-    Module_State *button_state = (Module_State*)malloc(sizeof(Module_State));
-    button_state->type = '-';
-    button_state->on = 0;
-    button_state->last_sent_pulse_type = 'L';
-    shput(state, "button", button_state);
+    Module_State button_state;
+    button_state.type = '-';
+    button_state.on = 0;
+    button_state.last_sent_pulse_type = 'L';
+    state["button"] = button_state;
 
-    Module_State *broadcaster_state = (Module_State*)malloc(sizeof(Module_State));
-    broadcaster_state->type = '-';
-    broadcaster_state->on = 0;
-    broadcaster_state->last_sent_pulse_type = 'L';
-    shput(state, "broadcaster", broadcaster_state);
-
+    Module_State broadcaster_state;
+    broadcaster_state.type = '-';
+    broadcaster_state.on = 0;
+    broadcaster_state.last_sent_pulse_type = 'L';
+    state["broadcaster"] = broadcaster_state;
 
     return state;
 }
 
-void free_state_dict(Node_To_State *state)
+std::unordered_map<std::string, std::vector<std::string>>create_adjacency_list(char **lines, int linecount)
 {
-    for (int i = 0; i < shlen(state); i++)
-    {
-        free(state[i].value);
-    }
-    shfree(state);
-}
-
-Node_To_Neighbours *create_adjacency_list(char **lines, int linecount)
-{
-    Node_To_Neighbours *adj = NULL;
+    std::unordered_map<std::string, std::vector<std::string>> adj;
     for (int i = 0; i < linecount; i++)
     {
-        char **neighbours = (char**)malloc(10 * sizeof(char*));
+        std::vector<std::string> neighbours;
         char *key = lines[i];
         char *end_of_key = strchr(lines[i], ' ');
         *end_of_key = '\0';
 
         char *neighbour = strtok(end_of_key + 4, ", ");
-        int j = 0;
         while (neighbour != NULL)
         {
-            neighbours[j++] = neighbour;
+            neighbours.push_back(neighbour);
             neighbour = strtok(NULL, ", ");
         }
-        neighbours[j] = NULL;
-        if (key[0] == '&' || key[0] == '%') shput(adj, key+1, neighbours);
-        else shput(adj, key, neighbours); //broadcaster
+        if (key[0] == '&' || key[0] == '%') adj[key+1] = neighbours;
+        else adj[key] = neighbours; //broadcaster
     }
     return adj;
 }
 
-void free_adjacency_list(Node_To_Neighbours *adj)
+void modify_state(std::unordered_map<std::string, Module_State>& state, std::string& pulse_dest, char pulse_type, std::string& pulse_origin)
 {
-    for (int i = 0; i < shlen(adj); i++) free(adj[i].value);
-    shfree(adj);
-}
-
-void modify_state(Node_To_State *state, const char *pulse_dest, char pulse_type, const char *pulse_origin)
-{
-    if (shgeti(state, pulse_dest) == -1) return; // dest node has no neighbours. E.g. "output", "button"
-    Module_State *dest_state = shget(state, pulse_dest);
-    if ((dest_state->type == '%') && (pulse_type == 'L')){
-        dest_state->on = !dest_state->on;
+    if (state.count(pulse_dest) == 0) return; // dest node has no neighbours. E.g. "output", "button"
+    Module_State& dest_state = state[pulse_dest];
+    if ((dest_state.type == '%') && (pulse_type == 'L')){
+        dest_state.on = !dest_state.on;
         return;
     }
 
-    if (shgeti(state, pulse_origin) == -1) return; //origin has no state. 
-    Module_State *origin_state = shget(state, pulse_origin);
-    if (origin_state->type == '&' || origin_state->type == '%') {
-        origin_state->last_sent_pulse_type = pulse_type;
+    if (state.count(pulse_origin) == 0) return; //origin has no state. 
+    Module_State& origin_state = state[pulse_origin];
+    if (origin_state.type == '&' || origin_state.type == '%') {
+        origin_state.last_sent_pulse_type = pulse_type;
     }
 }
 
-Pulse **add_new_pulses_to_queue(Node_To_Neighbours *adj, Node_To_State *state, const char *pulse_dest, char pulse_type, Pulse **queue)
+void add_new_pulses_to_queue(std::unordered_map<std::string, std::vector<std::string>>& adj, std::unordered_map<std::string, Module_State>& state, std::string& pulse_dest, char pulse_type, std::deque<Pulse>& queue)
 {
-    if (shgeti(adj, pulse_dest) == -1) return queue; // dest node has no neighbours. E.g. "output"
-    Module_State *dest_state = shget(state, pulse_dest);
+    if (adj.count(pulse_dest) == 0) return; // dest node has no neighbours. E.g. "output"
+    Module_State& dest_state = state[pulse_dest];
 
-    int pulse_type_to_send;
-    if (dest_state->type == '%'){
-        if (pulse_type == 'L') pulse_type_to_send = dest_state->on ? 'H' : 'L';
-        else return queue;
+    char pulse_type_to_send;
+    if (dest_state.type == '%'){
+        if (pulse_type == 'L') pulse_type_to_send = dest_state.on ? 'H' : 'L';
+        else return;
     }
-    else if (dest_state->type == '&'){
+    else if (dest_state.type == '&'){
         // TODO: Make more efficient by having quick way to lookup if all_recent_were_high
         int all_recent_were_high = 1;
-        for (int i=0; i < shlen(adj); i++){
-            char **node_neighbours = adj[i].value;
-            while (*node_neighbours != NULL){
-                if (strcmp(*node_neighbours, pulse_dest) == 0){
-                    Module_State *neighbour_state = shget(state, adj[i].key);
-                    if (neighbour_state->last_sent_pulse_type == 'L') all_recent_were_high = 0;
+        for (const auto& pair : adj){
+            const std::vector<std::string>& node_neighbours = pair.second;
+            for (const auto &neighbour : node_neighbours){
+                if (neighbour == pulse_dest){
+                    Module_State& neighbour_state = state[pair.first];
+                    if (neighbour_state.last_sent_pulse_type == 'L') all_recent_were_high = 0;
                 }
-                node_neighbours++;
             }
+
         }
         pulse_type_to_send = all_recent_were_high ? 'L' : 'H';
     }
@@ -154,19 +113,20 @@ Pulse **add_new_pulses_to_queue(Node_To_Neighbours *adj, Node_To_State *state, c
         pulse_type_to_send = pulse_type;
     }
 
-    char **dest_neighbours = shget(adj, pulse_dest);
-    while (*dest_neighbours != NULL){
-        Pulse *new_pulse = create_new_pulse(pulse_dest, *dest_neighbours, pulse_type_to_send);
+    std::vector<std::string>& dest_neighbours = adj[pulse_dest];
+    for (const std::string& neighbour : dest_neighbours){
+        Pulse new_pulse;
+        new_pulse.origin = pulse_dest;
+        new_pulse.destination = neighbour;
+        new_pulse.type = pulse_type_to_send;
 
-        arrput(queue, new_pulse);
-        dest_neighbours++;
+        queue.push_back(new_pulse);
     }
 
-    return queue;
+    return;
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     if (argc != 2)
     {
         fprintf(stderr, "Please provide a single argument: the path to the file you want to parse\n");
@@ -176,38 +136,31 @@ int main(int argc, char **argv)
     char *file_path = argv[1];
     char **lines = NULL;
     int linecount = read_file_to_lines(&lines, file_path);
-    Node_To_Neighbours *node_to_adj = create_adjacency_list(lines, linecount);
-    Node_To_State *node_to_state = create_new_state_dict(lines, linecount);
+    std::unordered_map<std::string, std::vector<std::string>> node_to_adj = create_adjacency_list(lines, linecount);
+    std::unordered_map<std::string, Module_State> node_to_state = create_new_state_dict(lines, linecount);
 
     size_t low_pulse_count = 0;
     size_t high_pulse_count = 0;
-    Pulse **queue = NULL;
+    std::deque<Pulse> queue;
     for (int _ = 0; _ < 1000; _++){
-        Pulse *start_pulse = create_new_pulse("button", "broadcaster", 'L');
-        arrput(queue, start_pulse);
 
-        while (arrlen(queue) > 0){ 
-            Pulse *current = queue[0];
-            arrdel(queue, 0); // TODO: make more efficient with queue Data structure or with level-order traversal
+        Pulse new_pulse;
+        new_pulse.origin = "button";
+        new_pulse.destination = "broadcaster";
+        new_pulse.type = 'L';
 
-            if (current->type == 'L') low_pulse_count += 1;
+        queue.push_back(new_pulse);
+
+        while (queue.size() > 0){ 
+            Pulse current = queue.front();
+            queue.pop_front();
+            if (current.type == 'L') low_pulse_count += 1;
             else high_pulse_count += 1;
-            modify_state(node_to_state, current->destination, current->type, current->origin);
-
-            queue = add_new_pulses_to_queue(node_to_adj, node_to_state, current->destination, current->type, queue);
-            free(current);
+            
+            modify_state(node_to_state, current.destination, current.type, current.origin);
+            add_new_pulses_to_queue(node_to_adj, node_to_state, current.destination, current.type, queue);
         }
     }
 
     printf("Part1 sol: %zu\n", low_pulse_count * high_pulse_count);
-
-
-    arrfree(queue);
-    free_adjacency_list(node_to_adj);
-    free_state_dict(node_to_state);
-    for (int i = 0; i < linecount; i++) free(lines[i]);
-    free(lines);
 }
-
-
-//Part2 solved graphically. See part2.txt
