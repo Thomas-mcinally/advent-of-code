@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
     char **lines = NULL;
     int linecount = read_file_to_lines(&lines, file_path);
 
-    Brick *bricks = malloc(sizeof(Brick)*linecount);
+    Brick *bricks = (Brick*)malloc(sizeof(Brick)*linecount);
     int highest_x = 0;
     int highest_y = 0;
     int highest_z = 0;
@@ -86,8 +86,8 @@ int main(int argc, char **argv) {
     qsort(bricks, linecount, sizeof(Brick), compare_brick_z_start);
 
     // find and update z_coordinates for each brick to reflect end position
-    int **grid = malloc(sizeof(int *)*(highest_x + 1));
-    for(int i=0; i<highest_x+1; i++) grid[i] = calloc(highest_y+1, sizeof(int));
+    int **grid = (int**)malloc(sizeof(int *)*(highest_x + 1));
+    for(int i=0; i<highest_x+1; i++) grid[i] = (int*)calloc(highest_y+1, sizeof(int));
 
     Brick ***z_start_buckets = NULL;
     arrsetlen(z_start_buckets, highest_z+1);

@@ -55,7 +55,7 @@ void dfs(char **grid, int ROWS, int COLS, int *visited, int cur_r, int cur_c, in
 
 int find_energized_tiles_given_starting_pos(char **grid, int ROWS, int COLS, int start_r, int start_c, int start_direction)
 {
-    int *visited = calloc(ROWS * COLS, sizeof(int));
+    int *visited = (int*)calloc(ROWS * COLS, sizeof(int));
     dfs(grid, ROWS, COLS, visited, start_r, start_c, start_direction);
 
     int count = 0;

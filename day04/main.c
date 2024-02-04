@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
     char **lines = NULL;
     int lineCount = read_file_to_lines(&lines, file_path);
 
-    int *i_to_copies = malloc(lineCount * sizeof(int));
+    int *i_to_copies = (int*)malloc(lineCount * sizeof(int));
     for (int i = 0; i < lineCount; i++) i_to_copies[i] = 1;
     
     int total_score = 0;

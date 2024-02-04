@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     char **lines = NULL;
     int linecount = read_file_to_lines(&lines, file_path);
 
-    Point *points = malloc((linecount + 1) * sizeof(Point));
+    Point *points = (Point*)malloc((linecount + 1) * sizeof(Point));
     Point start = {0, 0};
     points[0] = start;
     size_t edge_count = 0;

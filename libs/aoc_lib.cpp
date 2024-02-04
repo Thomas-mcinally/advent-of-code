@@ -19,7 +19,7 @@ char *read_entire_file(char *file_path)
   int sz = ftell(f);
   fseek(f, 0L, SEEK_SET);
 
-  char *contents = calloc(2 * sz, sizeof(char));
+  char *contents = (char*)calloc(2 * sz, sizeof(char));
   if (contents == NULL)
   {
     fprintf(stderr, "Could not allocate memory. Buy more RAM I guess?\n");
@@ -47,8 +47,8 @@ int split_string_by_delimiter_string(const char *string_to_split, const char *de
 
     size_t length = (pos_delim != NULL) ? (pos_delim - substr_start) : strlen(substr_start); // If pos_delim is NULL, no delimiter found, so just copy the rest of the string
 
-    *result_strings = realloc(*result_strings, (result_count + 1) * sizeof(char *));
-    (*result_strings)[result_count] = malloc(length + 1);
+    *result_strings = (char**)realloc(*result_strings, (result_count + 1) * sizeof(char *));
+    (*result_strings)[result_count] = (char*)malloc(length + 1);
     strncpy((*result_strings)[result_count], substr_start, length);
     (*result_strings)[result_count][length] = '\0';
     result_count++;
@@ -83,10 +83,10 @@ int count_lines(char *contents)
 long long int extract_number_from_string_starting_from(const char *str, int *index)
 {
   long long int result = 0;
-  while (isdigit(str[*index]))
+  while (isdigit((int)str[*index]))
   {
     result *= 10;
-    result += str[*index] - '0';
+    result += (int)str[*index] - '0';
     (*index)++;
   }
   return result;
@@ -110,7 +110,7 @@ size_t extract_number_from_string(const char *str)
 {
   size_t index = 0;
   size_t result = 0;
-  while (isdigit(str[index]))
+  while (isdigit((int)str[index]))
   {
     result *= 10;
     result += str[index] - '0';
@@ -125,7 +125,7 @@ size_t extract_hex_val_from_string(char *hex, int max_len){
     
     while (is_hexadecimal(hex[i])){
       result *= 16;
-      if (isdigit(hex[i])) result += hex[i] - '0';
+      if (isdigit((int)hex[i])) result += hex[i] - '0';
       else result += hex[i] - 'a' + 10;
 
       i++;

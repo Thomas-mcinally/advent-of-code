@@ -20,10 +20,10 @@ typedef struct{
 HashMap *create_empty_hashmap()
 {
     // Must be freed by caller, can use free_hashmap
-    HashMap *result = malloc(sizeof(HashMap));
+    HashMap *result = (HashMap*)malloc(sizeof(HashMap));
     for (size_t i=0; i < HASHMAP_SIZE; i++)
     {
-        result->buckets[i] = malloc(sizeof(LinkedListNode));
+        result->buckets[i] = (LinkedListNode*)malloc(sizeof(LinkedListNode));
         result->buckets[i]->key = NULL;
         result->buckets[i]->value = 0;
         result->buckets[i]->next = NULL;
@@ -74,7 +74,7 @@ void hashmap_put(HashMap *map, char *label, int val)
     }
 
     // this key isnt in map yet
-    LinkedListNode *new_node = malloc(sizeof(LinkedListNode));
+    LinkedListNode *new_node = (LinkedListNode*)malloc(sizeof(LinkedListNode));
     new_node->key = label;
     new_node->value = val;
     new_node->next = NULL;

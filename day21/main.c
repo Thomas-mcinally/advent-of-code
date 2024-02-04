@@ -52,13 +52,13 @@ int main(int argc, char **argv)
     Point starting_position = find_starting_position(grid, ROWS, COLS);
 
     Point_To_Stepcount_Map *seen = NULL;
-    Point *queue = malloc(sizeof(Point));
+    Point *queue = (Point*)malloc(sizeof(Point));
     queue[0] = starting_position;
     size_t queue_len = 1;
     size_t steps_taken = 0;
     while (1){
         if (steps_taken == STEP_LIMIT_PART_2+1) break;
-        Point *next_queue = malloc(4*queue_len*sizeof(Point));
+        Point *next_queue = (Point*)malloc(4*queue_len*sizeof(Point));
         size_t next_queue_len = 0;
         for (size_t i=0;i<queue_len;i++){
             Point cur = queue[i];
