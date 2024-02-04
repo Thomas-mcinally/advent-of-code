@@ -34,9 +34,9 @@ int random_neighbour_of_node(int **adjacency_matrix, int node){
 }
 
 int **copy_adjacency_matrix(int **adjacency_matrix){
-    int **adjacency_matrix_copy = calloc(MAX_NODES, sizeof(int*));
+    int **adjacency_matrix_copy = (int**)calloc(MAX_NODES, sizeof(int*));
     for (int i = 0; i < MAX_NODES; i++) {
-        adjacency_matrix_copy[i] = calloc(MAX_NODES, sizeof(int));
+        adjacency_matrix_copy[i] = (int*)calloc(MAX_NODES, sizeof(int));
     }
     for (int i=0; i<MAX_NODES; i++){
         for (int j=0; j<MAX_NODES; j++){
@@ -60,9 +60,9 @@ int main(int argc, char **argv) {
     int total_nodes = 0;
     Node_To_Index *lookup_table = NULL;
 
-    int **adjacency_matrix = calloc(MAX_NODES, sizeof(int*));
+    int **adjacency_matrix = (int**)calloc(MAX_NODES, sizeof(int*));
     for (int i = 0; i < MAX_NODES; i++) {
-        adjacency_matrix[i] = calloc(MAX_NODES, sizeof(int));
+        adjacency_matrix[i] = (int*)calloc(MAX_NODES, sizeof(int));
     }
 
     char *file_path = argv[1];
@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
     while (min_cut != 3){
         int nodes_remaining = total_nodes;
         int **adjacency_matrix_copy = copy_adjacency_matrix(adjacency_matrix);
-        int *node_to_absorbed_nodes = calloc(total_nodes, sizeof(int));
+        int *node_to_absorbed_nodes = (int*)calloc(total_nodes, sizeof(int));
         for (int i=0; i<total_nodes; i++) node_to_absorbed_nodes[i] = 1;
         while (nodes_remaining > 2){
             int start = random_node_from_adjacency_matrix(adjacency_matrix_copy);

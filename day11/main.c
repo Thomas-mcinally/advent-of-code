@@ -15,9 +15,9 @@ typedef struct {
 
 size_t calculate_total_distance(int expansion_factor, char **grid, int ROWS, int COLS){
     int galaxy_count = 0;
-    int *col_is_not_empty = calloc(COLS, sizeof(int));
-    int *row_is_not_empty = calloc(ROWS, sizeof(int));
-    int *galaxy_labels = calloc(ROWS*COLS, sizeof(int));
+    int *col_is_not_empty = (int*)calloc(COLS, sizeof(int));
+    int *row_is_not_empty = (int*)calloc(ROWS, sizeof(int));
+    int *galaxy_labels = (int*)calloc(ROWS*COLS, sizeof(int));
     Point *galxy_positions = NULL;
     for (int r=0;r<ROWS;r++){
         for (int c=0;c<COLS;c++){
@@ -33,7 +33,7 @@ size_t calculate_total_distance(int expansion_factor, char **grid, int ROWS, int
     Point *queue = NULL;
     size_t total_distance = 0;
     for (int i=0; i<galaxy_count; i++){
-        int *seen_points = calloc(ROWS*COLS, sizeof(int));
+        int *seen_points = (int*)calloc(ROWS*COLS, sizeof(int));
 
         Point starting_galaxy = galxy_positions[i];
         arrput(queue, starting_galaxy);

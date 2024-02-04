@@ -63,8 +63,8 @@ int main(int argc, char **argv)
         }
         size_t s_len = strlen(s);
         size_t key_len = arrlen(key);
-        size_t *memo = calloc(s_len * key_len, sizeof(size_t));
-        int *dot_count_s = calloc(s_len, sizeof(int));
+        size_t *memo = (size_t*)calloc(s_len * key_len, sizeof(size_t));
+        int *dot_count_s = (int*)calloc(s_len, sizeof(int));
         for (int k=0; k<s_len; k++){
             if (s[k] == '.') dot_count_s[k] = 1;
             if (k>0) dot_count_s[k] += dot_count_s[k-1];
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
 
 
 
-        char *s_part_2 = malloc(s_len*5 + 5);
+        char *s_part_2 = (char*)malloc(s_len*5 + 5);
         char *cursor = s_part_2;
         strcpy(cursor, s);
         cursor += s_len;
@@ -91,9 +91,9 @@ int main(int argc, char **argv)
         }
         size_t s_len_part_2 = strlen(s_part_2);
         size_t key_len_part_2 = arrlen(key_part_2);
-        size_t *memo_2 = calloc(s_len_part_2 * key_len_part_2, sizeof(size_t));
+        size_t *memo_2 = (size_t*)calloc(s_len_part_2 * key_len_part_2, sizeof(size_t));
         for (int memo_i=0; memo_i<s_len_part_2 * key_len_part_2; memo_i++) memo_2[memo_i] = -1;
-        int *dot_count_s_2 = calloc(s_len_part_2, sizeof(int));
+        int *dot_count_s_2 = (int*)calloc(s_len_part_2, sizeof(int));
         for (int k=0; k<s_len_part_2; k++){
             if (s_part_2[k] == '.') dot_count_s_2[k] = 1;
             if (k>0) dot_count_s_2[k] += dot_count_s_2[k-1];

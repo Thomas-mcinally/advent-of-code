@@ -132,7 +132,7 @@ int main(int argc, char **argv)
         line[10] = '\0';
         line[15] = '\0';
 
-        char **neighbours = malloc(2 * sizeof(char*));
+        char **neighbours = (char**)malloc(2 * sizeof(char*));
         neighbours[0] = line + 7;
         neighbours[1] = line + 12;
         shput(adj, line, neighbours);

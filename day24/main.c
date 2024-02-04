@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
     char **lines = NULL;
     int linecount = read_file_to_lines(&lines, file_path);
 
-    Hailstone **hailstones = malloc(sizeof(Hailstone*)*linecount);
+    Hailstone **hailstones = (Hailstone**)malloc(sizeof(Hailstone*)*linecount);
     for(int i=0; i<linecount; i++){
         char *line = lines[i];
         char *separator = strchr(line, '@');
@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
         sscanf(line, "%lf,%lf,%lf", &px, &py, &pz);
         sscanf(separator+1, "%d,%d,%d", &vx, &vy, &vz);
 
-        Hailstone *hailstone = malloc(sizeof(Hailstone));
+        Hailstone *hailstone = (Hailstone*)malloc(sizeof(Hailstone));
         hailstone->px = px;
         hailstone->py = py;
         hailstone->pz = pz;

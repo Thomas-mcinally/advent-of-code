@@ -33,13 +33,13 @@ int compare_node_weights(const void* a, const void* b) {
 }
 
 int ****create_visited_array(int ROWS, int COLS, int max_steps) {
-        int ****visited = malloc(ROWS * sizeof(int***));
+        int ****visited = (int****)malloc(ROWS * sizeof(int***));
         for(int i = 0; i < ROWS; i++) {
-                visited[i] = malloc(COLS * sizeof(int**));
+                visited[i] = (int***)malloc(COLS * sizeof(int**));
                 for(int j = 0; j < COLS; j++) {
-                        visited[i][j] = malloc(4 * sizeof(int*));
+                        visited[i][j] = (int**)malloc(4 * sizeof(int*));
                         for(int k = 0; k < 4; k++) {
-                                visited[i][j][k] = calloc(max_steps, sizeof(int)); 
+                                visited[i][j][k] = (int*)calloc(max_steps, sizeof(int)); 
                         }
                 }
         }
@@ -72,7 +72,7 @@ int get_opposite_dir(int dir){
 size_t min_path(char **grid, int ROWS, int COLS, int max_steps, int min_steps){
         int sol = 0;
         int ****visited = create_visited_array(ROWS, COLS, max_steps);
-        Node **q = malloc(ROWS*COLS*4*max_steps*sizeof(Node*));
+        Node **q = (Node**)malloc(ROWS*COLS*4*max_steps*sizeof(Node*));
         int q_size = 0;
         
 

@@ -24,12 +24,12 @@ WorkflowsMapItem *populate_workflows_hashmap(char *s, WorkflowsMapItem *workflow
     {
         char *end_of_key = strchr(workflow_lines[i], '{');
         *end_of_key = '\0';
-        char *key = malloc(end_of_key - workflow_lines[i] + 1);
+        char *key = (char*)malloc(end_of_key - workflow_lines[i] + 1);
         strcpy(key, workflow_lines[i]);
 
         char *end_of_value = strchr(end_of_key+1, '}');
         *end_of_value = '\0';
-        char *value = malloc(end_of_value - end_of_key);
+        char *value = (char*)malloc(end_of_value - end_of_key);
         strcpy(value, end_of_key + 1);
 
         shput(workflows, key, value);
@@ -62,7 +62,7 @@ size_t dfs_part1(WorkflowsMapItem *workflows, char *cur, int x, int m, int a, in
     if (*cur == 'A') return x + m + a + s;
 
     char *rules = shget(workflows, cur);
-    char *dest = malloc(4*sizeof(char));
+    char *dest = (char*)malloc(4*sizeof(char));
     int dest_found = 0;
 
     while (!dest_found){
@@ -187,8 +187,8 @@ int main(int argc, char **argv)
     workflows = populate_workflows_hashmap(sections[0], workflows);
 
     int item_count = count_lines_in_string(sections[1]);
-    int **items = malloc(item_count * sizeof(int *));
-    for(int i = 0; i < item_count; i++) items[i] = malloc(4 * sizeof(int));
+    int **items = (int**)malloc(item_count * sizeof(int *));
+    for(int i = 0; i < item_count; i++) items[i] = (int*)malloc(4 * sizeof(int));
     populate_items_array(sections[1], items, item_count);
 
     printf("Part1 sol: %zu\n", part1(workflows, items, item_count));

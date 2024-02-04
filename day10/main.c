@@ -152,7 +152,7 @@ int main(int argc, char **argv)
         {starting_position.r, starting_position.c + 1},
         {starting_position.r, starting_position.c - 1}};
 
-    int *visited = malloc(ROWS * COLS * sizeof(int)); // 0->univisited, 1-> visited, 2-> visited and in loop
+    int *visited = (int*)malloc(ROWS * COLS * sizeof(int)); // 0->univisited, 1-> visited, 2-> visited and in loop
     int loop_length;
     for (int i = 0; i < 4; i++)
     {

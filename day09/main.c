@@ -8,7 +8,7 @@
 
 int extrapolate_next_val(int *nums, int num_count, bool is_part1)
 {
-    int *diff_array = calloc(num_count - 1, sizeof(int));
+    int *diff_array = (int*)calloc(num_count - 1, sizeof(int));
     bool is_next_arr_all_zeroes = true;
     for (int i = 1; i < num_count; i++)
     {
