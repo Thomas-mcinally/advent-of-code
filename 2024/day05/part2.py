@@ -35,3 +35,8 @@ for i, seq in enumerate(bad_sequences):
 
 # TOO SLOW - Probably need to figure out the Topological sort solution
 print(result)
+
+
+# there is a "right" order -> only 1 path through graph for each seq
+# -> every node must appear in rules (if it doesnt, the node can appear anywhere in the order and there isnt 1 "right" path)
+# -> topological sort across graph then order seq based on this path

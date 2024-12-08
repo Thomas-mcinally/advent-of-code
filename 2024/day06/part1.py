@@ -14,7 +14,13 @@ DIR_TO_DELTAS = {
     2: (1, 0),  #south
     3: (0, -1), #west
 }
+
+seen = set() #(r,c,dir)
 def explore(r,c, dir):
+    if (r,c,dir) in seen:
+        raise Exception("Cycle found, but None expected")
+    seen.add((r,c,dir))
+
     grid[r][c] = "X"
     dr, dc = DIR_TO_DELTAS[dir]
     next_r, next_c = r+dr, c+dc
@@ -38,3 +44,10 @@ for r in range(ROWS):
         result += 1 if grid[r][c] == "X" else 0
 
 print(result)
+
+
+# DFS sol
+# Path never splits
+# Max path length ROWS*COLS
+# Time O(ROWS*COLS)
+# Space O(ROWS*COLS)
