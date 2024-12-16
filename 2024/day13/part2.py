@@ -10,12 +10,6 @@ def solve_equation_set(x1: int,y1: int,r1: int,x2: int,y2: int,r2: int) -> tuple
     # (23*A + 71*B) == 10000000010279
     # Two equations with two variables -> one unique solution
     # Visualize as 2 linear graphs in a 2d plane, These lines only cross once. This is the solution
-
-    # B = (10000000018641 - 69A)/27
-    # 23*A + 71*(10000000018641 - 69A)/27  = 10000000010279
-    # 23A -71*69/27 A = 10000000010279 - 71*10000000018641/27
-    # A =(10000000010279 - 71*10000000018641/27)/(23 - 71*69/27)
-    # B = (10000000018641 - 69*A)/27
     x1: Decimal = Decimal(x1)
     y1: Decimal = Decimal(y1)
     r1: Decimal = Decimal(r1)
