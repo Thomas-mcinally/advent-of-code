@@ -1,4 +1,5 @@
 from decimal import Decimal
+import re
 
 def solve_equation_set(x1: int,y1: int,r1: int,x2: int,y2: int,r2: int) -> tuple[Decimal, Decimal]:
     # Button A: X+69, Y+23
@@ -30,23 +31,12 @@ MAX_BUTTON_PRESSES = 100
 
 parsed_games = []
 for game in raw_games:
-    game_lines = game.splitlines()
-    press_a = None
-    press_b = None
-    prize = None
-    for line in game_lines:
-        comma_pos = line.index(",")
-        if "Button A" in line:
-            press_a = (int(line[12:comma_pos]), int(line[comma_pos+4:]))
-        elif "Button B" in line:
-            press_b = (int(line[12:comma_pos]), int(line[comma_pos+4:]))
-        else:
-            prize = (int(line[9:comma_pos]), int(line[comma_pos+4:]))
-    parsed_games.append((press_a, press_b, prize))
+    ax, ay, bx, by, px, py = (int(num) for num in re.findall(r'(\d+)', game))
+    parsed_games.append((ax, ay, bx, by, px, py))
 
 total_tokens = 0
-for press_a, press_b, prize in parsed_games:
-    a_presses, b_presses = solve_equation_set(press_a[0], press_b[0], prize[0], press_a[1], press_b[1], prize[1])
+for ax, ay, bx, by, px, py in parsed_games:
+    a_presses, b_presses = solve_equation_set(ax, bx, px, ay, by, py)
     if a_presses < 0 or b_presses < 0 or a_presses > MAX_BUTTON_PRESSES or b_presses > MAX_BUTTON_PRESSES or not (a_presses==int(a_presses) and b_presses==int(b_presses)):
         continue
     total_tokens += a_presses*3 + b_presses
