@@ -1,3 +1,4 @@
+from collections import defaultdict, namedtuple
 import heapq
 
 
@@ -15,6 +16,8 @@ DIR_TO_DELTAS = {
     3: (0, -1), #west
 }
 
+State = namedtuple("State", ["r", "c", "dir"])
+
 def find_start_pos():
     for r in range(ROWS):
         for c in range(COLS):
@@ -22,26 +25,28 @@ def find_start_pos():
                 return (r,c)
     raise
 
-def dijkstras_shortest_path_to_end_starting_from(start_r, start_c, start_dir):
-    seen = set()
-    q = [(0, start_r, start_c, start_dir)] #min heap (total_points, r, c, dir)
+def dijkstras_shortest_path_to_end_starting_from(start_state: State) -> tuple[State, defaultdict]:
+    end_state = State(-1,-1,-1)
+
+    state_to_min_cost = defaultdict(lambda: float("inf"))
+    q = [(0, start_state)] #min heap (total_points, state, prev_state)
     while q:
-        total_points, r, c, dir = heapq.heappop(q)
-        if grid[r][c] == "E":
-            return total_points
-        if (r,c,dir) in seen or grid[r][c] == "#":
+        total_points, state = heapq.heappop(q)
+        if total_points > state_to_min_cost[state] or grid[state.r][state.c] == "#":
             continue
-        seen.add((r,c,dir))
+        state_to_min_cost[state] = total_points
+        if grid[state.r][state.c] == "E":
+            end_state = state
+            break
 
-        dr, dc = DIR_TO_DELTAS[dir]
-        heapq.heappush(q, (total_points+STEP_COST, r+dr, c+dc, dir))
-        heapq.heappush(q, (total_points+TURN_COST, r, c, (dir+1)%4))
-        heapq.heappush(q, (total_points+TURN_COST, r, c, (dir-1)%4))
-    
-    return -1
+        dr, dc = DIR_TO_DELTAS[state.dir]
+        
+        heapq.heappush(q, (total_points+STEP_COST, State(state.r+dr, state.c+dc, state.dir)))
+        heapq.heappush(q, (total_points+TURN_COST, State(state.r, state.c, (state.dir+1)%4)))
+        heapq.heappush(q, (total_points+TURN_COST, State(state.r, state.c, (state.dir-1)%4)))
 
+    return end_state, state_to_min_cost
 
 start_r, start_c = find_start_pos()
-print(dijkstras_shortest_path_to_end_starting_from(start_r, start_c, 1))
-        
-        
+end_state, state_to_min_cost = dijkstras_shortest_path_to_end_starting_from(State(start_r, start_c, 1))
+print(state_to_min_cost[end_state])
