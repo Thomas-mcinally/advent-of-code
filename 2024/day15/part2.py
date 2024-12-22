@@ -1,4 +1,4 @@
-with open("small_input.txt") as f:
+with open("input.txt") as f:
     s = f.read().strip()
 map, instructions = s.split("\n\n")
 instructions = [char for char in instructions if char != "\n"]
@@ -12,38 +12,47 @@ MOVE_TO_DR_DC = {
 }
 
 
-def push_starting_from(r,left_c,right_c,dr,dc):
-    next_r, next_left_c, next_right_c = r+dr, left_c+dc, right_c+dc    
+def push_starting_from(r,c_frontier: set,dr,dc):
+    next_r = r+dr    
     if dr != 0:
         # pushing up or down
-        if grid[next_r][next_left_c] == "[":
-            push_starting_from(next_r, next_left_c, next_right_c, dr, dc)
-        if grid[next_r][next_left_c] == "]":
-            push_starting_from(next_r, next_left_c-1, next_left_c, dr, dc)
-        if grid[next_r][next_right_c] == "[":
-            push_starting_from(next_r, next_right_c, next_right_c+1, dr, dc)
-        if grid[next_r][next_left_c] == "." and grid[next_r][next_right_c] == ".":
-            grid[next_r][next_left_c] = "["
-            grid[next_r][next_right_c] = "]"
-            grid[r][left_c] = "."
-            grid[r][right_c] = "."
+        if any(grid[next_r][c] == "#" for c in c_frontier):
+            # blocked
+            return
+        if any(grid[next_r][c] in "[]" for c in c_frontier):
+            next_c_frontier = set()
+            for c in c_frontier:
+                if grid[next_r][c] == "[":
+                    next_c_frontier.add(c)
+                    next_c_frontier.add(c+1)
+                elif grid[next_r][c] == "]":
+                    next_c_frontier.add(c)
+                    next_c_frontier.add(c-1)
+            push_starting_from(next_r, next_c_frontier, dr, dc)
+        
+        if all(grid[next_r][c] == "." for c in c_frontier):
+            for c in c_frontier:
+                grid[next_r][c] = grid[r][c]
+                grid[r][c] = "."
 
     elif dc == 1:
-        # pushing right
-        if grid[r][right_c+1] == "[":
-            push_starting_from(r, right_c+1, right_c+2, dr, dc)
-        if grid[r][right_c+1] == ".":
-            grid[r][right_c+1] = "]"
-            grid[r][right_c] = "["
-            grid[r][left_c] = "."
+        # pushing right 
+        front_c = next(c for c in c_frontier if grid[r][c] == "]")
+        if grid[r][front_c+1] == "[":
+            push_starting_from(r, {front_c+2}, dr, dc)
+        if grid[r][front_c+1] == ".":
+            grid[r][front_c+1] = "]"
+            grid[r][front_c] = "["
+            grid[r][front_c-1] = "."
     elif dc == -1:
         # pushing left
-        if grid[r][left_c-1] == "]":
-            push_starting_from(r, left_c-2, left_c-1, dr, dc)
-        if grid[r][left_c-1] == ".":
-            grid[r][left_c-1] = "["
-            grid[r][left_c] = "]"
-            grid[r][right_c] = "."
+        front_c = next(c for c in c_frontier if grid[r][c] == "[")
+        if grid[r][front_c-1] == "]":
+            push_starting_from(r, {front_c-2}, dr, dc)
+        if grid[r][front_c-1] == ".":
+            grid[r][front_c-1] = "["
+            grid[r][front_c] = "]"
+            grid[r][front_c+1] = "."
     
 
 
@@ -82,24 +91,20 @@ def resize_grid():
     COLS = len(grid[0])
 
 resize_grid()
+total_moves = len(instructions)
 cur_r, cur_c = get_start_pos()
-for move in instructions:
+for i, move in enumerate(instructions):
     dr, dc = MOVE_TO_DR_DC[move]
 
     if grid[cur_r+dr][cur_c+dc] == "[":
-        push_starting_from(cur_r+dr, cur_c+dc, cur_c+dc+1, dr, dc)
+        push_starting_from(cur_r+dr, {cur_c+dc, cur_c+dc+1}, dr, dc)
     elif grid[cur_r+dr][cur_c+dc] == "]":
-        push_starting_from(cur_r+dr, cur_c+dc-1, cur_c+dc, dr, dc)
+        push_starting_from(cur_r+dr, {cur_c+dc-1, cur_c+dc}, dr, dc)
 
     if grid[cur_r+dr][cur_c+dc] == ".":
         grid[cur_r][cur_c] = "."
         grid[cur_r+dr][cur_c+dc] = "@"
         cur_r += dr
         cur_c += dc
+
 print(get_grid_score())
-
-
-# debug
-    # 1447376 too high
-
-    # If pushing two or moore blocks in a row up or down, one of them getting stuck means that all get stuck
