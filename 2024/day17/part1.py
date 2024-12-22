@@ -1,7 +1,7 @@
 import re
 
 
-def run_program(program: list[int], reg_a_init: int, reg_b_init: int, reg_c_init: int) -> list[int]:
+def run_program(program: list[int], reg_a_init: int, reg_b_init: int, reg_c_init: int) -> list[str]:
     reg_a = reg_a_init
     reg_b = reg_b_init
     reg_c = reg_c_init
