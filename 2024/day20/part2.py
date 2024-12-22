@@ -25,17 +25,18 @@ def find_shortest_paths(grid: list[str]) -> dict:
 
 def count_good_cheats_starting_from(grid, coords_to_shortest_path, start_r,start_c):
     ROWS, COLS = len(grid), len(grid[0])
-    cheat_end_positions = collections.defaultdict(lambda: float("inf")) #required cheat duration is min val needed for this (end_r, end_c)
+    cheat_end_positions = set()
     for delta_c in range(20 + 1):
         for delta_r in range((20)-delta_c + 1):
-            cheat_end_positions[(start_r+delta_r, start_c+delta_c)] = min(delta_c+delta_r, cheat_end_positions[(start_r+delta_r, start_c+delta_c)])
-            cheat_end_positions[(start_r+delta_r, start_c-delta_c)] = min(delta_c+delta_r, cheat_end_positions[(start_r+delta_r, start_c-delta_c)])
-            cheat_end_positions[(start_r-delta_r, start_c+delta_c)] = min(delta_c+delta_r, cheat_end_positions[(start_r-delta_r, start_c+delta_c)])
-            cheat_end_positions[(start_r-delta_r, start_c-delta_c)] = min(delta_c+delta_r, cheat_end_positions[(start_r-delta_r, start_c-delta_c)])
+            cheat_end_positions.add((start_r+delta_r, start_c+delta_c))
+            cheat_end_positions.add((start_r+delta_r, start_c-delta_c))
+            cheat_end_positions.add((start_r-delta_r, start_c+delta_c))
+            cheat_end_positions.add((start_r-delta_r, start_c-delta_c))
     good_cheats = 0
-    for [end_r, end_c], cheat_duration in cheat_end_positions.items():
+    for end_r, end_c in cheat_end_positions:
         if end_r < 0 or end_c < 0 or end_r >= ROWS or end_c >= COLS or grid[end_r][end_c] == "#":
             continue
+        cheat_duration = abs(end_r-start_r) + abs(end_c-start_c)
         savings = coords_to_shortest_path[(end_r, end_c)] - coords_to_shortest_path[(start_r, start_c)]-cheat_duration
         if savings >= 100:
             good_cheats += 1

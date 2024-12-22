@@ -28,6 +28,7 @@ def find_shortest_paths(grid: list[str]) -> dict:
 
 def count_good_cheats_starting_from(grid, coords_to_shortest_path, start_r,start_c):
     ROWS, COLS = len(grid), len(grid[0])
+    CHEAT_DURATION = 2
     cheat_end_positions = [(start_r+2,start_c), (start_r-2,start_c), (start_r,start_c+2), (start_r,start_c-2), (start_r+1,start_c+1), (start_r-1,start_c+1), (start_r+1,start_c-1), (start_r-1,start_c-1)]
     
     good_cheats = 0
@@ -46,7 +47,6 @@ with open("input.txt") as f:
 lines = s.splitlines()
 grid = [[char for char in line] for line in lines]
 ROWS, COLS = len(grid), len(grid[0])
-CHEAT_DURATION = 2
 coords_to_shortest_path = find_shortest_paths(grid)
 
 total_good_cheats = 0
