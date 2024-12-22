@@ -26,14 +26,14 @@ for start in start_nums:
     cur = start
     for _ in range(2000):
         nxt = get_next_secret(cur)
-        delta = int(str(nxt)[-1]) - int(str(cur)[-1])
+        delta = (nxt%10) - (cur%10)
         delta_sequence.append(delta)
         cur = nxt
         if len(delta_sequence) > 4:
             delta_sequence.pop(0)
         if len(delta_sequence) == 4 and tuple(delta_sequence) not in seen_delta_sequences:
             seen_delta_sequences.add(tuple(delta_sequence))
-            sequence_to_bananas[tuple(delta_sequence)] += int(str(nxt)[-1])
+            sequence_to_bananas[tuple(delta_sequence)] += (nxt%10)
 
 result = max(sequence_to_bananas.values())
 print(result)
